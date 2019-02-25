@@ -172,7 +172,7 @@
         <para>paranccsal, majd ismételjük meg a fentebb tett ellenőrzéseket!</para>
         <programlisting language="c">
             <![CDATA[
-                #include <omp.h>
+            #include <omp.h>
 
                 int main()
                 {
@@ -183,7 +183,7 @@
 
                     return 0;
 
-                }
+                }            
             ]]>
         </programlisting>
         <screen>
@@ -336,8 +336,121 @@ false]]></screen>
         <para>
             Megoldás forrása:  
         </para>
+        <programlisting language="c">
+            <![CDATA[
+#include <stdio.h>
+
+#define val1 1986 
+#define val2 2033
+
+signed int temp;
+
+void swap(int*,int*, int);
+
+int main()
+{
+    int a = val1, b = val2;
+    
+    //e C forrás miatt Uncle Bob törné ujjaimat
+    
+    printf("================================\n");
+    printf("Változók felcserélés, a program.\n");
+    printf("================================\n\n");
+    
+    printf("Csere összeadással/kivonással:\n");
+    
+    printf("Kezdeti értékek:\t a=%d b=%d\n", a, b);
+    swap(&a,&b,0);
+    printf("Csere után:\t\t a=%d b=%d\n\n", a, b);
+    
+    
+    printf("Csere XOR-ral:\n");
+    
+    printf("Kezdeti értékek:\t a=%d b=%d\n", a, b);
+    swap(&a,&b,1);
+    printf("Csere után:\t\t a=%d b=%d\n\n", a, b);
+    
+    printf("Csere segédmunkással:\n");
+    
+    printf("Kezdeti értékek:\t a=%d b=%d\n", a, b);
+    swap(&a,&b,2);
+    printf("Csere után:\t\t a=%d b=%d\n\n", a, b);
+    
+    return 0;
+}
+void swap(int* a,int* b, int swapMode)
+{
+    switch(swapMode)
+    {
+        case 0: 
+            *b = *b - *a;
+            *a = *a + *b;
+            *b = *a - *b;
+            return;
+        case 1:
+            *b = *a ^ *b;
+            *a = *a ^ *b;
+            *b = *a ^ *b;
+            return;
+            
+        default:
+            temp = *a;
+            *a = *b;
+            *b = temp;
+            return;
+    }
+}
+
+    
+            ]]>
+        </programlisting>
         <para>
             Tanulságok, tapasztalatok, magyarázat...:
+        </para>
+        <para>
+            A legtöbbet használt módszerek a változók értékeinek felcserélésére az új változókkal való csere, az XOR művelettel való csere és az összeadás/kivonás műveleteivel törénő csere.
+        </para>
+        <para>
+            Sokat nem lehet beszélni róluk, viszont röviden működésüket érdemes átnézni.
+        </para>
+        <para>
+            A kedvenc, legtöbbet általam igénybevett módszerem, az XOR csere.
+        </para>
+        <para>
+            Az XOR, vagyis a kizáró vagy, igazat ad vissza ha egyik, vagy a másik vizsgált dolog igaz, de nem mind a kettő.
+        </para>
+        <para>
+            E tényt felhasználva történik a csere. Nézzünk egy példát:
+        </para>
+        <para>
+            a=0011
+        </para>
+        <para>
+            b=0111
+        </para>
+        <para>
+            A forráskód alapján:
+        </para>
+        <para>
+            b = 0011 ^ 0111 = 0100
+        </para>
+        <para>
+            a = 0011 ^ 0100 = 0111
+        </para>
+        <para>
+            b = 0111 ^ 0100 = 0011
+        </para>
+        <para>Látjuk, hogy az értékek felcserélődtek</para>
+        <para>
+            Segédváltozót felhasználva egyértelmű a csere. Egyik változó értéke elmentődik benne, megkapja ezek után a másik változó értékét és végül a másik változó az elmentett értéket.
+        </para>
+        <para>
+            Összeadásos/kivonásos módszert szerintem nem kell magyarázni.
+        </para>
+        <para>
+            a = 1; b = 6; b = b-a = 5;
+            a = 1 + 5 = 6;
+            b = 6 - 5 = 1;
         </para>
     </section>                     
 
@@ -357,6 +470,265 @@ false]]></screen>
         <para>
             Tanulságok, tapasztalatok, magyarázat...
         </para>
+        <para>FIGYELEM!!!</para>
+        <para>
+            Megoldásom kipróbálásához, 
+            fordításához szükséges az <application>ncurses</application> megléte.
+            A legtöbb modern Linux disztró jön a megfelelő csomagokkal, 
+            de például Ubuntu esetében szükséges lehet a <application>ncurses-dev</application> csomag telepítése.
+        </para>
+        <para>
+            Fordítás:
+        </para>
+        <para>
+            <command>gcc -o bouncingBall bouncingBall.c -lncurses</command>
+        </para>
+        <para>
+            <command>
+                gcc -o bouncingSets bouncingBallWithSets.c -lncurses
+            </command>
+        </para>
+        <para>
+            Elágazásokkal, főleg ha valaki már rajzolgatott program segítségével ablakokra/terminálba, 
+            nagyon gyors a megoldás, 
+            hiszen csak a labda pozícióját kell ellenőrizgetnünk, hogy érinti-e "börtönének" falait, 
+            és ütközésnél a megfelőlen kell reagálnunk.
+        </para>
+        <para>
+            Egy megvalósítását ennek alább láthatjuk:
+        </para>
+        <programlisting language="c">
+            <![CDATA[
+#include <ncurses.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#define SLEEPY_TIME 60000
+
+typedef struct ball
+{
+    int x, y, stepX, stepY;
+    char ballBody;
+} Ball;
+
+void initializeWindow(char,char,int);
+void destroyWindow();
+
+Ball* createBall(char, int, int);
+void update(Ball* theBall);
+
+
+int winHeight, winWidth;
+
+int main()
+{
+    
+    initializeWindow(0,0,0);
+    getmaxyx(stdscr,winWidth,winHeight);
+    
+    char key;
+    
+    Ball* theBall = createBall('O',10,12);
+    
+    while((key = getch()) == ERR)
+    {
+       
+        update(theBall);
+        usleep(SLEEPY_TIME); //unistd.h
+        refresh();
+    }
+    
+    
+    destroyWindow();
+    
+    
+    free(theBall);
+    return 0;
+}
+
+void initializeWindow(char side_sym, char tops_sym, int cur_mod)
+{
+    initscr();
+    cbreak();
+    noecho();
+    
+    nodelay(stdscr, TRUE);
+    curs_set(cur_mod);
+  
+    box(stdscr, side_sym,tops_sym);
+}
+void destroyWindow()
+{
+    getch();
+    endwin();
+}
+Ball* createBall(char body, int posX, int posY)
+{
+    if((posX < 0 || posX > winHeight) || (posY < 0 || posY > winWidth))
+    {
+        mvprintw(0,0, "NEGATÍV vagy ABLAKON KÍVÜLI pozíciók lettek megadva!");
+        destroyWindow();
+        exit(-1);
+    }
+    
+    Ball* theBall = (Ball*)calloc(1,sizeof(Ball));    
+    theBall->ballBody = body;
+    (posX >= 2 && posX < winWidth - 3) ? theBall->x = posX : 2;
+    (posY >= 2 && posY < winHeight - 3) ? theBall->y = posY : 2;
+    theBall->stepX = 1;
+    theBall->stepY = 1;
+    
+    return theBall;
+}
+void update(Ball* theBall)
+{
+    if((theBall->x < 2) || (theBall->x > winWidth-3))
+    {    theBall->stepX*=-1;}
+    if((theBall->y < 2) || (theBall->y > winHeight-3))
+    {    theBall->stepY*=-1;}
+    
+    mvaddch(theBall->x, theBall->y, ' ' | A_NORMAL);
+    
+    theBall->x += theBall->stepX;
+    theBall->y += theBall->stepY;
+    
+    mvaddch(theBall->x, theBall->y, theBall->ballBody );
+}
+            ]]>
+        </programlisting>
+        <para>
+            Aki nem tudná az <application>ncurses</application> könyvtár a pseudo-/terminal alkalmazásokban
+            enged GUI-kat (TUI épül ki pontosabban) építeni, rajzolni, illetve engedi kihasználni az adott terminál képességeit könnyedén.
+            Például: kurzor mozgatása, színezés, input handling, ...
+        </para>
+        <para>
+            Program működéséről röviden:
+        </para>
+        <para>
+            <application>ncurses</application> könyvtár segítségével felépül a környezet, inicializáljuk a módot,
+            beállítjuk, hogy a bemenet egyből a programhoz kerüljön, s ne kelljen '\n'-t beütnünk, kurzurt kikapcsoljuk,...
+            Működését nem tárgyalnám, további információk : 
+        </para>
+        <para>
+            <link xlink:href="http://tldp.org/HOWTO/NCURSES-Programming-HOWTO/">
+                    <filename>NCURSES - HOW TO</filename>
+            </link>
+        </para>
+        <para>
+            A labda szerkezetét egy Ball nevű struct-ban tároljuk, létrehozásáról a <function>createBall</function> nevű függvény gondoskodik,
+            ami egy mutatóval tér vissza a heap-en elhelyezkedő labdáról. Ugyanitt leellenőrizzük, hogy a labda paramétereit helyesen adta-e meg a user(programozó), tehát benne van-e a "világában" a labda.
+            
+        </para>
+        <para>
+            Eztuán belépünk a render ciklusba, ami addig iterálja a <function>update</function> 
+            <function>usleep</function> 
+            <function>refresh</function> függvényeket, amíg le nem nyomunk egy gombot. Ez ugye az <application>ncurses</application> felhasználásával valósul meg.
+            Kivétel az <function>update</function> függvény, ami user-defined, tehát én írtam, illetve az <function>usleep</function> függvény amit az <application>unistd.h</application> biztosít, vele várakozunk/lassítjuk a labda mozgását(iterálást).
+        </para>
+        <para>
+            Az <function>update</function> folyamatosan mozgatja a labdát, ellenőrzi, hogy ne menjen át a határokon, illetve meghívja az <function>mvaddch</function> 
+            <application>ncurses</application> függvényt, ami kirajzolja őt a megfelelő helyre(pozícíójára).
+        </para>
+        <para>
+            A ciklus megszakítását követően pedig felszabadítjuk a labdánkat heap-en található börtönéből.
+        </para>
+        <para>
+            Létezik erre egy másik megoldás is, azaz az elágazás nélküli "pattogtatás".
+        </para>
+        <para>
+            A lényege ennek a megoldásnak az, hogy két számsort tartunk számon(mindkét "tengelynek", az egyik csökken, másik nő, és csak a határokon belüli értékeket vesznek fel.
+            Ha csak egy-egy számsort tartanánk fenn akkor hirtelen lenne egy ugrás a max értékről a 0-ra, vagy fordítva. 
+            A határon nem átkelésről a % operátor gondoskodik, ami maradékos osztást visz véghez, azaz mindig 0-(határ-1) értékkel fogunk dolgozni.
+        </para>
+        <para>
+            Ezután összemossuk a megfelelő számsorokat, így kapja egy új hullámzó számsort, ami leírja a labda pályájának megfelelő x/y pozícióit.
+            Megfigyelhetjük azt is, hogy duplán vesszük a konzolunk méreteit. Ez egyfajta lassításnak felel meg, ugyanis ha az eredeti méreteivel dolgoznánk, ugrálna labda, így pedig minden lépés 1 egység.
+        </para>
+        <para>
+            Az <application>ncurses</application> működéséről nem beszélnék részletesen, lásd link fentebb.
+        </para>
+        <programlisting language="c">
+            <![CDATA[
+                 #include <ncurses.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#define SLEEPY_TIME 60000
+
+typedef struct ball
+{
+    int x, y;
+    char ballBody;
+} Ball;
+
+void initializeWindow(char,char,int);
+void destroyWindow();
+
+void update(Ball* theBall);
+
+
+int winHeight, winWidth;
+int helperX=0, helperY=0;
+
+int main()
+{
+    
+    initializeWindow(0,0,0);
+    getmaxyx(stdscr,winWidth,winHeight);
+    
+    winWidth*=2;
+    winHeight*=2;
+    
+    
+    Ball theBall = {0, 0, 'o'};
+    
+    for(;;)
+    {
+       
+        update(&theBall);
+        usleep(SLEEPY_TIME);
+        refresh();
+    }
+    
+    
+    destroyWindow();
+    
+    
+    return 0;
+}
+
+void initializeWindow(char side_sym, char tops_sym, int cur_mod)
+{
+    initscr();
+    cbreak();
+    noecho();
+    
+    nodelay(stdscr, TRUE);
+    curs_set(cur_mod);
+  
+    box(stdscr, side_sym,tops_sym);
+}
+void destroyWindow()
+{
+    getch();
+    endwin();
+}
+
+void update(Ball* theBall)
+{
+    mvaddch(abs(theBall->y + (winWidth-helperY))/2,abs(theBall->x + (winHeight-helperX))/2 , ' ');
+    theBall->x = (theBall->x-1) % winHeight;
+    helperX =  (helperX+1) % winHeight;
+    
+    theBall->y = (theBall->y-1) % winWidth;
+    helperY = (helperY+1) % winWidth;
+    
+    mvaddch(abs(theBall->y + (winWidth-helperY))/2,abs(theBall->x + (winHeight-helperX))/2 , theBall->ballBody);
+    
+    box(stdscr, 0,0); // this is a hack, very simple hack, heck
+}
+            ]]>
+        </programlisting>
     </section>                     
 
     <section>
@@ -421,5 +793,7 @@ false]]></screen>
             Tanulságok, tapasztalatok, magyarázat...
         </para>
     </section>
+
+</chapter>                
 
 </chapter>                
