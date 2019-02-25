@@ -1,0 +1,15 @@
+<authorgroup xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <author>
+        <personname>
+            <surname>Lucski</surname>
+            <firstname>Attila</firstname>        
+        </personname>    
+        <affiliation>
+            <jobtitle>hallgató</jobtitle>
+            <orgname>Debreceni Egyetem</orgname>
+            <address>
+                <email>attilalucski@gmail.com</email>
+            </address>
+        </affiliation>
+    </author>    
+</authorgroup>
