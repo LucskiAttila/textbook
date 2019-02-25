@@ -1,0 +1,425 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Turing!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Végtelen ciklus</title>
+        <para>
+            Írj olyan C végtelen ciklusokat, amelyek 0 illetve 100 százalékban dolgoztatnak egy magot és egy olyat, amely  
+            100 százalékban minden magot!
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:  src/Infinite/*   
+        </para>
+        <para>
+            Ha tisztában vagyunk egy kicsit is a számítógépek működésével
+            akkor egyből láthatjuk, hogy ennek a feladatnak a megoldása triviális, ugyanis
+            100%-os leterheltséget akkor érünk el, ha "szünet" nélkül dolgoztatjuk a CPU-t.
+        </para>
+        <para>
+            Ehhez pedig nem kell mást írnunk mint egy végtelen ciklust egy adott programozási nyelvben, jelen esetben
+            a C programozási nyelvben:
+        </para>
+        <programlisting language="c">
+            <![CDATA[
+            int main()
+            {
+                    for(;;)
+                    {
+                
+                    }
+                    return 0;
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Fordításkor az <application>infTRUE100</application> nevet adtam neki.
+            A programot indítsuk el a háttérben, majd
+            a <command>ps aux | grep inf</command> paranccsal győződjünk meg arról, hogy a várt 100%-os terhelést elértük-e ezzel a megoldással!
+        </para>
+        <screen>
+            <![CDATA[
+                tomi@cant0r:~/Dev/bhax/src$ ./infTRUE100&
+                [1] 22771
+                tomi@cant0r:~/Dev/bhax/src$ ps aux | grep inf
+                tomi     22771 99.2  0.0   2316   684 pts/1    R    19:10   0:07 ./infTRUE100
+                tomi     22775  0.0  0.0  20352   896 pts/1    S+   19:10   0:00 grep --color=auto inf
+                tomi@cant0r:~/Dev/bhax/src$ ps aux | grep inf
+                tomi     22771  107  0.0   2316   684 pts/1    R    19:10   0:09 ./infTRUE100
+                tomi     22777  0.0  0.0  20352   828 pts/1    S+   19:10   0:00 grep --color=auto inf
+                tomi@cant0r:~/Dev/bhax/src$ 
+            ]]>
+        </screen>
+        <para>
+            Ahogyan a kimenet 3. oszlopában látjuk, elértük a 100%-os terhelést.
+        </para>
+        <para>
+            Hogyan érjük el a 0% terhelést? Egyszerűen változtassuk meg a fenti C kódot a következőképpen:
+        </para>
+        <programlisting language="c">
+            <![CDATA[
+            #include <unistd.h>
+            
+            int main()
+            {
+                    for(;;)
+                    {
+                        sleep(1);
+                    }
+                    return 0;
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Ekkor a program minden iterációban vár egy kicsit a <function>sleep(n)</function> meghívásával, ami azt eredményezi, hogy
+            lelassítja az iterálás sebességét, tehát nem éri "teljes" terhelés a CPU-t.
+            Lásd <command>man 3 sleep</command> további információkért a sleep(n)-ről.
+        </para>
+        <screen>
+            <![CDATA[
+                tomi@cant0r:~/Dev/bhax/src$ ./infTRUE100&
+                [1] 22870
+                tomi@cant0r:~/Dev/bhax/src$ ps aux | grep inf
+                tomi     22870  0.0  0.0   2316   748 pts/1    S    19:20   0:00 ./infTRUE100
+                tomi     22872  0.0  0.0  20352   888 pts/1    S+   19:20   0:00 grep --color=auto infTRUE100
+                tomi@cant0r:~/Dev/bhax/src$ 
+            ]]>
+        </screen>
+        <para>
+            Ahhoz, hogy minden magon 100%-os kihasználást lássunk, a fenti programot egyszerre annyiszor kell futtattni amennyi magunk van, vagy szálasítunk!.
+        </para>
+        <para>
+            Az első esetben egyik standard gondolatunk, ha UNIX szerű rendszert használunk, hogy megvillázuk (forkoljuk) a processzust ezzel másolatokat készítve a futó processzusról.
+            A magok számát az <application>nproc</application> programmal egyszerűen lekérdezhetjük. E könyv elején megadott hardver esetében:
+        </para>
+        <screen>
+            <![CDATA[
+               tomi@cant0r:~/Dev/bhax/src/Infinite$ nproc
+               4
+               tomi@cant0r:~/Dev/bhax/src/Infinite$ 
+            ]]>
+        </screen>
+        <para>
+            A kinyert információ alapján létrehozzuk a következő C forráskódot, majd lefordítjuk a kedvenc C fordítónkkal. <command>gcc -o inf infTRUE100.c</command>
+        </para>
+        <programlisting language="c">
+            <![CDATA[
+                #include <unistd.h>
+                #include <sys/types.h>
+
+                int main()
+                {
+                    int p1, p2, p3;
+
+                    if(!(p1 = fork()))
+                    {
+                        for(;;);
+                    }
+                    if(!(p2 = fork()))
+                    {
+                        for(;;);
+                    }
+                    if(!(p3 = fork()))
+                    {
+                        for(;;);
+                    }
+
+                    for(;;);
+
+                    return 0;
+
+                }
+            ]]>
+        </programlisting>
+        <para>
+            Futassuk és nézzük meg az eredményt <application>top</application> alkalmazás felhasználásával!
+        </para>
+        <screen>
+            <![CDATA[
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ ls
+                infTRUE100  infTRUE100.c
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ ./infTRUE100 
+
+            ]]>
+        </screen>
+        <screen>
+            <![CDATA[
+                top - 15:57:11 up  1:30,  1 user,  load average: 1,34, 0,84, 0,90
+                Tasks: 237 total,   5 running, 232 sleeping,   0 stopped,   0 zombie
+                %Cpu0  :100,0 us,  0,0 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu1  : 99,3 us,  0,7 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu2  :100,0 us,  0,0 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu3  :100,0 us,  0,0 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                MiB Mem :   7869,0 total,   3025,2 free,   1891,9 used,   2951,9 buff/cache
+                MiB Swap:  15258,8 total,  15258,8 free,      0,0 used.   5342,4 avail Mem 
+            ]]>
+        </screen>
+        <para>
+            Ha szálasítani akarunk érdemes valamilyen kész megoldást használnunk, pl: OpenMP. Nyilván ezenkívül rengeteg ismert vagy ismeretlen solution áll rendelkezésünkre, de egyszerűsége miatt ennél
+            a feladatnál az előbb említett library szolgáltatásait vesszük igénybe.
+        </para>
+        <para>
+            A munkagépen, az én esetemben, a GNU Compiler Collection van telepítve ami alapértelmezetten támogatja az OpenMP könyvtárat.
+            Írjuk meg és fordítsuk le a következő C kódot a
+        </para> 
+        <para><command>gcc -o infOPEN infOPEN.c -fopenmp</command></para>
+        <para>paranccsal, majd ismételjük meg a fentebb tett ellenőrzéseket!</para>
+        <programlisting language="c">
+            <![CDATA[
+                #include <omp.h>
+
+                int main()
+                {
+                    #pragma omp parallel
+                    {
+                        for(;;);
+                    }
+
+                    return 0;
+
+                }
+            ]]>
+        </programlisting>
+        <screen>
+            <![CDATA[
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ gcc -o infOPEN infOPEN.c -fopenmp
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ ls
+                infOPEN  infOPEN.c  infTRUE100  infTRUE100.c
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ ./infOPEN 
+                ^C
+                tomi@cant0r:~/Dev/bhax/src/Infinite$ 
+            ]]>
+        </screen>
+        <screen>
+            <![CDATA[
+                top - 16:18:43 up  1:51,  1 user,  load average: 1,05, 0,86, 0,85
+                Tasks: 234 total,   2 running, 232 sleeping,   0 stopped,   0 zombie
+                %Cpu0  :100,0 us,  0,0 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu1  : 99,7 us,  0,3 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu2  : 99,7 us,  0,3 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                %Cpu3  :100,0 us,  0,0 sy,  0,0 ni,  0,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+                MiB Mem :   7869,0 total,   2955,0 free,   1883,9 used,   3030,1 buff/cache
+                MiB Swap:  15258,8 total,  15258,8 free,      0,0 used.   5334,7 avail Mem 
+            ]]>
+        </screen>
+    </section>
+        
+          
+    <section>
+        <title>Lefagyott, nem fagyott, akkor most mi van?</title>
+        <para>
+            Mutasd meg, hogy nem lehet olyan programot írni, amely bármely más programról eldönti, hogy le fog-e fagyni vagy sem!
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:  tegyük fel, hogy akkora haxorok vagyunk, hogy meg tudjuk írni a <function>Lefagy</function>
+            függvényt, amely tetszőleges programról el tudja dönteni, hogy van-e benne vlgtelen ciklus:              
+        </para>
+        <programlisting language="c"><![CDATA[Program T100
+{
+
+	boolean Lefagy(Program P)
+	{
+		 if(P-ben van végtelen ciklus)
+			return true;
+		 else
+			return false; 
+	}
+
+	main(Input Q)
+	{
+		Lefagy(Q)
+	}
+}]]></programlisting>            
+        <para>
+            A program futtatása, például akár az előző <filename>infTRUE100.c</filename> ilyen pszeudókódjára:
+            <screen><![CDATA[T100(t.c.pseudo)
+true]]></screen>            
+            akár önmagára
+            <screen><![CDATA[T100(T100)
+false]]></screen>  
+            ezt a kimenetet adja.          
+        </para>
+        <para>
+            A T100-as programot felhasználva készítsük most el az alábbi T1000-set, amelyben a
+            Lefagy-ra épőlő Lefagy2 már nem tartalmaz feltételezett, csak csak konkrét kódot:
+        </para>
+        <programlisting language="c"><![CDATA[Program T1000
+{
+
+	boolean Lefagy(Program P)
+	{
+		 if(P-ben van végtelen ciklus)
+			return true;
+		 else
+			return false; 
+	}
+
+	boolean Lefagy2(Program P)
+	{
+		 if(Lefagy(P))
+			return true;
+		 else
+			for(;;); 
+	}
+
+	main(Input Q)
+	{
+		Lefagy2(Q)
+	}
+
+}]]></programlisting>            
+        <programlisting><![CDATA[]]></programlisting>            
+        <para>
+            Mit for kiírni erre a <computeroutput>T1000(T1000)</computeroutput> futtatásra?
+                                
+            <itemizedlist>
+                <listitem>
+                    <para>Ha T1000 lefagyó, akkor nem fog lefagyni, kiírja, hogy true</para>                        
+                </listitem>
+                <listitem>
+                    <para>Ha T1000 nem fagyó, akkor pedig le fog fagyni...</para>                        
+                </listitem>
+            </itemizedlist>
+            akkor most hogy fog működni? Sehogy, mert ilyen <function>Lefagy</function>
+            függvényt, azaz a T100 program nem is létezik.                
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...:
+        </para>
+         <para>
+            Akár forráskódok nélkül is tekinthetünk a problémára és még egyszerűbben is láthatjuk, hogy ellentmondásra jutunk, ilyen gép/algoritmus/.. nem létezhet.
+        </para>
+            <para>Tételezzük fel, hogy létezik olyan program(King) ami el tudja dönteni a beolvasott bemenetéről, hogy végtelenségig fog-e futni vagy sem.
+            (Ha a bemenet meg fog állni egy ponton futása során, akkor térjen vissza egy "Igen"-nel, ha nem, akkor egy "Nem"-mel.)
+            </para>
+          <para>
+              Hozzunk létre egy új programot(Doctor Landau) ami az előző program(King) szolgáltatásaira épül,
+              ha a King-től egy "Igen" választ kap vissza, akkor nem áll meg végtelen ciklusba lép, ha "Nem"-et, akkor megáll.
+          </para>
+          <para>
+            Innen már láthatjuk is az ellentmondást.
+          </para>
+          <para>
+              Mi van akkor ha ezt az új programot "megetetjük" önmagával, tehát magát kapja meg argumentumként?
+          </para>
+          <para> 
+            Két eset lehetséges:
+          </para>
+          <para>
+            Doctor Landau megáll, de ez csak akkor lehetséges, ha Doctor Landau(argumentum) nem áll meg, de az csak akkor ha Doctor Landau(argumentum argumentuma) megáll...</para>
+          <para>Doctor Landau nem áll meg, de ez csak akkor lehetséges, ha Doctor Landau(argumentum) megáll, de ez csak akkor ha Doctor Landau(argumentum argumentuma) nem áll meg...</para>
+          <para>Ellentmondásra jutottunk, King hazudott, azaz hibásan működik, tehát nem létezik erre a problémára megoldás.</para>
+         
+        <para>
+            Azaz, feltételeztük, hogy létezik ilyen program, de paradoxonra jutottunk, tehát hibás a feltételezésünk.
+        </para>
+    </section>        
+                
+    <section>
+        <title>Változók értékének felcserélése</title>
+        <para>
+            Írj olyan C programot, amely felcseréli két változó értékét, bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk">https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk</link>
+        </para>
+        <para>
+            Megoldás forrása:  
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...:
+        </para>
+    </section>                     
+
+    <section>
+        <title>Labdapattogás</title>
+        <para>
+            Először if-ekkel, majd bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül írj egy olyan programot, ami egy labdát pattogtat a karakteres konzolon! (Hogy mit értek
+            pattogtatás alatt, alább láthatod a videókon.)
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/labdapattogas">https://bhaxor.blog.hu/2018/08/28/labdapattogas</link>
+        </para>
+        <para>
+            Megoldás forrása:  
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>                     
+
+    <section>
+        <title>Szóhossz és a Linus Torvalds féle BogoMIPS</title>
+        <para>
+            Írj egy programot, ami megnézi, hogy hány bites a szó a gépeden, azaz mekkora az <type>int</type> mérete.
+            Használd ugyanazt a while ciklus fejet, amit Linus Torvalds a BogoMIPS rutinjában! 
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href=""></link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat... 
+        </para>
+    </section>                     
+
+    <section>
+        <title>Helló, Google!</title>
+        <para>
+            Írj olyan C programot, amely egy 4 honlapból álló hálózatra kiszámolja a négy lap Page-Rank 
+            értékét!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href=""></link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+    <section xml:id="Brun">
+        <title>100 éves a Brun tétel</title>
+        <para>
+            Írj R szimulációt a Brun tétel demonstrálására!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/xbYhp9G6VqQ">https://youtu.be/xbYhp9G6VqQ</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/Primek_R">https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/Primek_R</link>
+        </para>
+    </section>
+    
+    <section xml:id="bhax-textbook-feladatok-turing.MontyHall">
+        <title>A Monty Hall probléma</title>
+        <para>
+            Írj R szimulációt a Monty Hall problémára!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan">https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/MontyHall_R">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/MontyHall_R</link>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+</chapter>                
