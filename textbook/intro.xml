@@ -1,0 +1,76 @@
+<part xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <title>Bevezetés</title>
+    <partintro>
+        <para> 
+        </para>
+    </partintro>
+    <chapter>
+        <info>
+            <title>A munka</title>
+            <keywordset>
+                <keyword/>
+            </keywordset>
+        </info>
+        <section>
+            <title>Mi a programozás?</title>
+            <para>                  
+                 A könyv technikai okok miatt Debian alapú disztró alatt lett írva, mivel néhány crucial .deb csomagot nem volt időm átcsomagolni Antergosra, illetve az AUR-ban található
+                 szkriptek módosítások után sem voltak képesek a Debian-os csomagokat átalakítani. A legtöbb feladat ennek ellenére az Antergos disztrón lett kidolgozva, a már kiépített Dev környezet miatt.
+            </para>
+             <screen>
+            <![CDATA[
+                                          ./+o+-       tomi@cant0r
+                  yyyyy- -yyyyyy+      OS: Ubuntu 18.10 cosmic
+               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.18.0-15-generic
+           .++ .:/++++++/-.+sss/`      Uptime: 2h 21m
+         .:++o:  /++++++++/:--:/-      Packages: 2158
+        o:+o+:++.`..```.-/oo+++++/     Shell: bash
+       .:+o:+o/.          `+sssoo+/    Resolution: 1920x1080
+  .++/+:+oo+o:`             /sssooo.   DE: GNOME 
+ /+++//+:`oo+o               /::--:.   WM: GNOME Shell
+ \+/+o+++`o++o               ++////.   WM Theme: Adwaita
+  .++.o+++oo+:`             /dddhhh.   GTK Theme: Yaru [GTK2/3]
+       .+.o+oo:.          `oddhhhh+    Icon Theme: Yaru
+        \+.++o+o``-````.:ohdhhhhh+     Font: Ubuntu 11
+         `:o+++ `ohhhhhhhhyo++os:      CPU: Intel Core i7-6500U @ 4x 3.1GHz [39.0°C]
+           .o:`.syhhhhhhh/.oo++o`      GPU: HD Graphics 520
+               /osyyyyyyo++ooo+++/     RAM: 1968MiB / 7868MiB
+                   ````` +oo+++o\:    
+                          `oo++.      
+
+            ]]>
+             </screen>
+             <para>
+                 Legfelsőbb munkagép
+             </para>
+             <screen>
+            <![CDATA[
+                                   `.-/::/-``                
+                                .-/osssssssso/.               tomi@asuslaptop
+                               :osyysssssssyyys+-             OS: Antergos 
+                            `.+yyyysssssssssyyyyy+.           Kernel: x86_64 Linux 4.20.11-arch2-1-ARCH
+                           `/syyyyyssssssssssyyyyys-`         Uptime: 16m
+                          `/yhyyyyysss++ssosyyyyhhy/`         Packages: 1280
+                         .ohhhyyyyso++/+oso+syy+shhhho.       Shell: bash
+                        .shhhhysoo++//+sss+++yyy+shhhhs.      Resolution: 1920x1080
+                       -yhhhhs+++++++ossso+++yyys+ohhddy:     DE: KDE 5.55.0 / Plasma 5.15.1
+                      -yddhhyo+++++osyyss++++yyyyooyhdddy-    WM: KWin
+                     .yddddhso++osyyyyys+++++yyhhsoshddddy`   GTK Theme: Numix-Frost-Light [GTK2/3]
+                    `odddddhyosyhyyyyyy++++++yhhhyosddddddo   Icon Theme: Numix
+                    .dmdddddhhhhhhhyyyo+++++shhhhhohddddmmh.  Font: Bitstream Vera Sans Roman
+                    ddmmdddddhhhhhhhso++++++yhhhhhhdddddmmdy  CPU: Intel Core i7-6500U @ 4x 3.1GHz 
+                    [35.0°C]
+                    dmmmdddddddhhhyso++++++shhhhhddddddmmmmh  GPU: intel
+                    -dmmmdddddddhhyso++++oshhhhdddddddmmmmd-  RAM: 669MiB / 7868MiB
+                     .smmmmddddddddhhhhhhhhhdddddddddmmmms.  
+                       `+ydmmmdddddddddddddddddddmmmmdy/.    
+                          `.:+ooyyddddddddddddyyso+:.`       
+                    
+
+
+            ]]>
+             </screen>
+        </section>
+        
+    </chapter>                
+</part>  
