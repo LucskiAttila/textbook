@@ -1,0 +1,1290 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Welch!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Első osztályom</title>
+        <para>
+            Valósítsd meg C++-ban és Java-ban az módosított polártranszformációs algoritmust! A matek háttér 
+            teljesen irreleváns, csak annyiban érdekes, hogy az algoritmus egy számítása során két normálist
+            számol ki, az egyiket elspájzolod és egy további logikai taggal az osztályban jelzed, hogy van vagy
+            nincs eltéve kiszámolt szám.
+        </para>
+<programlisting language="C++">
+                <![CDATA[
+//polargen.cpp
+#include <cstdlib>
+#include <cmath>
+#include <ctime>
+#include <iostream>
+class PolarGen
+{
+public:
+  PolarGen ()
+  {
+    nincsTarolt = true;
+    std::srand (std::time (NULL));
+  }
+   ~PolarGen ()
+  {
+
+  }
+double kovetkezo ()
+{
+  if (nincsTarolt)
+    {
+      double u1, u2, v1, v2, w;
+      do
+	{
+	  u1 = std::rand () / (RAND_MAX + 1.0);
+	  u2 = std::rand () / (RAND_MAX + 1.0);
+	  v1 = 2 * u1 - 1;
+	  v2 = 2 * u2 - 1;
+	  w = v1 * v1 + v2 * v2;
+	}
+      while (w > 1);
+
+      double r = std::sqrt ((-2 * std::log (w)) / w);
+
+      tarolt = r * v2;
+      nincsTarolt = !nincsTarolt;
+
+      return r * v1;
+    }
+  else
+    {
+      nincsTarolt = !nincsTarolt;
+      return tarolt;
+    }
+}
+private:
+  bool nincsTarolt;
+  double tarolt;
+};
+
+int main (int argc, char **argv)
+{
+  PolarGen pg;
+
+  for (int i = 0; i < 10; ++i)
+    std::cout << pg.kovetkezo () << std::endl;
+
+  return 0;
+}
+]]>
+</programlisting>
+
+<programlisting language="Java">
+                <![CDATA[
+//PolarGenerator.java
+public class PolarGenerator {
+    
+    boolean nincsTarolt = true;
+    double tárolt;
+    
+    public PolarGenerator() {
+        
+        nincsTarolt = true;
+        
+    }
+    
+    public double kovetkezo() {
+        
+        if(nincsTarolt) {
+            
+            double u1, u2, v1, v2, w;
+            do {
+                u1 = Math.random();
+                u2 = Math.random();
+                
+                v1 = 2*u1 - 1;
+                v2 = 2*u2 - 1;
+                
+                w = v1*v1 + v2*v2;
+                
+            } while(w > 1);
+            
+            double r = Math.sqrt((-2*Math.log(w))/w);
+            
+            tarolt = r*v2;
+            nincsTarolt = !nincsTarolt;
+            
+            return r*v1;
+            
+        } else {
+            nincsTarolt = !nincsTarolt;
+            return tarolt;
+        }
+    }
+    
+    public static void main(String[] args) {
+        
+        PolarGenerator g = new PolarGenerator();
+        
+        for(int i=0; i<10; ++i)
+            System.out.println(g.kovetkezo());
+        
+    }
+
+]]>
+</programlisting>
+        <para>
+	A polargen.cpp fajlban a program elejen definialtuk a PolarGen osztalyt, melynek eloszor a private resze definialodik ahol deklaraltuk a nincsTarolt valtozot bool tipussal tehat logikai erteket vehet fel ugy igazat vagy hamisat es a tarolt double tipsu valtozot ugye lebegopontos szam lesz az erteke majd. A public reszben definialtuk az osztaly konstruktorat aminek a nevenek meg kell egyeznie az osztaly nevevel, inicializaljuk benne a nincsTarolt valtozot true ertekre es az std::srand (std::time (NULL)); koddal beaalitjuk hogy a rand fuggveny minden program futtataskor mas eredmenyeket adjon, mivel a time(NULL) az aktualis idot adja eredmenyul. Ezek hasznalatahoz szukseges include-olni a ctime.h es cstdlib.h fajlokat. Letrehozzuk az osztaly destruktorat is amely torli az objektumot es az osztalyt, a destruktor nevenek meg kell egyeznie az osztaly nevevel es ~ jeloljuk hogy destruktor a neve elott. Egy osztalynak tobb konstruktora lehet, de csak egy destruktora. A kovetkezo fuggvenyt definialjuk double visszateresi ertekkel melyben definialunk egy if feltetelt melyben ha a nincsTarolt valtozo erteke igaz akkor akkor a polartranszformacios algoritmus hajtodik vegre, a rand fuggveny altal generalt a RAND_MAX erteke ami minimum 32767. A rand fuggveny random szamokat general, az sqrt a gyokvonast vegzi, a log pedig a logaritmus fuggveny. Az v1 es v2 ertekeket addig szamlojuk a while ciklus do utasitas reszeben amig a negyzetosszeguk nagyobb mint 1, a v1 es v2 ertekeket az u1 es u2 valtozok ketszeresebol kivonva egyet szamitjuk ki. Az r valtozoba kiszamoljuk a w valtozo segitsegevel aminek az erteke 0 es 1 kozotti szam aminek a logaritmusa negativ igy negativ szammal kell megszoroznunk gyokvonas elott mivel valos szamoknal csak pozitiv gyokvonast ertelmezzuk. A v1 valtozo es az r szorzatat adjuk visszateresi ertekul a fuggvenynek, a masik valtozot mentjuk a tarolt valtozoba hasonloan es a nincsTarolt valtozo erteket ellenkezojere allitjuk a ! jellel azaz igazrol hamisra, mivel ha az if feltetelben a nincsTarolt nem igaz erteke azaz hamis erteke eseten lep az else agba ahol a visszateresi ertek a tarolt valtozo es atallitjuk igazra a nincsTarolt valtozo erteket. Az int main fuggvenyben a PolarGen osztalyhoz letrehozunk egy objektum tipusu valtozot pg neven. Ekkor a konstruktor meghivodik es letrejon a qp objektum. A for ciklussal 10-szer kiiratjuk a szabvanyos kimenetre a pq objektumra a kovetkezo fuggveny visszateresi erteket. Mivel a tarolt valtozoba mentjuk minden masodikat igy feleannyiszor kell hasznalni a generalasos reszt. A cmath.h fajlt a log fuggvenyhez hasznaljuk es az iostream.h header pedig a szabvanyos bemeneti es kimeneti fuggvenyek hasznalatahoz szukseges, jelen esetben a cout-hoz. A PolgarGenerator.java programban a random fuggveny a Maths osztaly fuggvenyeit hasznaljuk a szamitasokhoz az sqrt es log fuggvenyeket es a random fuggvenyt. A random fugggveny visszateresi erteke egy 0 es 1 kozotti szamot az 1 kivetelevel. Itt nem biztositjuk hogy ujrafuttataskor nem jon e ki majd ugyanaz a random szam. Itt nem hasznalunk private reszt, es a nincsTarolt valtozo erteket dekralalaskor megadjuk. A konstruktor hasznalatahoz a new operatorral letrekell  hoznunk egyet melynek erteket a g objektum tipusu valtozoba mentjuk. A System.out.println(g.kovetkezo()) fugvennyel kiiratjuk az ugye OlarGenerator osztaly g objektumahoz tartozo fuggveny ertekeit 10-szer.
+	</para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat... térj ki arra is, hogy a JDK forrásaiban a Sun programozói
+            pont úgy csinálták meg ahogyan te is, azaz az OO nemhogy nem nehéz, hanem éppen természetes neked!
+        </para>                
+    </section>        
+
+    <section>
+        <title>LZW</title>
+        <para>
+            Valósítsd meg C-ben az LZW algoritmus fa-építését!
+        </para>
+<programlisting language="C">
+                <![CDATA[
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+typedef struct binfa
+{
+  int ertek;
+  struct binfa *bal_nulla;
+  struct binfa *jobb_egy;
+
+} BINFA, *BINFA_PTR;
+
+BINFA_PTR
+uj_elem ()
+{
+  BINFA_PTR p;
+
+  if ((p = (BINFA_PTR) malloc (sizeof (BINFA))) == NULL)
+    {
+      perror ("memoria");
+      exit (EXIT_FAILURE);
+    }
+  return p;
+}
+
+extern void kiir (BINFA_PTR elem);
+extern void szabadit (BINFA_PTR elem);
+
+int
+main (int argc, char **argv)
+{
+  char b;
+
+  BINFA_PTR gyoker = uj_elem ();
+  gyoker->ertek = '/';
+  BINFA_PTR fa = gyoker;
+
+  while (read (0, (void *) &b, 1))
+    {
+      write (1, &b, 1);
+      if (b == '0')
+	{
+	  if (fa->bal_nulla == NULL)
+	    {
+	      fa->bal_nulla = uj_elem ();
+	      fa->bal_nulla->ertek = 0;
+	      fa->bal_nulla->bal_nulla = fa->bal_nulla->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->bal_nulla;
+	    }
+	}
+      else
+	{
+	  if (fa->jobb_egy == NULL)
+	    {
+	      fa->jobb_egy = uj_elem ();
+	      fa->jobb_egy->ertek = 1;
+	      fa->jobb_egy->bal_nulla = fa->jobb_egy->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->jobb_egy;
+	    }
+	}
+    }
+
+  printf ("\n");
+  kiir (gyoker);
+  extern int max_melyseg;
+  printf ("melyseg=%d", max_melyseg);
+  szabadit (gyoker);
+}
+
+static int melyseg = 0;
+int max_melyseg = 0;
+
+void
+kiir (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      ++melyseg;
+      if (melyseg > max_melyseg)
+	    max_melyseg = melyseg;
+      kiir (elem->bal_nulla);
+      for (int i = 0; i < melyseg; ++i)
+	    printf ("---");
+      printf ("%c(%d)\n", elem->ertek < 2 ? '0' + elem->ertek : elem->ertek,
+	      melyseg);
+      kiir (elem->jobb_egy);
+      --melyseg;
+    }
+}
+
+void
+szabadit (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      szabadit (elem->jobb_egy);
+      szabadit (elem->bal_nulla);
+      free (elem);
+    }
+}
+]]>
+</programlisting>
+	<para>
+	A strucut binfa koddal letrehozunk egy binfa nevu strukturat, a typedef szoval nem lesz szukseges a struct szo hasznalata a kesobbiekben az adott osztaly tipusu valtozok letrehozasakor. A binfa strukturaban dekralalunk egy egesz tipusu valtozot ertek neven, a strukturan belul szukseges a struct szot hasznalni mutatok letrehozasakor, jelen esetben letrehozunk ket binfa strukturara mutato  mutatot bal_nulla es jobb_egy neven. A struktura definialas vegen dekralalhatunk struktura tipusu valtozokat, jelen esetben a BINFA valtozot es a *BINFA_PTR strukturara mutato valtozot dekralaltuk a binfa vegen. Mivel typedef tipussal hoztuk letre a strukturat igy nem lesz lathato a kesobbiekben tehat a BINFA_PTR valtozot hasznaljuk binfa tipus definialaskor. Letrehozzuk a BINFA_PTR struktura tipussal az uj_elem fuggvenyt melyben letrehozzuk a p binfa tipusu valtozot es if feltetelben malloc segitsegevel foglalunk memoriat sizeof(BINFA) azaz binfa struktura tipusu BINFA valtozo meretnyit, ami 24 bajt. A malloc jelen esetben tipuskenyszerites nelkul is 24 bajt memoriat foglal. Ha sikeres a memoriafoglalas akkor a p valtozoba mentjuk a memoriacimet a foglalt memoriateruletnek, mivel ekkor a memoriacimet adja ertekul a malloc. Ha nem tudunk memoriat foglalni a malloc visszateresi erteke NULL tehat teljesul az if feltetel akkor a  perror ("memoria"); kod kiiratja a szabvanyos kimenetre a memoria sztringgel a hibauzenetet es  exit (EXIT_FAILURE); koddal pedig kilep a program. Az uj_elem fuggveny visszateresi erteke pedig a p valtozo erteke ami ugye a lefoglalt memoria cime. Az extern tipusu fuggvenyek lathaok es ujradefinialhatoak, ket ilyen fuggvenyt dekralalunk igy kiir es a szabadit neven void tipussal tehat nincs visszateresi ertekuk, parametereik egy binfa tipusu valtozo lesz, mivel a BINFA_PTR a binfa struktura mutatoja es az elem pedig BINFA_PTR tipusu valtozo. Az int main fuggvenyben dekralaltuk a b valtozot char tipussal, ami 1 bajt memoriat hasznal. Dekralaljuk a gyoker valtozot ami mutato tipusu valtozo lesz mivel a binfa pointeret adtuk tipusanak es inicializaljuk az uj_elem fuggvennyel aminek ugye a visszateresi erteke a lesz a gyoker erteke. A struktura erteket ha struktura tipusu mutatoval akarjuk elerni a -> operatort kell hasznalnunk. Igy a gyoker->ertek koddal tudjuk ertekul adni az ertek valtozonak '/' erteket amire ugye a gyoker valtozo mutat. A fa valtozot hasonloan deklaraljuk a gyoker valtozohoz es incicializaljuk a gyoker valtozo ertekevel. A while felteleben a read fuggveny van amivel a szabvanyos bemenetrol beolvasunk 1 bajtot es mentjuk a b valtozo void tipusu memoriacimevel ugye a b valtozoba. Mivel a read fuggveny visszateresi erteke a beolvasott bajtok szama vagy ha nincs tobb beolvasando bajt akkor 0, igy a while ciklus addig fut amig van beolvasando bajt ugye a while(1) es mas nagyobb termeszetes szamok vegtelen ciklust hoznak letre, a while(0) pedig kilep. A write fuggveny segitsegevel a szabvanyos kimenetre irunk 1 bajtot, a b memoriacimet felhasznalva a b valtozo erteket. Ha a beolvasott ertek 0 akkor fa->bal_nulla == NULL feltetel teljesul tehat nem letezik meg a fa->bal_nulla mutato tipusu valtozo akkor foglalunk neki helyet es ertekul adjuk a 0-t majd letrehozzuk a fa->bal_nulla mutato tipusu valtozoba bal_nulla es jobb_nulla agat NULL ertekekkel es a fa mutato tipusu valtozot a gyoker mutatora allitjuk. Ha a fa->bal_nulla valtozo erteke ugye mar 0 akkor a fa mutatot raalitjuk. A jobboldali agaknal ugyanigy van csak mutatokat forditva hasznaljuk es az erteket is. A  printf ("\n"); koddal kihagyunk egy sort, majd a kiir fuggvenyt hivjuk a gyoker valtozora es ujradekralaljuk a main fuggvenyen belul is a max_elyseg valtozot egesz tipusura az extern kifejezest hasznalva igy az utoljara adott erteket kapjuk a valtozo ertekent, nem a 0-t. Majd a printf fuggveny segitsegevel kiiratjuk az erteket a melyseg= sztring utan. Majd a szabadit fuggvenyt hivjuk a gyoker valtozora. Dekralaljuk es inicializaljuk a melyseg es max_melyseg globalis valtozokat 0 ertekekkel es a melyseg valtozo stati tipusu tehat a memoriaba van a program futasa alatt. A kiir fuggveny void tipusu igy nincs visszateresi erteke, ha a parameterkent adott BINFA_PTR tipusu mutato valotzo amit elemmel neveztunk el NULL erteku akkor veget er a program. Ha nem NULL erteku akkor noveljuk a melyseg szamat egyyel es egy if feltetel segitsegevel keressuk a max_melyseg erteket, majd hivjuk a kiir fuggvenyt a bal_nulla valtozora. A for ciklus segitsegevel kiirunk annyi --- vonalat amennyi a melyseg a printf fuggveny segitsegevel. A masik printf fuggveny tartalmaz egy kondicios feltetelt melynel ha a ? elotti resz igaz akkor a : elotti resz, ha hamis akkor a : utanni resz irodik ki a melyseg erteke elott. Majd a kiir fuggvenyt hivjuk a elem->jobb_egy valtozora majd a melyseg erteket csokkentjuk eggyel. Az elso if feltetel nyilvan a ertek valtozo miatt szukseges mert elobb  utobb NULL lesz a jobb_egy es a bal_nulla eseteben is. Hasonlokeppen van a szabadit void tipusu globalis fuggveny feltele is, itt felszabaditjuk a parameterkent adott valtozo altal foglalt helyet a free fuggvennyel majd minden jobb_egy es bal_nulla eseten is. A program 0 es nem 0 bemeneti ertekeket kezel. Mivel egymasba agyazottan vannak a kiir fuggvenyek igy az if feltetelnek az agak kialalkitasakoz szukseges.
+	</para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+    </section>        
+        
+    <section>
+        <title>Fabejárás</title>
+        <para>
+            Járd be az előző (inorder bejárású) fát pre- és posztorder is!
+        </para>
+<programlisting language="C">
+                <![CDATA[
+//preorder.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+typedef struct binfa
+{
+  int ertek;
+  struct binfa *bal_nulla;
+  struct binfa *jobb_egy;
+
+} BINFA, *BINFA_PTR;
+
+BINFA_PTR 
+uj_elem ()
+{
+  BINFA_PTR p;
+
+  if ((p = (BINFA_PTR) malloc (sizeof (BINFA))) == NULL)
+    {
+      perror ("memoria");
+      exit (EXIT_FAILURE);
+    }
+  return p;
+}
+
+extern void kiir (BINFA_PTR elem);
+extern void szabadit (BINFA_PTR elem);
+
+int
+main (int argc, char **argv)
+{
+  char b;
+
+  BINFA_PTR gyoker = uj_elem ();
+  gyoker->ertek = '/';
+  BINFA_PTR fa = gyoker;
+
+  while (read (0, (void *) &b, 1))
+    {
+      write (1, &b, 1);
+      if (b == '0')
+	{
+	  if (fa->bal_nulla == NULL)
+	    {
+	      fa->bal_nulla = uj_elem ();
+	      fa->bal_nulla->ertek = 0;
+	      fa->bal_nulla->bal_nulla = fa->bal_nulla->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->bal_nulla;
+	    }
+	}
+      else
+	{
+	  if (fa->jobb_egy == NULL)
+	    {
+	      fa->jobb_egy = uj_elem ();
+	      fa->jobb_egy->ertek = 1;
+	      fa->jobb_egy->bal_nulla = fa->jobb_egy->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->jobb_egy;
+	    }
+	}
+    }
+
+  printf ("\n");
+  kiir (gyoker);
+  extern int max_melyseg;
+  printf ("melyseg=%d", max_melyseg);
+  szabadit (gyoker);
+}
+
+static int melyseg = 0;
+int max_melyseg = 0;
+
+void
+kiir (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      ++melyseg;
+      if (melyseg > max_melyseg)
+	    max_melyseg = melyseg;
+      for (int i = 0; i < melyseg; ++i)
+	    printf ("---");
+      printf ("%c(%d)\n", elem->ertek < 2 ? '0' + elem->ertek : elem->ertek,
+	      melyseg);
+      kiir (elem->bal_nulla);
+      kiir (elem->jobb_egy);
+      --melyseg;
+    }
+}
+
+void
+szabadit (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      szabadit (elem->jobb_egy);
+      szabadit (elem->bal_nulla);
+      free (elem);
+    }
+}
+]]>
+</programlisting>
+
+<programlisting language="C">
+                <![CDATA[
+//posztorder.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+typedef struct binfa
+{
+  int ertek;
+  struct binfa *bal_nulla;
+  struct binfa *jobb_egy;
+
+} BINFA, *BINFA_PTR;
+
+BINFA_PTR 
+uj_elem ()
+{
+  BINFA_PTR p;
+
+  if ((p = (BINFA_PTR) malloc (sizeof (BINFA))) == NULL)
+    {
+      perror ("memoria");
+      exit (EXIT_FAILURE);
+    }
+  return p;
+}
+
+extern void kiir (BINFA_PTR elem);
+extern void szabadit (BINFA_PTR elem);
+
+int
+main (int argc, char **argv)
+{
+  char b;
+
+  BINFA_PTR gyoker = uj_elem ();
+  gyoker->ertek = '/';
+  BINFA_PTR fa = gyoker;
+
+  while (read (0, (void *) &b, 1))
+    {
+      write (1, &b, 1);
+      if (b == '0')
+	{
+	  if (fa->bal_nulla == NULL)
+	    {
+	      fa->bal_nulla = uj_elem ();
+	      fa->bal_nulla->ertek = 0;
+	      fa->bal_nulla->bal_nulla = fa->bal_nulla->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->bal_nulla;
+	    }
+	}
+      else
+	{
+	  if (fa->jobb_egy == NULL)
+	    {
+	      fa->jobb_egy = uj_elem ();
+	      fa->jobb_egy->ertek = 1;
+	      fa->jobb_egy->bal_nulla = fa->jobb_egy->jobb_egy = NULL;
+	      fa = gyoker;
+	    }
+	  else
+	    {
+	      fa = fa->jobb_egy;
+	    }
+	}
+    }
+
+  printf ("\n");
+  kiir (gyoker);
+  extern int max_melyseg;
+  printf ("melyseg=%d", max_melyseg);
+  szabadit (gyoker);
+}
+
+static int melyseg = 0;
+int max_melyseg = 0;
+
+void
+kiir (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      ++melyseg;
+      if (melyseg > max_melyseg)
+	    max_melyseg = melyseg;
+      kiir (elem->bal_nulla);
+      kiir (elem->jobb_egy);
+      for (int i = 0; i < melyseg; ++i)
+	    printf ("---");
+      printf ("%c(%d)\n", elem->ertek < 2 ? '0' + elem->ertek : elem->ertek,
+	      melyseg);
+      --melyseg;
+    }
+}
+
+void
+szabadit (BINFA_PTR elem)
+{
+  if (elem != NULL)
+    {
+      szabadit (elem->jobb_egy);
+      szabadit (elem->bal_nulla);
+      free (elem);
+    }
+}
+]]>
+</programlisting>
+	<para>
+	Az inorder bejarasnal eloszor a binaris fa legbaloldalibb reszfajanak gyokerenek baloldali erteket majd a jobboldalit veszzuk. Ezt rekurzivan hajtjuk vegre tehat minden csomopont eseten igy jarunk el, eloszor a baloldali elemet majd a csomopontot majd a jobboldali elemet dolgozzuk fel. Beolvasaskor csomopontokat hozunk letre amiknek van erteke bal es jobboldali mutatojuk, letrehozzuk egy csomopontot gyoker neven ekkor ugye / lesz az erteke es a ket mutato erteke 0. Ha a beolvasott ertek 0 akkor megnezzuk van e az aktualis csomopontnak baloldali mutatojanak erteke, ha van akkor beallitjuk e mutato ertek altal mutatott csomopontot aktualis csomopontnak, ezzel beolvastunk egy 0-t igy tomoritodik a fajl. Ha pedig nincs baloldali csomopontja akkor letrehozunk egyet melynek erteke 0 es beallitjuk a letrehozott csomopont mutatojat az aktualis csomopont baloldali mutatojanak majd az aktualis csomopont a gyoker lesz. 1 beolvasa eseten hasonloan hajtodik vegre. Az hogy milyen bejarasu a fa a kiir fuggveny hatarozza meg hogy milyen sorrendben hasznaljuk a kovetkezoket: a baloldali reszfara a kiir fuggvenyt, a jobboldali reszfara a kiir fuggvenyt, az aktualis csomopont ertekenek kiiratasat. Ha mar az aktualis csomopont erteke null azaz nincs bal vagy ugye jobb mutatoja nem hivodik ujra a kiir fuggveny hanem az azelott meghivott kiir fuggvenyek folytatodnak egyenkent mig le nem fut egy. A beagyazodas addig folytatodik igy amig ugye baloldalira hivva baloldali ujabb csompont letezik, jobboldali eseten jobboldali csomopont. Az posztorder rednezesnel addig megyunk a baloldali agakon lefele amig van ujabb baloldali ag, ha nincs akkor az utolsora megnezzuk van e jobboldali aga, ha nincs kiiratjuk a nullat majd visszafele haladva ugye marcsak a jobboldali agakat kell ellenoriznunk. A jobboldalinak lehet azonban ujabb bal es jobboldali aga. Tehat vagy gyokerbol legbaloldalibb agig ahol ellenorizzuk a jobbodlali agat ha van kiiratjuk a csompont erteket es ralepunk az ellenorzott agra ekkor ismet ahogy a gyokertol, vagy ha nincs kiirjuk a csomopont erteket es visszalepunk egyet ekkor pedig ismet a legbaloldalibb eleresetol. Preorder eseten kiiratjuk a gyoker erteket majd a baloldali elemeket ameddig vannak, majd ellenorizzuk van e jobboldali elem ha van ismet a baloldali elemek kiiratasa ha nincs akkor visszalepunk az elozo csomopontra ahol ismet ellenorzunk. Mindharom bejarasnal a jobboldali elem elott van a baloldali elem az algoritmusaban igy a kiiratas lehet elotte kozotte  mogotte mivel 3 bejarasi froma van a preorder inorder postorder.
+	</para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+    </section>        
+                        
+    <section>
+        <title>Tag a gyökér</title>
+        <para>
+            Az LZW algoritmust ültesd át egy C++ osztályba, legyen egy Tree és egy beágyazott Node
+            osztálya. A gyökér csomópont legyen kompozícióban a fával!
+        </para>
+<programlisting language="C++">
+                <![CDATA[
+#include <iostream>				
+#include <fstream>		
+
+class LZWBinFa
+{
+public:
+    
+   LZWBinFa ():fa (&gyoker)
+    {
+    }
+    ~LZWBinFa ()
+    {
+        szabadit (gyoker.egyesGyermek ());
+        szabadit (gyoker.nullasGyermek ());
+    }
+
+    void operator<< (char b) 
+    {
+        
+        if (b == '0')
+        {
+           
+            if (!fa->nullasGyermek ())	
+            {
+                Csomopont *uj = new Csomopont ('0');
+                fa->ujNullasGyermek (uj);
+                fa = &gyoker;
+            }
+            else			
+            {
+                
+                fa = fa->nullasGyermek ();
+            }
+        }
+       
+        else
+        {
+            if (!fa->egyesGyermek ())
+            {
+                Csomopont *uj = new Csomopont ('1');
+                fa->ujEgyesGyermek (uj);
+                fa = &gyoker;
+            }
+            else
+            {
+                fa = fa->egyesGyermek ();
+            }
+        }
+        
+    
+        
+        
+    }
+    
+    void kiir (void)
+    {
+        melyseg = 0;
+        kiir (&gyoker, std::cout);
+    }
+   
+    int getMelyseg (void);
+
+    friend std::ostream & operator<< (std::ostream & os, LZWBinFa & bf)
+    {
+        bf.kiir (os);
+        return os;
+    }
+    void kiir (std::ostream & os)
+    {
+        melyseg = 0;
+        kiir (&gyoker, os);
+    }
+    
+
+private:
+    class Csomopont
+    {
+    public:
+        Csomopont (char b = '/'):betu (b), balNulla (0), jobbEgy (0)
+        {
+        };
+        ~Csomopont ()
+        {
+        };
+        
+        Csomopont *nullasGyermek () const
+        {
+            return balNulla;
+        }
+        
+        Csomopont *egyesGyermek () const
+        {
+            return jobbEgy;
+        }
+        
+        void ujNullasGyermek (Csomopont * gy)
+        {
+            balNulla = gy;
+        }
+        
+        void ujEgyesGyermek (Csomopont * gy)
+        {
+            jobbEgy = gy;
+        }
+        char getBetu () const
+        {
+            return betu;
+        }
+
+    private:
+        char betu;
+        Csomopont *balNulla;
+        Csomopont *jobbEgy;
+        Csomopont (const Csomopont &); //másoló konstruktor
+        Csomopont & operator= (const Csomopont &);
+    };
+
+   
+    Csomopont *fa;
+ 
+    int melyseg;
+    
+    LZWBinFa (const LZWBinFa &);
+    LZWBinFa & operator= (const LZWBinFa &);
+
+    
+    void kiir (Csomopont * elem, std::ostream & os)
+    {
+        
+        if (elem != NULL)
+        {
+            ++melyseg;
+            kiir (elem->egyesGyermek (), os);
+            for (int i = 0; i < melyseg; ++i)
+                os << "---";
+            os << elem->getBetu () << "(" << melyseg - 1 << ")" << std::endl;
+            kiir (elem->nullasGyermek (), os);
+            --melyseg;
+        }
+    }
+    void szabadit (Csomopont * elem)
+    {
+       
+        if (elem != NULL)
+        {
+            szabadit (elem->egyesGyermek ());
+            szabadit (elem->nullasGyermek ());
+            delete elem;
+        }
+    }
+
+protected:			
+    Csomopont gyoker;
+    int maxMelyseg;
+
+    void rmelyseg (Csomopont * elem);
+};
+int
+LZWBinFa::getMelyseg (void)
+{
+    melyseg = maxMelyseg = 0;
+    rmelyseg (&gyoker);
+    return maxMelyseg - 1;
+}
+
+void
+LZWBinFa::rmelyseg (Csomopont * elem)
+{
+    if (elem != NULL)
+    {
+        ++melyseg;
+        if (melyseg > maxMelyseg)
+            maxMelyseg = melyseg;
+        rmelyseg (elem->egyesGyermek ());
+        // ez a postorder bejáráshoz képest
+        // 1-el nagyobb mélység, ezért -1
+        rmelyseg (elem->nullasGyermek ());
+        --melyseg;
+    }
+}
+
+void
+usage (void)
+{
+    std::cout << "Usage: lzwtree in_file " << std::endl;
+}
+
+int
+main (int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        usage ();
+        return -1;
+    }
+
+    char *inFile = *++argv;
+
+    std::fstream beFile (inFile, std::ios_base::in);
+    if (!beFile)
+    {
+        std::cout << inFile << " nem letezik..." << std::endl;
+        usage ();
+        return -2;
+    }
+
+    unsigned char b;		
+    LZWBinFa binFa;	
+
+
+    while (beFile.read ((char *) &b, sizeof (unsigned char)))
+    {
+
+       if(b=='0')
+	{
+	binFa << b;
+	}
+	else if(b=='1')
+	{
+	binFa << b;
+	}
+    }
+
+    std::cout<<binFa;
+    std::cout<< "depth = " << binFa.getMelyseg () << std::endl;
+    
+    beFile.close ();
+
+    return 0;
+}
+]]>
+</programlisting>
+	<para>
+	Tutoraltam Nagy Laszlo Mihalyt.	
+	</para> 
+	<para>
+	Letrehozzuk az LZWBinfa osztalyt, mivel az osztalyon kivul is hasznalni fogjuk a konstruktort objektum letrehozasara igy az osztaly public reszebe definialjuk az osztaly konstruktorat es destruktorat. Az alapetertelmezett osztalyresz a private, ami nem elerheto csak osztalyon belul vagy barat osztalyok szamara. Az osztaly referenciavaltozoit a konstruktor inicializacios listajaban inicializalhatjuk, jelen esetben a fa valtozo erteke a gyoker valtozo memoriacime lesz. Letrehozzuk a destruktort is melyben a szabadit fuggvenyt hivjuk a gyoker objektum egyesGyerek es nullasGyerek fuggvenyeire. Az operator fuggveny segitsegevel tulterhelhetjuk az operatorokat jelen esetben a duplakisebbkacsacsor operatort. Void tipusukent hasznaljuk az operator fuggvenyt igy visszateritesi ertek nelkul es char b parameterrel, azaz egy bajtot olvas be a szabvanyos kimenetrol. Ha a beolvasott bajt 0 akkor ha a fa valtozo nem mutat a nullasGyerek fuggvenyre akkor az Csomopont konstruktor segitsegevel es a new paranccsal letrehozunk egy uj objektumot melynek erteke 0 lesz es memoriacimet az uj valtozoba mentjuk. A fa valtozoval altal mutatott ujNullasGyermek fuggvenyt hivjuk uj valtozo parameterrel, majd a fa valtozo erteket visszaallitjuk a gyoker valtozo memoriacimere. A feltetel kulonben agaban pedig a fa valtozo erteket a fa valtozo altal mutatott egyesGyermek fuggveny visszateresi erteke. Az eredeti if feltetel else agat ehhez hasonlokeppen definialjuk csak a jobboldali aghoz tartozo fuggeny es valtozo nevekkel. Definialjuk a kiir fuggvenyt visszateresi ertek es void parameterrel, tehat nem adhatunk parametert neki, a melyseg valtozo ertket 0-ra allitja es meghivja a kiir fuggvenyt ket parameterrel a gyoker valtozo memoriacimevel es a cout fuggvennyel. Definialjuk a geMelyseg fuggvenyt egesz tipusu visszateresi ertekkel a fuggvenynek nem adhatunk parametert mivel void parameter tipsusu. Egy adott osztalyban definialunk friend tipussal fuggvenyeket masik osztalyokbol vagy masik osztalyokat akkor a masik osztaly fuggvenyei es a freind tipussal definialt fuggvenyek hozzaferhetnek az adott osztaly private reszenek elemeihez, jelen esetben az std kimeneti fuggvenyek es az duplakisebbkacsacsor operator fuggveny hozzaferhet az LZWBinfa privat reszehez. Az std::ostream end os egy ostream osztalybeli objektumot os-t jelol, az LZWBinfa end bf pedig egy LZWBinfa beli objektumot jelol a jelen esetben a bf-et. Ezek voltak a tulterhelt duplakisebbkacsacsor operator fuggveny parameterei melyben egy bf objektumban definialt kiir fuggvenyt hivunk os objektum parameterrel es a visszateresi erteke az os objektum. A kiir fuggvenyt definialjuk parameteresen a parametere egy ostream-beli objektum lesz jelen esetben az os es visszateresi erteke nincs, a melyseg valtozo erteket 0-ra allitjuk es meghivjuk a ket parameteres kiir fuggvenyt a gyoker valtozo memoriacimere es a megadott os objektumra. A privat reszben definialjuk a Csomopont osztalyt melynek publikus reszeben definialjuk a parametizalt konstruktort melynek parametere egy char tipusu valtozo / kezdoertekkel amelyet jelen esettben b-nek neveztunk. A konstruktorhoz tartozo inicilaizalt lista segitsegevel tudunk kezdoerteket adni az osztaly privat reszben dekralalt valtozoinak, a betu kezdoerteke a b valtozo erteke a balNulla es a jobbEgy valtozok pedig 0 azaz NULL erteket kapnak. Letrehozzuk a destruktorat is az osztalynak. Definialjuk a nullasGyermek fuggvenyt Csomopont osztaly mutato tipusu fuggvenyt mivel const tagu fuggveny igy nem valtoztathat a valtozok ertekein, ertekul adja a 0-t egy mutatoval ha van az aktualis csomopontnak. A visszateresi ertek nelkuli ujNullasGyermek fuggveny a parameterul kapott Csomopont osztaly mutato tipusu gy valtozo erteket ertekul adja a balNulla valtozonak. Az egyesGyermek es az ujEgyesGyermek fuggvenyek hasonloan mukodnek csak mas valtozonevekkel. A getBetu fuggveny char visszateresi erteku parameterementes const tipussal es visszadja a betu valtozo erteket. A privat reszben deklaraljuk a betu valtozot char tipussal es a balNulla es jobbEgy Csomopont mutato tipusu valtozokat. Majd letrehozunk egy masolo konstruktort es egy egy seged konstruktort. Letrehozzuk a fa valtozot Csomopont mutato tipussal, dekralaljuk int tipssal a melyseg, atlagosszeg, atlagdb valtozokat es double tipussal a szorasosszeg valtozot. Letrehozunk az LZWBinfa osztalyhoz is egy masolo es egy segedkondtruktort. Definialjuk a kiir fuggvenyt ket parameterrel az elso parametere egy Csomopont mutato tipusu elem nevu valtozo a masodik az ostream osztaly os objektuma. A fuggveny segitsegevel kiiratjuk a binfat inorder modon. A szabadit fugvennyel toroljuk a parameterul adott mutato tipusu valtozo egyes majd nullas gyermekeinek memoriacimet majd a valtozo altal foglalt memoriat is felszabaditjuk a delete fuggveny segitsegevel. A vedett reszben letrehozunk egy Csomopont osztalybeli objektumot gyoker neven es dekralaljuk int tipussal a maxMelyseg valtozot es double tipussal a szorzas es atlag valtozokat. Definialjuk void tipussal az rmelyseg fuggvenyt Csomopont mutato tipusu elem nevu valtozo parameterrel. A usage fuggveny segitsegevel hibauzenetet iratunk ki a szabvanyos kimenetre, pontosabban hasznalati utasitast. Az int main fuggvenyben vizsgaljuk hogyha a parancssori argumentmok szama nem ketto akkor hivjuk a usage fuggvenyt es kilepunk a main-bol. A bemeneti fajl mutatojat inicializaljuk az elso parancssori argumentum ertekevel. Az fstream osztaly segitsegevel a beFile objektumot beallitjuk bemenetnek az inFIle valtozo segitsegevel. Ha nincs beFile akkor hibauzenetet irunk ki hogy nem letezik... es kilepunk a programbol. Dekrealaljuk a b valtozot unsinged char tipussal igy a merete egy bajt es az ertekei csak pozitivak lehetnek 0 es 255 kotiek. Letrehozzuk az LZWBinfa osztaly binFa nevu objektumat es a kommentben bool tipusu valtozot fale ertekkel inicializaljuk. A read fuggveny segitsegevel while ciklusban bajtonkent olvasunk a a bementi fajlbol a b valtozoba amig van beolvasando bajt. A beolvasott bajtokat if feltetellel ellenorizve eldontjuk 0 vagy 1 es ez alapjan irjuk a binFa objektumba a b valtozot. A depth= sztringet kiirajtuk a cout fuggvennyel es az erteke a binfa legnagyobb melysege amit a getMelyseg fuggveny hataroz meg az rmelyseg fuggveny segitsegevel.
+	</para>
+       <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+    </section>        
+                
+    <section>
+        <title>Mutató a gyökér</title>
+        <para>
+            Írd át az előző forrást, hogy a gyökér csomópont ne kompozícióban, csak aggregációban legyen a fa
+            fával!
+        </para>
+<programlisting language="C++">
+                <![CDATA[
+#include <iostream>		
+#include <fstream>		
+
+class LZWBinFa
+{
+public:
+    
+   LZWBinFa ()
+    {	
+	fa = gyoker;
+    }
+    ~LZWBinFa ()
+    {
+       free(gyoker);
+    }
+
+
+    void operator<< (char b) 
+    {
+        
+        if (b == '0')
+        {
+           
+            if (!fa->nullasGyermek ())	
+            {
+                Csomopont *uj = new Csomopont ('0');
+                fa->ujNullasGyermek (uj);
+                fa = gyoker;
+            }
+            else			
+            {
+                
+                fa = fa->nullasGyermek ();
+            }
+        }
+       
+        else
+        {
+            if (!fa->egyesGyermek ())
+            {
+                Csomopont *uj = new Csomopont ('1');
+                fa->ujEgyesGyermek (uj);
+                fa = gyoker;
+            }
+            else
+            {
+                fa = fa->egyesGyermek ();
+            }
+        }
+    }
+    
+    void kiir (void)
+    {
+        melyseg = 0;
+        kiir (gyoker, std::cout);
+    }
+   
+    int getMelyseg (void);
+    double getAtlag (void);
+    double getSzoras (void);
+
+    friend std::ostream & operator<< (std::ostream & os, LZWBinFa & bf)
+    {
+        bf.kiir (os);
+        return os;
+    }
+    void kiir (std::ostream & os)
+    {
+        melyseg = 0;
+        kiir (gyoker, os);
+    }
+    
+
+private:
+    class Csomopont
+    {
+    public:
+        Csomopont (char b = '/'):betu (b), balNulla (0), jobbEgy (0)
+        {
+        };
+        ~Csomopont ()
+        {
+        };
+        
+        Csomopont *nullasGyermek () const
+        {
+            return balNulla;
+        }
+        
+        Csomopont *egyesGyermek () const
+        {
+            return jobbEgy;
+        }
+        
+        void ujNullasGyermek (Csomopont * gy)
+        {
+            balNulla = gy;
+        }
+        
+        void ujEgyesGyermek (Csomopont * gy)
+        {
+            jobbEgy = gy;
+        }
+        char getBetu () const
+        {
+            return betu;
+        }
+
+    private:
+        char betu;
+        Csomopont *balNulla;
+        Csomopont *jobbEgy;
+        Csomopont (const Csomopont &); //másoló konstruktor
+        Csomopont & operator= (const Csomopont &);
+    };
+
+   
+    Csomopont *fa;
+ 
+    int melyseg, atlagosszeg, atlagdb;
+    double szorasosszeg;
+    
+     LZWBinFa (const LZWBinFa &);
+     LZWBinFa & operator= (const LZWBinFa &);
+
+    
+    void kiir (Csomopont * elem, std::ostream & os)
+    {
+        
+        if (elem != NULL)
+        {
+            ++melyseg;
+            kiir (elem->egyesGyermek (), os);
+            for (int i = 0; i < melyseg; ++i)
+                os << "---";
+            os << elem->getBetu () << "(" << melyseg - 1 << ")" << std::endl;
+            kiir (elem->nullasGyermek (), os);
+            --melyseg;
+        }
+    }
+    void szabadit (Csomopont * elem)
+    {
+       
+        if (elem != NULL)
+        {
+            szabadit (elem->egyesGyermek ());
+            szabadit (elem->nullasGyermek ());
+            delete elem;
+        }
+    }
+
+protected:			
+    Csomopont * gyoker = new Csomopont();
+
+    int maxMelyseg;
+
+    void rmelyseg (Csomopont * elem);
+};
+int
+LZWBinFa::getMelyseg (void)
+{
+    melyseg = maxMelyseg = 0;
+    rmelyseg (gyoker);
+    return maxMelyseg - 1;
+}
+
+void
+LZWBinFa::rmelyseg (Csomopont * elem)
+{
+    if (elem != NULL)
+    {
+        ++melyseg;
+        if (melyseg > maxMelyseg)
+            maxMelyseg = melyseg;
+        rmelyseg (elem->egyesGyermek ());
+        // ez a postorder bejáráshoz képest
+        // 1-el nagyobb mélység, ezért -1
+        rmelyseg (elem->nullasGyermek ());
+        --melyseg;
+    }
+}
+
+void
+usage (void)
+{
+    std::cout << "Usage: lzwtree in_file " << std::endl;
+}
+
+int
+main (int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        usage ();
+        return -1;
+    }
+
+    char *inFile = *++argv;
+
+    std::fstream beFile (inFile, std::ios_base::in);
+    if (!beFile)
+    {
+        std::cout << inFile << " nem letezik..." << std::endl;
+        usage ();
+        return -2;
+    }
+
+    unsigned char b;		
+    LZWBinFa binFa;	
+
+
+    while (beFile.read ((char *) &b, sizeof (unsigned char)))
+    {
+
+       if(b=='0'||b=='1')
+	{
+	binFa << b;
+	}
+    }
+    std::cout<<binFa;
+    std::cout<< "depth = " << binFa.getMelyseg () << std::endl;
+    
+    beFile.close ();
+
+    return 0;
+}
+]]>
+</programlisting> 
+	<para>
+	A gyoker objektum nem lesz kompozicioban a fa mutato tipsusu valtozoval ami foglal egy Csomopont osztalybeli objektum meretu memoriat mivel most kulon hoztunk letre gyoker neven mutato tipusu valtozot igy a gyoker objektum a fa valtozo mellett a gyoker valtozo ertekekent is a memoriaba van, igy a gyoker objektum aggreagacioban all a fa valtozoval mivel nemcsak a fa valtozo hatarozza meg hogy meddig van a memoriaban a gyoker objektum. A Csomopont gyoker; helyett most Csomopont * gyoker = new Csomopont(); a gyoker nem egy Csomopont tipusu objektum neve lesz hanem egy Csomopont meretnyi memoriara mutato valtozo mely megadja a memoriacimet a lefoglalt helynek es kezdoertke egy Csomopont tipusu objektum. A fa mutato tipusu valtozonak ertekul adjuk a gyoker valtozo erteket igy a fa es a gyoker valtozo is ugyanarra az objektumra mutat ami ugye a memoriaba van. A new paranccsal foglalunk memoriat melynek a cimet tarolnunk kell a hasznalatahoz kulonben elvesz. A new altal foglalt memoriat torolnunk kell a delete paranccsal melynek parametere a torolni kivant memoria cime ami jelen esetben a gyoker vagy a fa is lehet. Mivel memoiriacimekkel dolgozunk a fuggvenyekben igy eddig az gyoker objektum memoriacimet az end paranccsal ertuk el, de mivel a most a gyoker a memoriacime az objektumnak igy torolnunk kell az end jeleket. A gyoker objektumot a stack memoriaba hoztuk letre igy az osztaly destruktora azt automatikusan tolri, de a jelen esetben a gyoker valtozot torolne csak a destruktor ami a heap-en foglalt memoria cime igy ezt kulon torolnunk kell kulonben elvesz. A destruktor tartalmat a szabadit(gyoker.egyesGyermek) es szabadit(gyoker.nullasGyermek)-rol modositjuk szabadit(gyoker)-re mivel torolnunk kell a gyoker altal foglaltat memoriat is igy nem a szabadit(gyoker->egyesGyermek) es szabadit(gyoker->nullasGyermek)-re irjuk at mivel ez csak a gyoker altal mutatott memoriacimeket torolne hanem a szabadit(gyoker)-re ami ugye torli a gyoker altal foglalt memoriat is. 
+	</para>
+        <para>
+            Megoldás videó: 
+        </para>
+        <para>
+            Megoldás forrása:  
+        </para>
+    </section>                     
+
+    <section>
+        <title>Mozgató szemantika</title>
+        <para>
+            Írj az előző programhoz mozgató konstruktort és értékadást, a mozgató konstruktor legyen a mozgató
+            értékadásra alapozva!
+        </para>
+	<programlisting language="C++">
+                <![CDATA[
+#include <iostream>		
+#include <fstream>		
+
+class LZWBinFa
+{
+public:
+    
+   LZWBinFa ()
+    {
+	fa = gyoker;
+    }
+    ~LZWBinFa ()
+    {
+       szabadit(gyoker);
+    }
+
+    LZWBinFa (LZWBinFa&& masik)
+    {
+        gyoker = nullptr;
+        *this = std::move(masik);
+    }
+    
+    LZWBinFa& operator=(LZWBlpinFa&& masik)
+    {
+        std::swap(gyoker, masik.gyoker);
+        return *this;
+    }
+ 
+    void operator<< (char b) 
+    {
+        
+        if (b == '0')
+        {
+           
+            if (!fa->nullasGyermek ())	
+            {
+                Csomopont *uj = new Csomopont ('0');
+                fa->ujNullasGyermek (uj);
+                fa = gyoker;
+            }
+            else			
+            {
+                
+                fa = fa->nullasGyermek ();
+            }
+        }
+       
+        else
+        {
+            if (!fa->egyesGyermek ())
+            {
+                Csomopont *uj = new Csomopont ('1');
+                fa->ujEgyesGyermek (uj);
+                fa = gyoker;
+            }
+            else
+            {
+                fa = fa->egyesGyermek ();
+            }
+        }
+    }
+    
+    void kiir (void)
+    {
+        melyseg = 0;
+        kiir (gyoker, std::cout);
+    }
+   
+    int getMelyseg (void);
+    double getAtlag (void);
+    double getSzoras (void);
+
+    friend std::ostream & operator<< (std::ostream & os, LZWBinFa & bf)
+    {
+        bf.kiir (os);
+        return os;
+    }
+    void kiir (std::ostream & os)
+    {
+        melyseg = 0;
+        kiir (gyoker, os);
+    }
+    
+
+private:
+    class Csomopont
+    {
+    public:
+        Csomopont (char b = '/'):betu (b), balNulla (0), jobbEgy (0)
+        {
+        };
+        ~Csomopont ()
+        {
+        };
+        
+        Csomopont *nullasGyermek () const
+        {
+            return balNulla;
+        }
+        
+        Csomopont *egyesGyermek () const
+        {
+            return jobbEgy;
+        }
+        
+        void ujNullasGyermek (Csomopont * gy)
+        {
+            balNulla = gy;
+        }
+        
+        void ujEgyesGyermek (Csomopont * gy)
+        {
+            jobbEgy = gy;
+        }
+        char getBetu () const
+        {
+            return betu;
+        }
+
+    private:
+        char betu;
+        Csomopont *balNulla;
+        Csomopont *jobbEgy;
+        Csomopont (const Csomopont &); //másoló konstruktor
+        Csomopont & operator= (const Csomopont &);
+    };
+
+   
+    Csomopont *fa;
+ 
+    int melyseg, atlagosszeg, atlagdb;
+    double szorasosszeg;
+    
+     LZWBinFa (const LZWBinFa &);
+     LZWBinFa & operator= (const LZWBinFa &);
+
+    
+    void kiir (Csomopont * elem, std::ostream & os)
+    {
+        
+        if (elem != NULL)
+        {
+            ++melyseg;
+            kiir (elem->egyesGyermek (), os);
+            for (int i = 0; i < melyseg; ++i)
+                os << "---";
+            os << elem->getBetu () << "(" << melyseg - 1 << ")" << std::endl;
+            kiir (elem->nullasGyermek (), os);
+            --melyseg;
+        }
+    }
+    void szabadit (Csomopont * elem)
+    {
+       
+        if (elem != NULL)
+        {
+            szabadit (elem->egyesGyermek ());
+            szabadit (elem->nullasGyermek ());
+            delete elem;
+        }
+    }
+
+protected:			
+    Csomopont * gyoker = new Csomopont();
+
+    int maxMelyseg;
+
+    void rmelyseg (Csomopont * elem);
+};
+int
+LZWBinFa::getMelyseg (void)
+{
+    melyseg = maxMelyseg = 0;
+    rmelyseg (gyoker);
+    return maxMelyseg - 1;
+}
+
+void
+LZWBinFa::rmelyseg (Csomopont * elem)
+{
+    if (elem != NULL)
+    {
+        ++melyseg;
+        if (melyseg > maxMelyseg)
+            maxMelyseg = melyseg;
+        rmelyseg (elem->egyesGyermek ());
+        // ez a postorder bejáráshoz képest
+        // 1-el nagyobb mélység, ezért -1
+        rmelyseg (elem->nullasGyermek ());
+        --melyseg;
+    }
+}
+
+void
+usage (void)
+{
+    std::cout << "Usage: lzwtree in_file " << std::endl;
+}
+
+int
+main (int argc, char *argv[])
+{
+    if (argc != 2)
+    {
+        usage ();
+        return -1;
+    }
+
+    char *inFile = *++argv;
+
+    std::fstream beFile (inFile, std::ios_base::in);
+    if (!beFile)
+    {
+        std::cout << inFile << " nem letezik..." << std::endl;
+        usage ();
+        return -2;
+    }
+
+    unsigned char b;		
+    LZWBinFa binFa;	
+
+
+    while (beFile.read ((char *) &b, sizeof (unsigned char)))
+    {
+
+       if(b=='0'||b=='1')
+	{
+	binFa << b;
+	}
+    }
+    std::cout<<binFa;
+    std::cout<< "depth = " << binFa.getMelyseg () << std::endl;
+    LZWBinFa binFa2 = std::move(binFa);
+    
+    std::cout << "\nEredeti fa mozgatás után:\n";
+    std::cout << binFa;
+
+    std::cout << "depth = " << binFa.getMelyseg () << std::endl;
+
+    std::cout << "\nMozgatással létrejött fa:\n\n";
+    std::cout << binFa2;
+
+    std::cout << "depth = " << binFa2.getMelyseg () << std::endl;
+    
+    beFile.close ();
+
+    return 0;
+}
+	]]>
+</programlisting> 
+	<para>
+	A LZWBinFa binFa2 = std::move(binFa); paranccsal letrehozunk egy LZWBinfa objektumot binFa2 neven melynek erteket egy masik LZWBinFa osztlaybeli objektummal tesszuk egyenlove igy masolo konstruktor hivodna, de jelen esetben a binFa objektumot parameterul adtuk az std::move fuggvenynek igy jobbertekke alakitottuk at igy a mozgato kontruktort hivja meg. A mozgato konstruktor definialasakor a parameterkent end end operatort hasznalunk end helyett. A masik objektum jelen esetben a binFa objektum lesz, a this az aktualis objektum azaz a BinFa2. A gyoker valtozo az aktualis objektum azaz a binFa2 valtozoja amit nullptr ertekre allitunk majd a this*-nak azaz az aktualis objektum memoriacimenek ertek adasara a binFa objektumot parameterkent felhasznalva meghivjuk az ertekado konstruktort melyben az std::swap fuggveny segitsegevel megcserljuk a ket objektum gyoker valtozojanak memoriacimet, majd visszateresi ertekkent megadjuk az aktualis objektum memoriacimet. Az ertekado konstruktor a mozgato konstruktoron belul hivodik meg. Igy a BinFa2 objektum kiiratasakor a gyoker valtozo hivasakor ugye mar a BinFa objektumet hasznaljuk igy arrol felepul a fa, de a BinFa objektum kiiratasakor a gyoker mar nem mutat sehova igy kilep a kiiratas fuggvenybol es nem rajzol ki semmit. Mivel a melyseget is a gyoker alapjan szamoljuk ott is hasnoloan kilep mivel ellenorzi hogy null e a mutato tipusu valtozo erteke.
+	</para>
+        <para>
+            Megoldás videó: 
+        </para>
+        <para>
+            Megoldás forrása:  
+        </para>
+    </section>                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

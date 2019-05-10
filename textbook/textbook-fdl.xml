@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://docbook.org/ns/docbook" 
+      xmlns:xlink="http://www.w3.org/1999/xlink" 
+      xmlns:xi="http://www.w3.org/2001/XInclude" 
+      version="5.0" xml:lang="hu">    
+    
+    <xi:include href="textbook-fdlinfo.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-fdlinfo.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>     
+        
+    <xi:include href="textbook-motto.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-motto.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>     
+    
+    <xi:include href="textbook-pre.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-pre.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include> 
+
+    <!-- 
+        <xi:include href="textbook-glossary.xml">
+            <xi:fallback>
+                <para>
+                    <emphasis>XInclude: textbook-glossary.xml file not found</emphasis>
+                </para>
+            </xi:fallback>
+        </xi:include> 
+    -->
+
+    <xi:include href="textbook-intro.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-glossary.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include> 
+
+    <xi:include href="textbook-feladatok.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-motto.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>                                                              
+
+    <xi:include href="textbook-feladatok2.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-motto.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>                                                              
+
+
+    <xi:include href="textbook-bib.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-bib.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>     
+          
+            <xi:include href="textbook-ack.xml">
+            <xi:fallback>
+                <para>
+                    <emphasis>XInclude: textbook-ack.xml file not found</emphasis>
+                </para>
+            </xi:fallback>
+        </xi:include>     
+
+</book>

@@ -1,0 +1,516 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Chomsky!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Decimálisból unárisba átváltó Turing gép</title>
+        <para>
+            Állapotátmenet gráfjával megadva írd meg ezt a gépet!
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+<programlisting language="c++"><![CDATA[
+#include<iostream>
+int main(){
+int v;
+std::cin>>v;
+for(int i=0;i<v;++i)
+std::cout<<"|";
+}
+]]>
+      </programlisting>
+	<para>	
+	Tutoraltam.
+	</para>
+        <para>
+           A decimalis szamrendszer a tizes szamrendszer amit napjainkban hasznalunk tiz szamjegybol all melyek a 0,1,2,3,4,5,6,7,8,9. Az unaris szamrendszer az egyes szamrendszer ami egy szamjegybol vagy valamilyen szimbolumbol is allhat. Az atvaltas tizesbol egyes szamrendszerbe ugy tortenik hogy annyi szimbolumot irunk amennyi a szam erteke. Az egyes szamrendszerbol alakult ki a tizes szamrendszer mivel igy egyszerubben leirhatjuk a nagyobb szamokat. A program C++ nyelvet hasznal igy iostream header file hasznalata szukseges mivel a szabvanyos be kimeneten dolgozunk. Az std::cin segitsegevel mentjuk a beirt sztringet egy v egesz tipusu valtozoba, majd for ciklus segitsegevel mely addig hatjsa vegre az tasitast mig a feltetel igaz, tehat az i egesz tipusu valtozo erteket nullatol noveljuk eggyel amig kisebb az erteke mint a v valtozo erteke. Az utasitasban pedig minden ciklusban kiirunk egy | szimbolumot a szabvanyos kimenetre az std::cout fuggveny segitsegevel. Turing geppel ramegyunk a bemenet utolso szamjegyere majd csokkentjuk az erteket a szamnak eggyel a megfelelo modon es az egyenloseg utan irunk egy szimbolumot minden ertek csokkenesnel mig a bemenet nem torlodik. A Turing gep a bemenetet feldolgozza, az adott allapotatmenet graf segitsegevel. Az allapotok kozott az utasitasok vegrehajtasa szerint lepdel, egy utasitasban megadjuk az aktualis bemeneti karaktert mire cserelje es merre lepjen.
+        </para>
+    </section>
+
+    <section>
+        <title>Az a<superscript>n</superscript>b<superscript>n</superscript>c<superscript>n</superscript> nyelv nem környezetfüggetlen</title>
+        <para>
+            Mutass be legalább két környezetfüggő generatív grammatikát, amely ezt a nyelvet generálja!
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+         A kornyezetfuggo nyevlekben a kepzesi szabalyok alakja lehet aAb -> agb ahol A nemterminalis, a-t es b-t terminalisok es nemterminalisok alkotjak, g-t nemterminalisok es terminalisok alkothatjak de ures szo is lehet. A kepzesi szabalyok alakja lehet meg a -> b ahol a-t es b-t nemterminalsik es terminalisok alkotjak es a-nak tartalmaznia kell legalabb egy nemterminalist es b hossza legalabb akkora mint a hossza. A kepzesi szabayok alakja lehet meg S -> a ahol S kezdo nemterminalis es a ures szo, ekkor S egyetlen szabaly jobboldalan sem szerepelhet. Az a az n-ediken*b az n-ediken*c az n-ediken*d az n-ediken azt jelenti hogy abc sorrendben vannak az a,b,c nemterminalisok azonos hatvanyon, ahanyadikon van annyi nemterminalist kell irni, nulladik eseten ures szo lesz.
+        </para>
+           <programlisting language="c">
+                <![CDATA[
+Nemtreminalisok:
+	S, X, Y
+
+Terminalisok:
+	a, b, c
+
+Helyettesiti szabalyok:
+	S -> uresszo	
+	S -> abc 
+	S -> aXbc 
+	Xb -> bX 
+	Xc -> Ybcc 
+	bY -> Yb 
+	aY -> aaX 
+	aY -> aa 
+]]>
+            </programlisting>
+
+ <programlisting language="c">
+                <![CDATA[
+Nemterminalisok:	
+	A, B, C
+
+Terminalisok:	
+	a, b, c
+
+Helyettesi szabalyok:
+	S -> A
+	S -> uresszo
+	A -> aAB 
+	A -> aC 
+	CB -> bCc 
+	cB -> Bc 
+	C -> bc
+]]>
+            </programlisting>
+    </section>
+
+    <section>
+        <title>Hivatkozási nyelv</title>
+        <para>
+            A <citation>KERNIGHANRITCHIE</citation> könyv C referencia-kézikönyv/Utasítások melléklete alapján definiáld
+            BNF-ben a C utasítás fogalmát!
+            Majd mutass be olyan kódcsipeteket, amelyek adott szabvánnyal nem fordulnak (például C89), mással (például C99) igen.
+        </para>
+	<para>
+	A BNF nyelvet kornyezet-fuggetlen nyelvek leirasara hasznaljuk, melyben az alabbi jeloleseket hasznaljuk: := szarmaztatasi szabaly megadasa, kisebb nagyobbkacsacsor szimbolum, | vagy, " " ` ` szoveg. A {}? kozt talalhato kifejezes opcionalis tehat az is lehetseges hogy nem letezik. A kodban a valtozok szimbolumkent szerepelnek a megfelelo jelolessel, mivel egy szimbolumnak egy erteke lehet egyszerre igy a vagy jelolessel defnialjuk ::=-vel. A // kommentelo jel hasznalata c90-ben hibauzenetet ad vissza, c99-ben pedig mukodik, ahogy a for ciklus sem mukodik inicializalt parameterekkel c90-ben, csak c99-ben.
+	</para>
+	 <programlisting language="c">
+                <![CDATA[
+<Utasitasok> ::= <cimkezett_utasitas>
+              | <kifejezesutasitas>
+              | <osszetett_utasitas>
+              | <kivalaszto_utasitas>
+              | <iteracios_utasitas>
+              | <vezerlesatado_utasitas>
+
+<cimkezett_utasitas> ::= <azonosito> : <utasitas>
+                      | case <allando_kifejezes> : <utasitas>
+                      | default : <utasitas>
+
+<kifejezesutasitas> ::= {<kifejezes>}? ;
+
+<osszetett_utasitas> ::= { {<deklaracios_lista>}? {<utasitas_lista>}? }
+<deklarációs-lista> ::= <deklaráció> | <deklarációs-lista> <deklaráció>
+<utasítás-lista> ::= <utasítás> | <utasítás-lista> <utasítás>
+
+
+<kivalaszto_utasitas> ::= if ( <kifejezes> ) <utasitas>
+                        | if ( <kifejezes> ) <utasitas> else <utasitas>
+                        | switch ( <kifejezes> ) <utasitas>
+
+<iteracios_utasitas> ::= while ( <kifejezes> ) <utasitas>
+                        | do <utasitas> while ( <kifejezes> ) ;
+                        | for ( {<kifejezes>}? ; {<kifejezes>}? ; {<kifejezes>}? ) <utasitas>
+
+<vezerlesatado_utasitas> ::= goto <azonosito> ;
+                   | continue ;
+                   | break ;
+                   | return {<kifejezes>}? ;
+]]>
+            </programlisting>
+
+            <programlisting language="c"><![CDATA[
+int main()
+{
+//a
+for(int i=0;i<10;++i){
+}
+}
+]]>
+            </programlisting>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+    <section>
+        <title>Saját lexikális elemző</title>
+        <para>
+            Írj olyan programot, ami számolja a bemenetén megjelenő valós számokat!
+            Nem elfogadható olyan megoldás, amely maga olvassa betűnként a bemenetet,
+            a feladat lényege, hogy lexert használjunk, azaz óriások vállán álljunk és ne kispályázzunk!
+        </para>
+            <programlisting language="c"><![CDATA[	
+%{
+#include <stdio.h>
+int realnumbers = 0;
+%}
+%%
+[0-9]*(\.[0-9]+)? {++realnumbers;
+printf("[Valos szam=%s]", yytext);}
+%%
+int main ()
+{
+yylex ();
+printf("Valos szamok szama =%d\n", realnumbers);
+return 0;
+}
+]]>
+            </programlisting>
+	<para>
+	A program hasznalatahoz telepiteni kell a flex csomagot, es forditashoz a lex kulcsszot es a -lfl kapcsolot kell hasznalni. A program elso reszeben c programhoz hasoloan definialjuk a hasznalatos valtozokat es includoljuk a fajlokat, majd a %% jelek kozti reszben regularis kifejezesekkel adjuk meg a szabalyokat amelyekre illeszkedo karaktereket keres a program. A [0-9] resz egy nulla es kilenc kozti egesz szamot jelent, a * karakter hasznalata azt jelenti hogy az elotte levo kifejezes nulla vagy tobbszor is szerepelhet egymas utan, a + karakter pedig hogy egy vagy tobbszor szerepelhet az elotte levo kifejezes, a \. a tizedes vesszot jelenti mivel valos szamra valo illeszkedest keresunk az nem feltetlenul egesz szam lesz. A ? karakter azt jelenti hogy az elotte levo kifejezes nulla vagy egyszer szerepelhet, mivel egesz szamok is valos szamok es egy tizedesreszuk van, ugye jelen esetben a ? hataskore az elotte levo zarojelek kozotti osszes kifejezes. Majd egy masik regularis kifejezessel szamoljuk a realnumbers valtozo ertekeben hany valos szamot talaltunk es kiirajtuk a printf fuggveny segitsegevel a talalt szamot, az yytext valtozo erteke a talalt kifejezes erteke ami jelen esetben a valos szam. Az int main reszben meghivjuk az yylex fuggvenyt mely futtatja a szabalyokkal a lexikalis elemzot majd miutan vegigment a szovegen kiiratjuk a valos szamok szamat. A program a szabalyokra nem illeszkedo kifejezeseket is megjeleniti a kimeneti csatornan ami alapbeallitas alapjan a szabvanyos kimenet, illetve a szabalyok altal modositott kifejezeseket is a szovegben. 
+	</para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Megoldás forrása:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+    <section>
+        <title>l33t.l</title>
+        <para>
+            Lexelj össze egy l33t ciphert!
+        </para>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+	A felx program elso reszeben azaz a %{ }% reszben definialjuk a program mukodesehez szukseges valtozokat, strukturakat es include-oljuk a megfelelo header file-okat. Definialunk egy L337SIZE macrot mely az l33d1c7 tomb sorainak szamat, mivel a sizeof fuggveny meghatarozza az adott tomb,struktura meretet bajtban, mivel char tipusu igy egy bajt. A strukturaban mindegyik valtozo erteke char tipusu igy az l337d1c7 tomb merete annyi ahany eleme van, a chiper struktura merete pedig a dekralalt valtozok merete ami egy sora az l337d1c7 tombnek igy a hanyados erteke a tomb oszlopainak a szama lesz. Majd a chipher struktura tipusu tombnek az ertekeit adjuk meg mellyen definialjuk hogy az adott karaktert majd milyen karakterekre cserelhetjuk le. A program masodik reszeben azaz %% %% reszben kifejezesek hasznalataval adjuk meg a flexeles szabalyait. A . karakter egy tetszoleges karakter a bemenetrol kiveve az ujsort melyet keresunk a szovegben, majd egy kifejezesben megadjuk hogy a illeszkedes eseten melyik karakterre cserelje at a beolvasott karaktert. Ehhez inicializaljuk a found valtozot nulla kezdoertekkel, melynek erteke illeszkedes eseten egyre valtozik es mivel minden karakter megfelel a szabalynak mivel minden egy tetszoleges karaktert keresunk igy nekunk kell kiiratni ha nem modsitjuk az erteket, mivel automatikusan csak a szabalynak nem megfelelot irna ki. A for ciklus segitsegevel minden sorban talalhato karakterre azaz a tomb c konstans reszere ellenorizzuk hogy illeszkedik e a beolvasott karakter ami az yytext valtozo tarol, mivel kisbetus karaktereket adtunk meg  es a karakter nagybetus megfelelojet is ugyanugy kezeljuk igy a tolower fuggvennyel kisbetuskent ellenorizzuk az illeszkedest. Majd ha teljesul a feltetel, tehat talaltunk egy illeszkedo karaktert akkor r egesz tipusu valtozoba generalunk egy random egesz szamot egy es szaz kozott, mivel a rand()/RAND_MAX+1.0 egy nulla es egy kozotti lebegopontos szamot general, ugye a +1.0 azert szukseges hogy ne egeszeket osszunk mert akkor mindig nullat kapnank, de mivel ezt megszoroztuk szazzal igy nulla es szaz kozti szamot kapunk szazat a nullat beleertve mivel egesz tipusura kerekitjuk az osztas utan es csak szazzal szoroztuk elotte a valos szamot. Majd hozzaadunk meg egyet a kapott hanyadoshoz hogy nagyobb szamot kapjunk mivel a felteteleket kilencven feletti szamokra is adtuk, igy a szam mar egy es szaz kozotti lesz. Majd if feltelekkel meghatarozzuk a generalt szam alapjan melyik karaktert irjuk ki a kimenetre a beolvasott helyett az l33d1c7tomb adott sorahoz tartozo leet valtozo megfelelo ertekevel. Majd a found valtozo erteket egyre allitjuk igy nem irjuk ki a mar kiirt karaktert megegyszer, majd a break fuggvennyel kilepunk a for ciklusbol. Majd egy if feltetel segitsegevel ellenorizzuk hogy a found valtozo erteke nulla e mert akkor kiiratjuk a beolvasott karaktert, mivel mindegyik karakter megfelel a szablynak igy nem ir ki egyet sem automatikusan. A main fuggvenyben az scrand segitsegevel melynek segitsegevel kezdoerteket adunk a rand fuggvenynek ami ugye utanna hivodik meg az yylex fuggvenyben, a time(NULL) fuggveny a program futasa ota eltelt miliszkundumokat adja meg, de mivel igy minden ujra inditaskor nagyabol akkor hivodna meg igy hozzaadjuk az aktualis processID-t azaz muveletazonositot ami a getpid fuggveny visszateresi erteke, igy nem inicializaljuk ugyanolyan ertekkel a rand fuggveny pszedo listajat ahonnan a szamokat generalja az automatikusan generalt RAND_MAX valtozo ertekeig. Mivel van visszateresi erteke main-nek igy addig hivodik ujra az yylex fuggveny amig van bemenet.
+	</para>
+            <programlisting language="c"><![CDATA[
+%{
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <time.h>
+  #include <ctype.h>
+
+  #define L337SIZE (sizeof l337d1c7 / sizeof (struct cipher))
+
+  struct cipher {
+    char c;
+    char *leet[4];
+  } l337d1c7 [] = {
+
+  {'a', {"4", "4", "@", "/-\\"}},
+  {'b', {"b", "8", "|3", "|}"}},
+  {'c', {"c", "(", "<", "{"}},
+  {'d', {"d", "|)", "|]", "|}"}},
+  {'e', {"3", "3", "3", "3"}},
+  {'f', {"f", "|=", "ph", "|#"}},
+  {'g', {"g", "6", "[", "[+"}},
+  {'h', {"h", "4", "|-|", "[-]"}},
+  {'i', {"1", "1", "|", "!"}},
+  {'j', {"j", "7", "_|", "_/"}},
+  {'k', {"k", "|<", "1<", "|{"}},
+  {'l', {"l", "1", "|", "|_"}},
+  {'m', {"m", "44", "(V)", "|\\/|"}},
+  {'n', {"n", "|\\|", "/\\/", "/V"}},
+  {'o', {"0", "0", "()", "[]"}},
+  {'p', {"p", "/o", "|D", "|o"}},
+  {'q', {"q", "9", "O_", "(,)"}},
+  {'r', {"r", "12", "12", "|2"}},
+  {'s', {"s", "5", "$", "$"}},
+  {'t', {"t", "7", "7", "'|'"}},
+  {'u', {"u", "|_|", "(_)", "[_]"}},
+  {'v', {"v", "\\/", "\\/", "\\/"}},
+  {'w', {"w", "VV", "\\/\\/", "(/\\)"}},
+  {'x', {"x", "%", ")(", ")("}},
+  {'y', {"y", "", "", ""}},
+  {'z', {"z", "2", "7_", ">_"}},
+
+  {'0', {"D", "0", "D", "0"}},
+  {'1', {"I", "I", "L", "L"}},
+  {'2', {"Z", "Z", "Z", "e"}},
+  {'3', {"E", "E", "E", "E"}},
+  {'4', {"h", "h", "A", "A"}},
+  {'5', {"S", "S", "S", "S"}},
+  {'6', {"b", "b", "G", "G"}},
+  {'7', {"T", "T", "j", "j"}},
+  {'8', {"X", "X", "X", "X"}},
+  {'9', {"g", "g", "j", "j"}}
+  };
+%}
+%%
+.	{
+	  int found = 0;
+	  for(int i=0; i<L337SIZE; ++i)
+	  {
+	    if(l337d1c7[i].c == tolower(*yytext))
+	    {
+	      int r = 1+(int) (100.0*rand()/(RAND_MAX+1.0));
+          if(r<91)
+	        printf("%s", l337d1c7[i].leet[0]);
+          else if(r<95)
+	        printf("%s", l337d1c7[i].leet[1]);
+	      else if(r<98)
+	        printf("%s", l337d1c7[i].leet[2]);
+	      else
+	        printf("%s", l337d1c7[i].leet[3]);
+
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if(!found)
+	     printf("%c", *yytext);
+	}
+%%
+int
+main()
+{
+  srand(time(NULL)+getpid());
+  yylex();
+  return 0;
+}
+]]></programlisting>
+
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+
+    <section>
+        <title>A források olvasása</title>
+        <para>
+            Hogyan olvasod, hogyan értelmezed természetes nyelven az alábbi kódcsipeteket? Például
+            <programlisting><![CDATA[if(signal(SIGINT, jelkezelo)==SIG_IGN)
+    signal(SIGINT, SIG_IGN);]]></programlisting>
+            Ha a SIGINT jel kezelése figyelmen kívül volt hagyva, akkor ezen túl is legyen
+            figyelmen kívül hagyva, ha nem volt figyelmen kívül hagyva, akkor a jelkezelo függvény
+            kezelje. (Miután a <command>man 7 signal</command> lapon megismertem a SIGINT jelet, a
+            <command>man 2 signal</command> lapon pedig a használt rendszerhívást.)
+        </para>
+
+        <caution>
+            <title>Bugok</title>
+            <para>
+                Vigyázz, sok csipet kerülendő, mert bugokat visz a kódba! Melyek ezek és miért?
+                Ha nem megy ránézésre, elkapja valamelyiket esetleg a splint vagy a frama?
+            </para>
+        </caution>
+
+        <orderedlist numeration="lowerroman">
+            <listitem>
+                <programlisting><![CDATA[if(signal(SIGINT, SIG_IGN)!=SIG_IGN)
+    signal(SIGINT, jelkezelo);]]></programlisting>
+		<para>
+		Ha az elozo signal fuggvenyben nem ignoroltuk a billentyuzetrol bemeno utasitasok ertelmezeset, akkor ezeket a jelkezelo fuggveny fogja kezelni. Akkor ignoraljuk a signal fuggveny elso parameterekent adott szignalt, ha az elozo signal fuggveny masodik parametere SIG_IGN volt, es a signal fuggveny visszateresi erteke a masodik parameterkent megadott szignalkezelo fuggveny elozo erteke.
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[for(i=0; i<5; ++i)]]></programlisting>
+		<para>
+		Egy for ciklus mely vegrehajtja az adott utasitasokat otszor, a ++i kifejezes eloszor noveli az ivaltozo erteket aztan allitja be a visszateresi erteket igy kulon valtozoban mentve az utasitast novelt erteket kapnank.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[for(i=0; i<5; i++)]]></programlisting>
+		<para>
+		Egy for ciklus mely vegrehajtja az adott utasitasokat otszor, az i++ kifejezes eloszor megadja a visszateresi erteket, aztan noveli a masik valtozo erteket igy kulon valtozoba mentve az utasitas a novelni kivant valtozo eredeti erteket kapnank vissza, de az ertek novelt lenne.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[for(i=0; i<5; tomb[i] = i++)]]></programlisting>
+		<para>
+		A for ciklus nem jol fogja kitolteni az ertekeket, tehat nem 0,1,2,3,4 ertekek kerulnek a tombbe, hanem az elso helyre random ertek kerul igy tomb[i-1]-et kell hasznalnunk, illetve ++i-t.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[for(i=0; i<n && (*d++ = *s++); ++i)]]></programlisting>
+		<para>
+		A for ciklus annyiszor fut amig i erteke nem lesz egyenlo az n valtozo ertekevel avgy a *d++=*s++ egyenloseg nem all fenn.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[printf("%d %d", f(a, ++a), f(++a, a));]]></programlisting>
+		<para>
+		A printf fuggvennyel kiirajtuk az f fuggveny parameterei altal visszadatott erteket.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[printf("%d %d", f(a), a);]]></programlisting>
+		<para>
+		A printf fuggvennyel kiiratjuk az f fuggveny visszateresi erteket a valtozora es az a valtozo erteket.
+		</para>
+            </listitem>
+            <listitem>
+
+                <programlisting><![CDATA[printf("%d %d", f(&a), a);]]></programlisting>
+		<para>		
+		A printf fuggvennyel kiiratjuk az f fuggveny visszateresi erteket az a valtozo memoriacimere es az a valtozo erteket.
+		</para>
+            </listitem>
+        </orderedlist>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+	   Tanulságok, tapasztalatok, magyarázat...
+        </para>
+    </section>
+
+    <section>
+        <title>Logikus</title>
+        <para>
+            Hogyan olvasod természetes nyelven az alábbi Ar nyelvű formulákat?
+        </para>
+        <programlisting language="tex">
+<![CDATA[
+$(\forall x \exists y ((x<y)\wedge(y \text{ prím})))$
+$(\forall x \exists y ((x<y)\wedge(y \text{ prím})\wedge(SSy \text{ prím})))$
+$(\exists y \forall x (x \text{ prím}) \supset (x<y)) $
+$(\exists y \forall x (y<x) \supset \neg (x \text{ prím}))$
+]]></programlisting>
+        <para>
+ Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/MatLog_LaTeX/matlog.tex">https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/MatLog_LaTeX/matlog.tex</link>
+        </para>
+
+        <para>
+            Megoldás videó:
+        </para>
+
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+          Az elso formulanak a jelentese hogy a primszamok szama vegtelen, a masodik formulaje hogy az ikerprimek szama vegtelen, a harmadik formulaje hogy a primszamok szama veges, a negyedik formulaje hogy a primszamok szama vegtelen.
+        </para>
+    </section>
+
+    <section>
+        <title>Deklaráció</title>
+
+        <para>
+            Vezesd be egy programba (forduljon le) a következőket:
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>egész</para>
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutató</para>
+            </listitem>
+            <listitem>
+                <para>egész referenciája</para>
+            </listitem>
+            <listitem>
+                <para>egészek tömbje</para>
+            </listitem>
+            <listitem>
+                <para>egészek tömbjének referenciája (nem az első elemé)</para>
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatók tömbje</para>
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatót visszaadó függvény</para>
+            </listitem>
+            <listitem>
+                <para>egészre mutató mutatót visszaadó függvényre mutató mutató</para>
+            </listitem>
+            <listitem>
+                <para>egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvény</para>
+            </listitem>
+            <listitem>
+                <para>függvénymutató egy egészet visszaadó és két egészet kapó függvényre mutató mutatót visszaadó, egészet kapó függvényre</para>
+            </listitem>
+        </itemizedlist>
+
+       <para>
+            Mit vezetnek be a programba a következő nevek?
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <programlisting><![CDATA[int a;]]></programlisting>
+		<para>
+		Az a-t egesz tipusu valtozokent dekralaltuk.
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *b = &a;]]></programlisting>
+		<para>
+		A b egesz tipusu mutato valtozot inicializaljuk az a valtozo memoriacimevel.		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int &r = a;]]></programlisting>
+		<para>
+		Az r egesz tipusu valtozo memoriacimenenek ertekul adjuk az a valtozojet.
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int c[5];]]></programlisting>
+		<para>
+		Letrehozunk egy ot egesz tipusu elembol allo tombot. 		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int (&tr)[5] = c;]]></programlisting>
+		<para>
+		A tr egesz tipusu tomb otodik elemenek memoriacimet a c valtozo memoriacimere allitjuk.		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *d[5];]]></programlisting>
+		<para>
+		Letrehozunk ot egesz tipusu memoriacimre mutato tombot d neven.		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *h ();]]></programlisting>
+		<para>
+		Definialunk egy h nevu fuggvenyt melynek visszateresi erteke egesz tipsu mutato.		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int *(*l) ();]]></programlisting>
+		<para>
+		Definialunk egy l nevu fuggvenyre mutato mutato melynek visszateresi erteke egesz tipusu mutato.		
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int (*v (int c)) (int a, int b)]]></programlisting>
+		<para>
+		Definialunk egy v nevu fugvenyre mutato mutatot melynek visszateresi erteke egesz tipusu, parametere egy c nevu fuggveny melynek visszateresi erteke egesz tipusu es parametere a es b egesz tipusu valtozok.
+		</para>
+            </listitem>
+            <listitem>
+                <programlisting><![CDATA[int (*(*z) (int)) (int, int);]]></programlisting>
+		<para>
+		Definialunk egy z nevu fuggvenyre mutato mutatot melynek parametere egesz tipus es mutatojanak visszateresi erteke egesz tipus es parametere ket egesz tipus.
+		</para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Megoldás videó:
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+    </para>
+    </section>
+</chapter>
