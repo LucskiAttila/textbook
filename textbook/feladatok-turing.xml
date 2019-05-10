@@ -299,6 +299,469 @@ int main(void)
         </para>
 	<para>
 	    Tanulságok, tapasztalatok, magyarázat... A static fuggvenyeket csak abba a fajlba hasznalhatjuk ahol definialtuk oket igy nem problema ha masik fajlba ugyanolyan nevu fuggvney van mert a C  fuggvenyek globalisak igy mas fajlba hasznalhatjuk oket. A gotoxy fuggveny a parameterkent megadott (x,y) koordinatara allitja a  kurzort. A fuggvenynek maximum koordinatai vannak x 80 y 25 igy csak 80x25 teruleten fog csak pattogni a labda. Az (1,1) a balfelso sarokba van de a labda az inicializalt x valtozo es y valtozo indul igy a pattogtatashoz a koorinatakat ellentetesen kell novelni csokkenteni. A 80 maximum miatt ha x=80-rol inditjuk a labdat szegmentalasi hibat kapunk. Minimum koordinata nincs igy y=1 es x kisebb mint 80-rol inditva a labdat a y=1 soron mozog balrol jobbra az x=1 es 80 koordinatak kozott. (0,0) es negativ koordinatakrol is szegmentalasi hibat kapunk. A szegmentalasi hibat kapunk futas kozbe ha y=25 vagy 24-rol inditjuk a labdat megfelelo x koordinataval ha eleri a program az y=23 koordinatat. Mivel az y erteket az egyy azt pedig a ty[y] vektor erteke hatarozza meg. A 25-nel indulva a kiirja a (x,25)-re az o-t majd noveli az y-t az egyy kezdoertekevel -1-1el igy lesz 24. Aminek lekeri az erteket ugye a ty[y]: ty[24]-et nemfog talalni igy a t[i]-t keresi majd melynek erteke 1 lesz. Az i erteke a tartozo for meg 0,1,...22 volt de utanna lefutott meg 3 for ciklus i valtozoval ujabb ertekekkel kozte a 24-el. Ugye ty[24]-nek nincs erteke, de van i=24 es ty[i]=1. A ty[y] for ciklusba a ty[i]=1 olyan i-ket kap ami megfelel a feltetelnek igy ezt nem ellenorzi mivel nincs utkozesbe sem semmilyen logikai i-re vonatkozo feltetellel a ty[i]=1-hez tartozo for ciklusba ugye a tobbi feltelt nem venne figyelembe.
+A vegtlen cikluson kivul eso 2 for ciklusban 1 erteket adunk a nem szelso sorok es oszlopok koordinatainak a szelsoke -1 lesz. A vektorok nevet a tobbi globalis valtozonal deklaraltuk. 2 random generalt ertekkel amit befolyasol az utanna levo for ciklus es hogy milyen nevet adtunk a vektornak. Kaphat 0 erteket is ekkor vizszintesen vagy fuggolegesen megy a labda egy vonalba. Lehet kiugratni is a kurzormozgato billentyukkel felugrott -13567-re 500-rol es ekkor felul a volnalig ment balra mert a felso sarkot nem erte el az odairt vonalaktol amit a vegtelen ciklusba irunk meg. A jobb oldali vonal volt a 0 attol ment jobbra a 79 ertekig. Ez is egyvonalba kozlekedett csak mashogyan mert elcsuszott a szelsokoordinatak ahogy irtam a vonalaktol. Ekkor is 0 volt az egyy igy viszszintesen pattogot. Peldaul Y=28-nal x+1-el pedig erdekes ivet jar a labda. A vegtelen ciklusba a 2 for ciklusba 2x35 vonalat irunk printf fuggveny es koze 2x4 helyen pedig az x es y koordinatakat kiiratjuk. Majd a kezdopontkent megadott (x,y) koordinatara allitjuk a labdat a gotoxy-val. Majd az x valtozo es y valtozo erteket az egyx valtozo es eggy valtozo ertekeivel noveljuk. Aztan a tx[x] vektor es ty[y] ertekeivel megszorozzuk az egyy valtozo es egyx valtozo igy sarkokra erve iranyt valtoztat a labda. Majd a usleep fuggveny hivva a megadott microsecundommal kesleltetjuk a labda minden mozgasat es hasznalatahoz kell a time.h header file. A (void)systeam("clear") fuggveny hasznalatahoz includo-lni kell a stdlib.h header filet es torli a konzol tartalmat. Igy marad minden lepes utan a vonal felul mert torles nelkul a kurzor lenne a balalso sarokba tehat elcsuszna. (1,1)-rol inditva is erdekesen pattog a labda. A gotoxy fuggveny deklarasanal a printf fuggveny megadhatjuk milyen karakkter leptetunk. Az int main() fuggveny futasa utan elvegzi a deklaraciot a gotoxy fuggveny vegett a printf fuggveny bevonalazza es kiirja az x es y-t az elso sorba majd a gotoxy fuggveny hivasakor. Ez tobb idot vesz igenybe igy ezalatt megprobalja ugyanonnan kiirni mind 3 printf fuggveny sikertelenul. Majd az elsot tudja irni az elso sor utan mert eszleli hogy /n van benne uj sort ker. Igy leirja a 20 Entert majd kovetkezik a Szokozos amit nemtud megkezdeni az elsosorbol mert mar odairta a korabbi vonalas for ciklus es a sor vegere meg az Enterest irta. Igy keresi a 3. printf fuggveny kiiratasi helyet ami mivel Entert tartalmaz 
+A printf fuggvenyek hasznalatanal az utolso printf fuggveny '\n'-re kell vegzodnie. A (void)system("clear") minden for ciklus vegen torli a terminalt igy ujra pozicionalja a definialt gotoxy. 
+	</para>  
+        <para>
+           A program különleges parancsai a "clear" (mely a egyetlen labdához) és a "usleep" (mely a "sima" pattogáshoz kell).
+        </para>
+    </section>
+
+    <section>
+
+        <title>Szóhossz és a Linus Torvalds féle BogoMIPS</title>
+        <para>
+            Írj egy programot, ami megnézi, hogy hány bites a szó a gépeden, azaz mekkora az <type>int</type> mérete.
+            Használd ugyanazt a while ciklus fejet, amit Linus Torvalds a BogoMIPS rutinjában!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href=""></link>
+        </para>
+        <para>
+          <programlisting language="c">
+            <![CDATA[
+            #include <stdio.h>
+int
+main (void)
+{
+  int m = 0;
+  int n = 0x01;
+  do
+    ++m;
+  while (n <<= 1);
+  printf ("A szo %d bites\n", h);
+  return 0;
+}
+}]]>
+</programlisting>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat... A 0x01 16-os szamrendszerben van x felosztja ketfele 2x4 szamjegyre az egyszerubb atvaltas miatt mert az egyes 4 szamjegyu tagok erteke 0 es 15 koze esik ami a 16-os szamrendszer szamkeszlete. A es F kozti angol abc betukkel jeloljuk a 10 es 15 kozti hexadecimalis szamjegyeket. A 0x01 az kettes szamrendszerben 0000-0001 ami tizes szamrendszerben 1. Tizes szamrendszerbe atvaltani ugy lehet hogy a szam vegerol eleje fele felirjuk egyesevel a szamrendszer amiben van hatvanyait 0-tol a szo hossza -1-ig majd egyenkent megszorozzuk a hozzatartozo szam ertekevel majd osszeadjuk a szorzatokat. A while ciklus csinalja az utanna irt utasitast jelen esetben noveli egyesevel az m valtozo erteket amig a while feltetel nem ad vissza hamis erteket. A while ciklus felteleben levo n balshift 1 = n fut n=0-ig amikor a feltetel hamis lesz mert akkor mar nem tudja shiftelni n-t igy a kovetekezo gepiszoba kerul at a shiftelt 1-es. A printf fuggveny"%d" resze azt jelenti hogy veszi a kovetkezo argumentumot es kiirja egesz szamkent. A gepi szo 32 bit igy az opreacios rendszerem 32 bites ami max 4GB memoriat tamogat. Az hogy hany bites operacios rendszert hasznalhatunk a legfokepp processzor bitszama befolyasolja. A printf fuggveny parameterebe h valtozo helyett n valtozo hasznaltam. A BogoMips a Linux operációs rendszerben nyújtott mérés amely relatív módon jelzi hogy a számítógép processzora milyen gyorsan fut.
+        </para>
+    </section>
+
+    <section>
+        <title>Helló, Google!</title>
+        <para>
+            Írj olyan C programot, amely egy 4 honlapból álló hálózatra kiszámolja a négy lap Page-Rank
+            értékét!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="">https://www.youtube.com/watch?v=P8Kt6Abq_rM</link>
+        </para>
+        <para>
+    <programlisting language="c">
+            <![CDATA[
+            #include <stdio.h>
+            #include <math.h>
+            void
+            kiir (double tomb[], int db)
+            {
+            int i;
+	for (i=0; i<db; ++i){</programlisting>
+		printf("%f\n",tomb[i]);
+  }
+  }
+
+double
+tavolsag (double PR[], double PRv[], int n){
+	int i;
+	double osszeg=0;
+	for (i = 0; i < n; ++i)
+	osszeg += (PRv[i] - PR[i]) * (PRv[i] - PR[i]);
+	return sqrt(osszeg);
+}
+
+void
+pagerank(double T[4][4]){
+	double PR[4] = { 0.0, 0.0, 0.0, 0.0 }; //ebbe megy az eredmény
+	double PRv[4] = { 1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0}; //ezzel szorzok
+	int i, j;
+	for(;;){
+		for (i=0; i<4; i++){
+			PR[i]=0.0;
+			for (j=0; j<4; j++){
+				PR[i] = PR[i] + T[i][j]*PRv[j];
+			}
+		}
+
+			if (tavolsag(PR,PRv,4) < 0.0000000001)
+				break;
+			for (i=0;i<4; i++){
+				PRv[i]=PR[i];
+			}
+	}
+
+	kiir (PR, 4);
+}
+
+int main (void){
+	double L[4][4] = {
+		{0.0,  0.0,      1.0/3.0,  0.0},
+		{1.0,  1.0/2.0,  1.0/3.0,  1.0},
+		{0.0,  1.0/2.0,  0.0,      0.0},
+		{0.0,  0.0, 	 1.0/3.0,  0.0}
+	};
+
+	double L1[4][4] = {
+		{0.0,  0.0,      1.0/3.0,  0.0},
+		{1.0,  1.0/2.0,  1.0/3.0,  0.0},
+		{0.0,  1.0/2.0,  0.0,      0.0},
+		{0.0,  0.0, 	 1.0/3.0,  0.0}
+	};
+
+	double L2[4][4] = {
+		{0.0,  0.0,      1.0/3.0,  0.0},
+		{1.0,  1.0/2.0,  1.0/3.0,  0.0},
+		{0.0,  1.0/2.0,  0.0,      0.0},
+		{0.0,  0.0, 	 1.0/3.0,  1.0}
+	};
+
+	printf("\nEredeti:\n");
+	pagerank(L);
+	printf("\nSemmire sem mutat:\n");
+	pagerank(L1);
+	printf("\nCsak magára mutat:\n");
+	pagerank(L2);
+	printf("\n");
+	return 0;
+}
+]]>
+</programlisting>
+        </para>
+        <para>
+            Tanulságok, tapasztalatok, magyarázat...
+            A PageRank algoritmus alapötlete, hogy azok a weblapok jobb minőségűek, amelyekre jobb minőségű lapok mutatnak.
+            A Google alapjai ezen a Pagerank rendszeren nyugodnak.
+        </para>
+        <para>
+A pagerank fuggveny bemenete 4x4-es matrix. Az L matrix oszloposan sztohasztikus minden oszlopanak osszege 1, ez szukseges feltele a helyes PageRank ertek szamitasnak. A PR vektorba menti a kijott eredmenyt amit a PRv kezdo PageRank ertekekbol szamol ki az L matrix segitsegevel. PRv kezdoerteke minden honlapnak 1/honlapokszama. Az aktualis honlapnak aminek PageRank erteket szamoljuk ugye a ramutato lapjara ahany lap mutat annyival le kell osztani a PageRank ertekeit majd osszeadni minden aktualis honlapra mutatoval ugyanigy. Az L-ben taroljuk hogy a mennyivel kell szorozni a PRv-t hogy hany lap mutat ra, csak reciprokkal szorzunk. Ezen literaciok szamat addig noveljuk mig nem fog sokat valtozni mar a PageRank erteke, ezt a tavolsag fuggvennyel merjuk. Ha nagyon minimalis az elteres akkor break-kel kilep a vetelen for ciklusbol es a kiir fuggveny jon. Egyebkent a PRv  vektorba atirja a PR ertekeit, a PR ertekeit pedig a vegtelen ciklus elso for ciklusa kinullazza. A tavolsag fuggveny az ujabb literacio es a literacio kulonbsegenek negyzetosszgenek gyoket hasonlitja a 0.0000000001-hez. Mivel az sqrt fuggvenyt hasznaljuk gyokvonashoz igy futtatni az -lm kapcsoloval kell es a hasznalatahoz szukseges includolni a math.h header filet. A kiir fuggveny pedig a parameterul adott vektornak a parameterul adott elemszamait irja ki 0-tol a parameterig. A tavolsag fuggveny pedig a paramterul adott 2 vektor a 3. parameterul adott egeszszamnal kisebb elemeitvel dolgozik. A printf %f paramtere a double tipusu kiratashoz szukseges. A kiir es a pagerank fuggveny void tipusu mivel nincs visszateresi az ot meghivo fuggveny fele. A tavolsag double tipusu mert nagy nemcsak egesz hanem lebegopontos szamokkal szamolunk es azt erdemenykent adja vissza a hivo fuggvenynek. Globalis fuggvenyek is.
+Az L1-ben a D nem mutat semmire igy nem noveli csak csokkenti az osszerteket igy a 0-hoz fognak tartani a PageRank ertekek. Az L3-ban a D ugye csokkenti az osszerteket minden ciklusban de noveli a sajtjat es tart az 1 fele. Az A, B, C osszerteke kb aranyosan csokken azzal al ertekkel amivel a D no ciklusonkent. Ha megy egy elemre muatatnak akkor visszakell muatatnia onamgan kivul valamelyikre.
+        </para>
+    </section>
+
+    <section xml:id="Brun">
+        <title>100 éves a Brun tétel</title>
+        <para>
+            Írj R szimulációt a Brun tétel demonstrálására!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://youtu.be/xbYhp9G6VqQ">https://youtu.be/xbYhp9G6VqQ</link>
+        </para>
+        <para>
+            <programlisting language="R"><![CDATA[
+library(matlab)
+stp <- function(x){
+    primes = primes(x)
+    diff = primes[2:length(primes)]-primes[1:length(primes)-1]
+    idx = which(diff==2)
+    t1primes = primes[idx]
+    t2primes = primes[idx]+2
+    rt1plust2 = 1/t1primes+1/t2primes
+    return(sum(rt1plust2))
+}
+
+x=seq(13, 1000000, by=10000)
+y=sapply(x, FUN=stp)
+plot(x,y,type="b")]]>
+        </programlisting>
+        </para>
+        <para>
+            A Brun-tétel azt mondja, hogy az ikerprímszámok reciprokaiból képzett sor összege véges vagy végtelen sor konvergens, ami azt jelenti, hogy ezek a törtek összeadva egy határt adnak ki pontosan vagy azt át nem lépve növekednek.
+            A program ezenek az ikerprímek összegzett reciprokaikat rajzolja ki.
+        </para>
+	<para>
+	A program R nyelven van kodolva igy futtatashoz R fordito szukseges, ahol telepitve van a matlab csomag. Ubuntuban install.packages("matlab") paranccsal tudjuk telepiteni miutan beleptunk az R paranccsal az R kornyezetbe. A program elso soraval belepunk a telpitett matlab konyvtarba. R nyelvben a valtozoknak nem kell tipust adni, az stp utan irt operatorral adunk erteket. Itt az stp valtozohoz rendeljuk a function(x) fuggvenyt igy stp(x)-el hasznalhatjuk mivel a function() beepitett fuggveny igy hasznalatahoz a hoazzarendelt nevvel tudunk hivatkozni. Letrehozzuk a primes vektort, ugye = operatorral hozunk letre vektorokat. A primes vektor ertekei a beipitett primes(x) fuggveny visszateresi ertekei. A primes fuggveny a megadott x paramterig irja ki a primeket x-et belertve. Tul nagy parameter megadasa esten hibauzenettel irja ki amennyit kitud es kijelzi hanyat nem tudott meg kiirni. Majd a diff vektorba mentjuk a kulonbsegeket a primes vektor 2. eleme es 1. elem kozt az utolso es tolso elotti elem koztig. R nyelvben a vektorok elemeinek a szama 1-tol indul. A diff meghatarozasara meg hasznaljuk a length bepitett fuggvenyt ami megadja az adott vektor elemeinek a szamat vagyis a legnagyobb ertek hivatkozasi szamat, sorszamat. R-ben 2 vektor kivonasa parameterenkent mukodik. A x:y operator az x-tol y-ig meno szabalyos sorozat aminek elemeit a primes fuggveny parameterkent egyesevel felhassznal. Az idx vektor tartalmazza az ikerprimek elso tagjanak indexet x-ig. Ezeket a t1primes vektorba iratjuk ki, a t2primesbe pedig az ikerprimen masodik tagjait. Az ikerprimek olyan primszamok melyeknek kulonbsege 2. A primszamok pedig olyan pozitiv egeszszamok melyeknek 2 kulonbozo osztoluk van 1 es onmaguk. A which bepitett fuggveny ellenorzi hogy mely indexu elemekre teljesul a felteltel ugye a diff vektor meyik eleme 2 es menti ezeket az idx vektorba. Az rt1plust2 vektorba osszeadjuk az ikerprimek reciprokait. A t1primes reciprokait es t2primes reciprokait vektorok elemeit elemenkent adjuk ossze es mentjuk az rt1plust2 vektorba. A reciprok a szam 1-gyel osztva. Majd return-be adjuk az rt1plust2 vektor elemeinek az osszeget ami az eredeti fuggveny visszateresi erteke lesz. A sum beepitettt fuggveny megadja a vektor elemeinek az ertekeinek az osszeget. Az x vektornak megadjuk az elemeit a seq(x,y,by=z) fuggvennyel ami szabayos sorozatot ad vissza x-tol y-ig z-vel novekedve. A sapply fuggvenyt hasznalnunk kell function(x) fuggvenyek, nem beiptett fuggvenyek kirajzoltatasa eseten. A sapply(x,FUN) meghatarozza a paraterul adott x koordinatakra a FUN fuggvenyhez rendelt fuggveny erteket es ezeket az ertekeket mentjuk az y vektorba. A plot fuggveny kirajzoltatja  egy kulon ablakba egy koordinatarendszerbe a megadott vektorokat elemnkent parositva. A type paramterbe megadhatunk tipusokat a "b" azt jelenti hogy koroket es vonalakat is rajzoljon.
+	</para>
+    </section>
+
+    <section xml:id="bhax-textbook-feladatok-turing.MontyHall">
+        <title>A Monty Hall probléma</title>
+        <para>
+            Írj R szimulációt a Monty Hall problémára!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan">https://bhaxor.blog.hu/2019/01/03/erdos_pal_mit_keresett_a_nagykonyvben_a_monty_hall-paradoxon_kapcsan</link>
+        </para>
+        <para>
+            <programlisting language="R"><![CDATA[
+kiserletek_szama=10000000
+kiserlet = sample(1:3, kiserletek_szama, replace=T)
+jatekos = sample(1:3, kiserletek_szama, replace=T)
+musorvezeto=vector(length = kiserletek_szama)
+
+for (i in 1:kiserletek_szama) {
+    if(kiserlet[i]==jatekos[i]){
+        mibol=setdiff(c(1,2,3), kiserlet[i])
+    }else{
+        mibol=setdiff(c(1,2,3), c(kiserlet[i], jatekos[i]))
+    }
+    musorvezeto[i] = mibol[sample(1:length(mibol),1)]
+}
+nemvaltoztatesnyer= which(kiserlet==jatekos)
+valtoztat=vector(length = kiserletek_szama)
+for (i in 1:kiserletek_szama) {
+    holvalt = setdiff(c(1,2,3), c(musorvezeto[i], jatekos[i]))
+    valtoztat[i] = holvalt[sample(1:length(holvalt),1)]
+}
+valtoztatesnyer = which(kiserlet==valtoztat)
+sprintf("Kiserletek szama: %i", kiserletek_szama)
+length(nemvaltoztatesnyer)
+length(valtoztatesnyer)
+length(nemvaltoztatesnyer)/length(valtoztatesnyer)
+length(nemvaltoztatesnyer)+length(valtoztatesnyer)]]>
+</programlisting>
+        </para>
+        <para>
+            A Monty Hall probléma lényege hogy amennyiben 3 "ajtó" közül választunk(1 ajtó mögött a "nyeremény"),egyet. Ezután kinyitnak egy ajtót amely üres; a probléma lényege pedig az ,hogy ha új ajtót választunk, akkor nagyobbak az esélyeink a sikerre.
+            A 21 – Las Vegas ostroma filmben is szóra került.
+        </para>
+	<para>
+             A kiserletek_szama egyelemu vektor melynek erteke meghatarozza a kiserltek szamat ami jelen esetben 10000000. A kiserlet vektort a sample fuggvennyel feltoltjuk adatokkal, ez tartalmazza a nyeremeny szamat ami 1 es 3 kozze eso szam egy kiserlet eseten, de kiserletek_szama mennyiseggel kell megismetelni annyi a vektor hossza. A sample(x,y,z) beepitett fuggveny ahol x helyere kerul az amik kozul general a fuggveny, y helyere hogy milyen hosszan generalja a szamsorozatot, z helyere replace=T vagy replace=F kerul. T-nel megengedett az ismetles a generalas soran, F eseten nem. 1:3 az 1 2 3 szamokat jelentik, ezekbol general kiserletek_szama-nyit. A jatekos vektort ugyanigy a random szamgeneralassal toltjuk fel, ez az amit a jatekos eloszor valaszt ki. Majd letrehozzuk a musorvezeto vektort a beepitett vector parancs segitsegevel. A vector parameterebe megadjuk a letrehozando vektor hosszat a length ertekevel ami a kiserletek szama. A musorvezeto vektort egy for ciklus segitsegevel toltjuk fel adatokkal. A for(i in 1:kiserletek_szama) azt jelenti hogy kiserletek_szama-nyiszor hajtodik vegre a for ciklus, a benne megadott utasitas. Az utasitas reszben toltjuk fel a musorvezeto vektort 2 lepesben a mibol vektor segitsegevel. Eloszor ellenorizzuk a hogy a jatekos a nyeremenyt valasztotta e az if utasitas segitsegevel, ha igen akkor a musorvezeto 2 kozul valaszthat mivel a nyeremenyt nem valaszthatja ki. A valasztasi lehetosegeket a mibol vektorba mentjuk amit a setdiff fuggveny segitsegevel hatarozzuk meg. A setdiff beepitett fuggveny kiszamolja a parameterkent adott adatok kulonbseget, jelen esetben kivonja az elso parameter ertekebol a masodik erteket. Vektort megadhatunk ugyhogy felsoroljuk az elemeit vagy meglevo vektorokat fuzhetunk ossze. Az if utasitas else agba kerul az ha nem a nyeremenyt valasztja a jatekos, ekkor a musorvezeto csak egyet valaszthat mivel a valasztasi lehetosegei kozt van a nyeremny amit ugye nem valaszthat. Igy ekkor a mibol vektor erteke az 1,2,3 szamokbol kivesszuk a jatekos altal valasztott ugye nem nyeremeny szamat es a kiserlet azaz a nyeremeny szamat. Majd a musorvezeto vektort feltoltjuk ugye egyenkent a for ciklussal a mibol vektor megfelelo elemeivel. Ugye ha egy elemu a mibol vektor tehat nem a nyeremenyt valasztotta a jatekos akkor a mibol vektor elso eleme lesz a musorvezeto i-edik erteke ugye minegyik valtozonal i-edik elemmel dolgozunk csak a mibol-nel nem a for cikluson belul. Ha pedig a nyeremenyt valasztotta a jatekos akkor a mibol vektor 2 elemu igy a sample fuggvennyel generalva 1 vagy 2-t donti el a mibol vektor hanyadik szamu eleme lesz a musorvezeto i-edik eleme. A nemvaltoztatesnyer vektorba mentjuk azokat az indexeket ahol a jatekos eloszor a nyeremnyt valasztotta. Ugye mindegyik vektorra passzolnak ezek az indexek. Kiiratasnal mivel sok adat volt igy soronkent 10 elemmel irja ki az elemeket legszelen pedig 10-el no soronkent a vektor indexe. A valtoztat vektort letrehozzuk a masodjara valasztasos esetekre ahol a jatekos ujat valaszt a musorvezeto valasztasa utan ebbe mentjuk az altala valasztott szamot ami egy lehet mivel az elozon kivul valaszt es a musorvezetojet sem valaszthatja. A musorvezeto vektorhoz hasonloan megadjuk a vektor meretet ez is ugyanakorra lesz mivel mindegyik esettel szamolunk. Az adatok feltoltese hasonloan segedvaltozoval tortenik jelen esetben a holvalt-tal, de itt ugy nemkell az if mert csak egy eset van. A valoztatesnyer vektort a nemvaltoztatesnyerhez hasonloan hozzuk letre, de ez azokat az indexeket tartalmazza ahol a jatekos ujabbat valasztva kivalasztotta a nyeremenyt. Ugye == operatort a logikai ellenorzesekre hasznaljuk, jelen esetben a which fuggveny paramereiben. Az sprintf fuggveny kiirja az elso parameterkent adott " " idezojelek kozti szoveget es koze a % jel megfelelo elhelyezesevel a masodik parameterkent megadott erteket, a % jel utan az i az egesz szamot jelenti. A length fuggvennyek pedig kiirjak a megadott vektorok meretet. A length(nemvaltoztatesnyer)+length(valtoztatesnyer) eredmenye a kiserletek_szama lesz.
+Mivel a musorvezeto mindig kivesz egy nemnyerot a harombol igy vagy nemvaltoztatassal vagy valtoztatassal mindenkepp nyersz. Ugye pont ellentetesen kell valasztani hogy igy vag ugy nyerj. Tehat a nagyobb esely arra van hogy nemnyerot valasztassz mert ekkor nyersz valtoztatassal 2/3. Igy arra pedig hogy nemvaltoztatassal nyerj 1/3 esely van mivel jot a nyerot kell kivalasztanod ehhez. A musorvezetonek a valasztasosnal van szerepe mert elintezi hogy biztos hogy nyerj. Igy az elso valasztas elott van eldontve valasztassz vagy nem. Jatek kozben dontve viszont 50-50%-nak tunhet a valasztas eselye. 
+	</para>
+    </section>
+
+</chapter>
+	{
+		 if(P-ben van végtelen ciklus)
+			return true;
+		 else
+			return false;
+	}
+
+	main(Input Q)
+	{
+		Lefagy(Q)
+	}
+}]]></programlisting>
+        <para>
+            A program futtatása, például akár az előző <filename>v.c</filename> ilyen pszeudókódjára:
+            <screen><![CDATA[T100(t.c.pseudo)
+true]]></screen>
+            akár önmagára
+            <screen><![CDATA[T100(T100)
+false]]></screen>
+            ezt a kimenetet adja.
+        </para>
+        <para>
+            A T100-as programot felhasználva készítsük most el az alábbi T1000-set, amelyben a
+            Lefagy-ra épőlő Lefagy2 már nem tartalmaz feltételezett, csak csak konkrét kódot:
+        </para>
+        <programlisting language="c"><![CDATA[Program T1000
+{
+
+	boolean Lefagy(Program P)
+	{
+		 if(P-ben van végtelen ciklus)
+			return true;
+		 else
+			return false;
+	}
+
+	boolean Lefagy2(Program P)
+	{
+		 if(Lefagy(P))
+			return true;
+		 else
+			for(;;);
+	}
+
+	main(Input Q)
+	{
+		Lefagy2(Q)
+	}
+
+}]]></programlisting>
+        <programlisting><![CDATA[]]></programlisting>
+        <para>
+            Mit for kiírni erre a <computeroutput>T1000(T1000)</computeroutput> futtatásra?
+
+            <itemizedlist>
+                <listitem>
+                    <para>Ha T1000 lefagyó, akkor nem fog lefagyni, kiírja, hogy true</para>
+                </listitem>
+                <listitem>
+                    <para>Ha T1000 nem fagyó, akkor pedig le fog fagyni...</para>
+                </listitem>
+            </itemizedlist>
+            akkor most hogy fog működni? Sehogy, mert ilyen <function>Lefagy</function>
+            függvényt, azaz a T100 program nem is létezik.
+        </para>
+        <para>
+            A feladatnak nincs megoldása mivel:
+            Ha a vizsgált program tartalmaz végtelen ciklust:
+             <function>Lefagy</function>=true és <function>Lefagy2</function>szintén true lesz.
+             Ha a vizsgált program nem tartalmaz végtelen ciklust:
+             <function>Lefagy</function>=false=><function>Lefagy2</function>=végtelen ciklus lesz.
+        </para>
+	<para>
+	Ilyen program nem letezik, de azt ellenorizhetjuk hogy van e eleg memoria a gepunkben a program hasznalatahoz mert ha elfogy a memoria akkor is lefagy.
+	</para>
+    </section>
+
+    <section>
+        <title>Változók értékének felcserélése</title>
+        <para>
+            Írj olyan C programot, amely felcseréli két változó értékét, bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül!
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk">https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk</link>
+        </para>
+        <para>
+            <programlisting language="c">
+                <![CDATA[
+            #include <stdio.h>
+
+int main()
+{
+	int a = 2;
+	int b = 1;
+	b = b-a;
+	a = a+b;
+	b = a-b;
+	printf(a);
+	printf(b);
+	return 0;
+}
+]]>
+</programlisting>
+        </para>
+        <para>
+                        Tanulságok, tapasztalatok, magyarázat...  A printf fuggveny I/O típusú így include-olni kell a stdio-t. A két változó deklarálása és inicializálása után a b valtozo értékét módosítjuk arra hogy a b valtozo értéke mennyivel nagyobb az a valtozo értékénél. E különbözet és az a valtozo értékének összegére módosítjuk az a valtozo értékét így az a valtozo értéke a b valtozo inicializált értéke lesz. Majd a b valtozo értékét módosítjuk úgy hogy a valtozo értékéből ami az inicializált b valtozo kivonjuk a b valtozo értékét ami a különbözet így a b valtozo értéke a a valtozo inicializált értéke lesz. Majd a printf fuggveny használva kiíratjuk az a valtozo értékét és a b valtozo értékét és ellenőrizzük a cserét.
+        </para>
+    </section>
+
+    <section>
+        <title>Labdapattogás</title>
+        <para>
+            Először if-ekkel, majd bármiféle logikai utasítás vagy kifejezés
+            nasználata nélkül írj egy olyan programot, ami egy labdát pattogtat a karakteres konzolon! (Hogy mit értek
+            pattogtatás alatt, alább láthatod a videókon.)
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/labdapattogas">https://bhaxor.blog.hu/2018/08/28/labdapattogas</link>
+        </para>
+        <para>
+                 <programlisting language="c"><![CDATA[
+#include <stdio.h>
+#include <curses.h>
+#include <unistd.h>
+
+int main ( void )
+{
+    WINDOW *ablak;
+    ablak = initscr ();
+
+    int x = 0;
+    int y = 0;
+
+    int xnov = 1;
+    int ynov = 1;
+
+    int mx;
+    int my;
+
+    for ( ;; ) {
+
+        getmaxyx ( ablak, my , mx );
+
+        mvprintw ( y, x, "O" );
+
+        refresh ();
+        usleep ( 100000 );
+
+        clear();
+
+        x = x + xnov;
+        y = y + ynov;
+
+        if ( x>=mx-1 ) {
+            xnov = xnov * -1;
+        }
+        if ( x<=0 ) {
+            xnov = xnov * -1;
+        }
+        if ( y<=0 ) {
+            ynov = ynov * -1;
+        }
+        if ( y>=my-1 ) {
+            ynov = ynov * -1;
+        }
+    }
+    return 0;
+}]]>
+</programlisting>
+        <para>
+	    Tanulságok, tapasztalatok, magyarázat... Az <fuction>int main ( void )</fuction> <paramter>void</paramter> azt jelenti hogy a <fuction>main</fuction> csak parameter nelkul lehet hivni. A <fuction>WINDOW *initscr()</fuction> curses modba kapcsolja a terminalt. Mivel ncurses tipusu igy hasznalathoz include-olni kell a curses.h-t es forditaskor -lncurses parancsot kell hasznalni. Az <variable>ablak</variable> arra szukseges hogy az <fuction>initscr</fuction> tudjunk hivatkozi. A <loop>for</loop> vegtelen ciklus igy addig fut amig ^C billentyuparanccsal le nem allitjuk. A <fuction>getmaxyx</fuction> megadja az ablak maximum oszlop es sorszamat ami az <variable>my</variable> es <variable>mx</variable>. Mivel nem inicializaltuk ezen valtozokat igy a teljes terminalon lehetnek koordinatak es egerrel allithatjuk a terminal meretet. Az <function>mvprintw</function> <variable>y</variable> es <variable>x</variable> meghatarozza a kurzor helyzetet es a 3. parameterkent megadott szoveget ideiglenes taroloba menti. E tarolot a <function>refresh</function> kiuriti es az adatait megjeneliti a terminalba. A <function>usleep</function> keslelteti a ciklusok vegrehatasi idejet a parameterkent megadott microsekundummal es hasznalatahoz include-olni kell az unistd.h-t. A <function>clear</function> torli a terminal tartalmat. Majd az <variable>x</variable> es <variable>y</variable> noveljuk az <variable>xnov</variable> <variable>ynov</variable> melynek ertekeit inicializltuk. Az <variable>x</variable> es <variable>y</variable> megadja a kezdokoordinatakat es a <variable>xnov</variable> es <variable>ynov</variable> a mozgas iranyat. Az <statement>if</statement> ellenorzik hogy az <variable>x</variable> es <variable>y</variable> ertekei nagyobb vagy egyenloek e a <variable>mx</variable> es <variable>my</variable> ertekeinel vagy kisebb vagy egyenloek e a 0-nal. Ha teljeseul a feltelel <variable>x</variable> akkor az <variable>xnov</variable> erteke valt elojelet ha az <variable>y</variable> teljesul akkor az <variable>ynov</variable> erteke valt elojelet. A labda indulasi koordinatait az <variable>x</variable> es <variable>y</variable> ertekei hatarozzak meg mozgasat az <variable>xnov</variable> es <variable>ynov</variable> ertekei es az <variable>x</variable> <variable>y</variable> <variable>xnov</variable> <variable>ynov</variable> modositasa. 
+        </para>
+A feladat if nélkül:
+<programlisting language="c"><![CDATA[
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+static void gotoxy(int x, int y)
+{
+  int i;
+  for(i=0; i<y; i++) printf("\n");
+  for(i=0; i<x; i++) printf(" ");
+  printf("o\n");
+
+}
+
+void usleep(int);
+int main(void)
+{
+
+  int egyx=1;
+  int egyy=-1;
+  int i;
+  int x=10;
+  int y=20;
+  int ty[23];
+  int tx[80];
+
+  for(i=0; i<23; i++)
+       ty[i]=1;
+
+  ty[1]=-1;
+  ty[22]=-1; 
+
+  for(i=0; i<79; i++)
+       tx[i]=1;
+
+  tx[1]=-1;
+  tx[79]=-1;
+
+  for(;;)
+  {
+    for(i=0; i<36; i++)
+       printf("_");
+
+    printf("x=%2d", x);
+    printf("y=%2d", y);
+
+    for(i=0; i<=35; i++)
+         printf("_");
+
+    (void)gotoxy(x,y);
+
+    x+=egyx;
+    y+=egyy;
+
+    egyx*=tx[x];
+    egyy*=ty[y];
+
+    usleep (200000);
+    (void)system("clear");
+  }
+}]]>
+</programlisting>
+        </para>
+	<para>
+	    Tanulságok, tapasztalatok, magyarázat... A static fuggvenyeket csak abba a fajlba hasznalhatjuk ahol definialtuk oket igy nem problema ha masik fajlba ugyanolyan nevu fuggvney van mert a C  fuggvenyek globalisak igy mas fajlba hasznalhatjuk oket. A gotoxy fuggveny a parameterkent megadott (x,y) koordinatara allitja a  kurzort. A fuggvenynek maximum koordinatai vannak x 80 y 25 igy csak 80x25 teruleten fog csak pattogni a labda. Az (1,1) a balfelso sarokba van de a labda az inicializalt x valtozo es y valtozo indul igy a pattogtatashoz a koorinatakat ellentetesen kell novelni csokkenteni. A 80 maximum miatt ha x=80-rol inditjuk a labdat szegmentalasi hibat kapunk. Minimum koordinata nincs igy y=1 es x kisebb mint 80-rol inditva a labdat a y=1 soron mozog balrol jobbra az x=1 es 80 koordinatak kozott. (0,0) es negativ koordinatakrol is szegmentalasi hibat kapunk. A szegmentalasi hibat kapunk futas kozbe ha y=25 vagy 24-rol inditjuk a labdat megfelelo x koordinataval ha eleri a program az y=23 koordinatat. Mivel az y erteket az egyy azt pedig a ty[y] vektor erteke hatarozza meg. A 25-nel indulva a kiirja a (x,25)-re az o-t majd noveli az y-t az egyy kezdoertekevel -1-1el igy lesz 24. Aminek lekeri az erteket ugye a ty[y]: ty[24]-et nemfog talalni igy a t[i]-t keresi majd melynek erteke 1 lesz. Az i erteke a tartozo for meg 0,1,...22 volt de utanna lefutott meg 3 for ciklus i valtozoval ujabb ertekekkel kozte a 24-el. Ugye ty[24]-nek nincs erteke, de van i=24 es ty[i]=1. A ty[y] for ciklusba a ty[i]=1 olyan i-ket kap ami megfelel a feltetelnek igy ezt nem ellenorzi mivel nincs utkozesbe sem semmilyen logikai i-re vonatkozo feltetellel a ty[i]=1-hez tartozo for ciklusba ugye a tobbi feltelt nem venne figyelembe.
 A vegtlen cikluson kivul eso 2 for ciklusban 1 erteket adunk a nem szelso sorok es oszlopok koordinatainak a szelsoke -1 lesz. A vektorok nevet a tobbi globalis valtozonal deklaraltuk. 2 random generalt ertekkel amit befolyasol az utanna levo for ciklus es hogy milyen nevet adtunk a vektornak. Kaphat 0 erteket is ekkor vizszintesen vagy fuggolegesen megy a labda egy vonalba. Lehet kiugratni is a kurzormozgato billentyukkel felugrott -13567-re 500-rol es ekkor felul a volnalig ment balra mert a felso sarkot nem erte el az odairt vonalaktol amit a vegtelen ciklusba irunk meg. A jobb oldali vonal volt a 0 attol ment jobbra a 79 ertekig. Ez is egyvonalba kozlekedett csak mashogyan mert elcsuszott a szelsokoordinatak ahogy irtam a vonalaktol. Ekkor is 0 volt az egyy igy viszszintesen pattogot. Peldaul Y=28-nal x+1-el pedig erdekes ivet jar a labda. A vegtelen ciklusba a 2 for ciklusba 2x35 vonalat irunk printf fuggveny es koze 2x4 helyen pedig az x es y koordinatakat kiiratjuk. Majd a kezdopontkent megadott (x,y) koordinatara allitjuk a labdat a gotoxy-val. Majd az x valtozo es y valtozo erteket az egyx valtozo es eggy valtozo ertekeivel noveljuk. Aztan a tx[x] vektor es ty[y] ertekeivel megszorozzuk az egyy valtozo es egyx valtozo igy sarkokra erve iranyt valtoztat a labda. Majd a usleep fuggveny hivva a megadott microsecundommal kesleltetjuk a labda minden mozgasat es hasznalatahoz kell a time.h header file. A (void)systeam("clear") fuggveny hasznalatahoz includo-lni kell a stdlib.h header filet es torli a konzol tartalmat. Igy marad minden lepes utan a vonal felul mert torles nelkul a kurzor lenne a balalso sarokba tehat elcsuszna. (1,1)-rol inditva is erdekesen pattog a labda. A <function>gotoxy</function> deklarasanal a <function>printf</function> megadhatjuk milyen karakkter leptetunk. Az int main() fuggveny futasa utan elvegzi a deklaraciot a <function>gotoxy</function> vegett a <function>printf</function>  bevonalazza es kiirja az x es y-t az elso sorba majd a gotoxy fuggveny hivasakor. Ez tobb idot vesz igenybe igy ezalatt megprobalja ugyanonnan kiirni mind 3 <function>printf</function> sikertelenul. Majd az elsot tudja irni az elso sor utan mert eszleli hogy /n van benne uj sort ker. Igy leirja a 20 Entert majd kovetkezik a Szokozos amit nemtud megkezdeni az elsosorbol mert mar odairta a korabbi vonalas for ciklus es a sor vegere meg az Enterest irta. Igy keresi a 3. <function>printf</function> kiiratasi helyet ami mivel Entert tartalmaz 
 A <function>printf</function> fuggvenyek hasznalatanal az utolso <function>printf</function> '\n'-re kell vegzodnie. A <function>(void)system("clear")</function> minden for ciklus vegen torli a terminalt igy ujra pozicionalja a definialt <function>gotoxy</function>. 
 	</para>  
