@@ -12,6 +12,7 @@
 	</para>
 	   <programlisting language="java">
                 <![CDATA[
+import java.math.*;
 public class PolarGenerator {
 
 	boolean nincsTarolt = true;
@@ -136,7 +137,7 @@ main (int argc, char **argv)
 ]]>
 </programlisting>
         <para>
-	A módosított polártranszformációs normális generátor segitsegevel pszeudo-random szamokat gyarthatunk, ezek nem teljesen veltelenek mert valamilyen matematikai algoritmus segitsegevel gyartjuk le oket. A PolarGenerator objektummal ket kulonbozo veletlen valos szamot generalunk le a Math osztaly random fuggvenyevel amit a kovetkezo publikus fuggvenyben definialunk, de csak egyet kapunk eredmenyul, a paratlanadik fuggvenyhivsra kapjuk a masikat eredmenyul amit a parosadik fuggvenyhivaskor hozunk letre es tarolunk le. A kovetkezo fuggveny publikus mivel egy masik szamot is tarolunk igy tobbszor is meghivhatjuk a letrehozott objektumunkra, ezzel tobb szamot generalhatunk. Jelen esetben tiz szamot iratunk ki a kepernyore a System.out osztaly println fuggvenyenek segitsegevel. Nehany szintaktiaki modsitas segitsegevel atirhatjuk C++-ra. A Sun-os JDK-ban is ez az algoritmus talalhato, ez veletlenszeruen general szamokat a tizes alapu logaritmus 0 es 1 kozti vegtelen szamaira alapozva. 
+	A módosított polártranszformációs normális generátor segitsegevel pszeudo-random szamokat gyarthatunk, ezek nem teljesen veltelenek mert valamilyen matematikai algoritmus segitsegevel gyartjuk le oket. A PolarGenerator objektummal ket kulonbozo veletlen valos szamot generalunk le a Math osztaly random fuggvenyevel amit a kovetkezo publikus fuggvenyben definialunk, de csak egyet kapunk eredmenyul, a paratlanadik fuggvenyhivsra kapjuk a masikat eredmenyul amit a parosadik fuggvenyhivaskor hozunk letre es tarolunk le. A kovetkezo fuggveny publikus mivel egy masik szamot is tarolunk igy tobbszor is meghivhatjuk a letrehozott objektumunkra, ezzel tobb szamot generalhatunk. Jelen esetben tiz szamot iratunk ki a kepernyore a System.out osztaly println fuggvenyenek segitsegevel. Nehany szintaktiaki modsitas segitsegevel atirhatjuk C++-ra. A Sun-os JDK-ban is ez az algoritmus talalhato, ez veletlenszeruen general szamokat a tizes alapu logaritmus 0 es 1 kozti vegtelen szamaira alapozva. Minden PolarGenerator osztalybol letrehozott objektumnal a nincsTarolt valtozo erteket false-ra allitjuk a konstruktor segitsegevel hogy tobb objektumra is mukodjon a program. Ennek erteket a kovetkezo fuggveny modositja az ellenkezojere. Mivel matematikai fuggvenyeket hasznalunk igy importalni kell a java.math.* osztalyt.
 	</para>
 	</section>
 
@@ -429,14 +430,68 @@ public void recVar (Node  n)
 ]]>
 </programlisting>
         <para>
-	Java-ban nincsennek include-alt header file-ok, helyettuk import-olni kell a megfelelo konyvtarakat, osztalyokat. A konstruktoroknal a valtozo incializalas a : operatorral nem mukodik, helyette a torzs reszben {} kozott kell megadnunk a megfelelo kezdoertekeket. A memoria felszabaditast a garbage collector vegzi automatikusan igy destruktor haszalata nincsen. Az operator tulterheles helyett az insert fuggvenyt hasznaljuk. Egy objektum tagfuggvenyere hivatkozni -> helyett . -tal kell. A fuggvenyek, valtozok hozzaferhetoseget kulon minden fuggveny, valtozo eseten kell feltuntetni, nem blokkban irva. Pointerek helyett referencia van, igy torolni kell a * jeloleseket, mivel referenciakkal hivatkozunk az objektumokra. Az sqrt fuggvenyt a Math objektum fuggvenyekent hasznaljuk. A nullptr helyett null-t hasznalunk mivel nincsenek pointerek csak referenciak. Az ostream helyett a PrintWinter objektumot hasznaljuk. Const kulcsszot nem hasznaljuk mivel nincs Java-ban, ehelyett final kulcsszoval hasznaljuk a gyokeret mivel az erteke nem fog valtozni a program futasa soran. Masolo konstruktor nincs Java-ban igy nem hasznaljuk. A parancssori argumentumok szamat args.length segitsegevel ellenorizzuk. A pancssori argumentumokat hasznaljuk a kodban mivel a FileReader,NufferedReader,Printwriter objektumok letrehozasahoz szukseges megadni hogy hova illetve honnan tortenjen az iras olvasas, nem csak a parancssorba iranyitjuk a fajlba a dolgokat. Ellenorizzuk meg az equals fuggveny segitsegevel hogy a megfelelo parancssori argumentumkent hasznaltuk e az o kapcsolot kimeneti fajl megadasahoz. A print fuggveny segitsegevel a megadott kimeneti fajlba kiirjuk a megfelelo adatokat a melyseghez, atlaghoz. Majd meghivjuk a close fuggvenyeket a bemenet es kimenet lezarasara. A webes kornyezet hasznalatahoz telepiteni kell a tomcat szervert. 
+	Java-ban nincsennek include-alt header file-ok, helyettuk import-olni kell a megfelelo konyvtarakat, osztalyokat. A konstruktoroknal a valtozo incializalas a : operatorral nem mukodik, helyette a torzs reszben {} kozott kell megadnunk a megfelelo kezdoertekeket. A memoria felszabaditast a garbage collector vegzi automatikusan igy destruktor haszalata nincsen. Az operator tulterheles helyett az insert fuggvenyt hasznaljuk. Egy objektum tagfuggvenyere hivatkozni -> helyett . -tal kell. A fuggvenyek, valtozok hozzaferhetoseget kulon minden fuggveny, valtozo eseten kell feltuntetni, nem blokkban irva. Pointerek helyett referencia van, igy torolni kell a * jeloleseket, mivel referenciakkal hivatkozunk az objektumokra. Az sqrt fuggvenyt a Math objektum fuggvenyekent hasznaljuk. A nullptr helyett null-t hasznalunk mivel nincsenek pointerek csak referenciak. Az ostream helyett a PrintWinter objektumot hasznaljuk. Const kulcsszot nem hasznaljuk mivel nincs Java-ban, ehelyett final kulcsszoval hasznaljuk a gyokeret mivel az erteke nem fog valtozni a program futasa soran. Masolo konstruktor nincs Java-ban igy nem hasznaljuk. A parancssori argumentumok szamat args.length segitsegevel ellenorizzuk. A pancssori argumentumokat hasznaljuk a kodban mivel a FileReader,NufferedReader,Printwriter objektumok letrehozasahoz szukseges megadni hogy hova illetve honnan tortenjen az iras olvasas, nem csak a parancssorba iranyitjuk a fajlba a dolgokat. Ellenorizzuk meg az equals fuggveny segitsegevel hogy a megfelelo parancssori argumentumkent hasznaltuk e az o kapcsolot kimeneti fajl megadasahoz. A print fuggveny segitsegevel a megadott kimeneti fajlba kiirjuk a megfelelo adatokat a melyseghez, atlaghoz. Majd meghivjuk a close fuggvenyeket a bemenet es kimenet lezarasara. A webes kornyezet hasznalatahoz telepiteni kell a tomcat szervert, mivel a Java Servlet mar elavult az altalunk hasznalatos bongeszok szamara. Ennek segitsegevel get lekerdezessel megkaphatjuk a binfa informacioit. A tomcat telepitese utan a webapps mappaba letrehozzuk az alkalmazasunk mappajat benne a META-INF es WEB-INF mappakat, a WEB-INF mappaban a classes, src, lib, web.xml mappakat. Az src mappaba kerul forraskod, a classes mappaba a leforditott java kod, a web.xml fajlban megadjuk: 
+	</para>
+	   <programlisting language="xml">
+                <![CDATA[
+<servlet>
+<servlet-name>Binfa</servlet-name>
+<servlet-class>com.company.Main</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>Binfa</servlet-name>
+<url-pattern>/get</url-pattern>
+</servlet-mapping>
+</web-app>
+]]>
+</programlisting>
+	<para>
+	Megirjuk a servlet mukodeset:
+	</para>
+ <programlisting language="java">
+            <![CDATA[ 
+public class Main extends HttpServlet {
+    LZWBinaryTree tree;
+    String data;
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        data = request.getParameter("data");
+        tree = new BinaryTree();
+        response.setContentType("text/html;charset=UTF-8");
+        for (int i = 0; i < data.length(); i++) {
+            tree.addItem(data.charAt(i));
+        }
+        PrintWriter out = response.getWriter();
+        try {
+            out.println("<!DOCTYPE html>");
+            out.println("<html><head>");
+            out.println("<meta http-eqiuv='Content-Type' content ='text/html; charset= UTF-8'>");
+            out.println("<body>");
+            tree.writeOut(tree.getRoot(), out);
+            out.println("<br></br>");
+            out.println("<p>Elemszam atlaga " + tree.getElemszamAtlag() + "</p>");
+            out.println("<p>Atlag " + tree.getAtlag() + "</p>");
+            out.println("<p>Melyseg " + tree.getMelyseg() + "</p>");
+            out.println("<p>Szoras " + tree.getSzoras() + "</p>");
+            out.println("</body>");
+            out.println("</html>");
+        } finally {
+            out.close();
+        }
+    }
+}
+]]>
+</programlisting>
+	<para>
+	A szerver inditasa elott lekell forditani a java kodot a -d kapcsolo segitsegevel hogy mentse a classe mappaba a fajlt, a -cp pedig hasznalja a szerver lib mappajaban levo servlet-api.jar csomagot. A szervert a bin mappabol inditjuk a startup.sh fajl segitsegevel.
+	</para>
 	</para>
 	</section>
 
 <section>
         <title>Gagyi</title>
 	<para>
-	Az ismert formális „while (x kisebb= t eses x >= t eses t != x);” tesztkérdéstípusra adj a szokásosnál (miszerint x, t az egyik esetben az objektum által hordozott érték, a másikban meg az objektum referenciája) „mélyebb” választ, írj Java példaprogramot mely egyszer végtelen ciklus, más x, t értékekkel meg nem! A példát építsd a JDK Integer.java forrására 3 , hogy a 128-nál inkluzív objektum példányokat poolozza!
+	Az ismert formális „while (x kisebb= t eses x >= t eses t != x);” tesztkérdéstípusra adj a szokásosnál (miszerint x, t az egyik esetben az objektum által hordozott érték, a másikban meg az objektum referenciája) „mélyebb” választ, írj Java példaprogramot mely egyszer végtelen ciklus, más x, t értékekkel meg nem! A példát építsd a JDK Integer.java forrására, hogy a 128-nál inkluzív objektum példányokat poolozza!
 	</para>
 	   <programlisting language="java">
                 <![CDATA[
@@ -460,7 +515,7 @@ public void recVar (Node  n)
 ]]>
 </programlisting>
         <para>
-	A JDK Integer.java forrasban leirast kapunk az Integer objektumok letrehozasaval kapcsolatban, hogy ha [-128,127] kozti szamot adunk meg akkor egyseges meglevo memoriacimhez rendeli az objektumot, igy az x es t objektum memoriacime megegyezik tehat nem teljesul a while ciklus t=!x resze, igy kilep a ciklusbol. Ha mas szamot adunk megg vagy a new kulcsszo segitsegevel hozunk letre uj objektumot ezzel ugy kulon memoriat foglalunk az objektumainknak igy a while ciklus minden feltetele teljesul es vegtelen ciklust kapunk. 
+	A JDK Integer.java forrasban leirast kapunk az Integer objektumok letrehozasaval kapcsolatban, hogy ha [-128,127] kozti szamot adunk meg akkor egyseges meglevo memoriacimhez rendeli az objektumot, igy az x es t objektum memoriacime megegyezik tehat nem teljesul a while ciklus t=!x resze, igy kilep a ciklusbol. Ha mas [-128,127] tartomanyon kivuli szamot adunk meg akkor letrehozza az objektumot a new kulcsszo segitsegevel, ezek alapjan kikerulheto ez az eljaras ha new kulcsszoval hozunk letre Integert igy ugyanugy mukodik minden szamra. Ezt memoriatakarekossag celjabol vezethettek be. Tehat ha kulonbozo memoriacimmel hozzuk letre az objektumainkat akkor a while ciklus minden feltetele teljesul es vegtelen ciklust kapunk. A ciklus tobbi feltetele teljesul mivel a ket objektum ertekei megeggyeznek igy nagyobb egyenlo es kisebb egyenlo egyik a masiknal, az egyenlo nem egyenlo pedig nem az ertekre hanem a memoriacimre vonatkozik. 
 	</para>
 	</section>
 
@@ -551,7 +606,7 @@ public class PiBBP {
 ]]>
 </programlisting>
         <para>
-	A BBP algoritmus segitsegevel kiszamitjuk n-bol a pi hexadecimalis n+1-edik szamjegyet az elotte levo szamjegyek meghatarozasa nelkul. Az algoritmust a {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}} kepletre epitettuk, ahol {16^dSj} = 
+	A BBP algoritmus segitsegevel kiszamitjuk n>0 szambol a pi hexadecimalis n+1-edik szamjegyet az elotte levo szamjegyek meghatarozasa nelkul. Ezt az algoritmust 1995-ben talatak fel, ez az elso formula melyet szamitogep segitsegevel alkottak meg. Az algoritmust a {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}} kepletre epitettuk, ahol {16^dSj} = sum k=0-tol d-ig (16^d mod 8k+j/8k+j), ahol j ertekei 1, 4, 5, 6. Ez utobbi keplet a log2 ertekenek binaris kiszamitasat letrehetevo formulabol adodik, mert eszrevettek hogy tetszoleges szamjegytol kezdhetik szamolni a log2 ertekeit. Az eredeti kepletet bovitetettek mod k-val mivel a tortesz lesz fontos az algoritmus szempontjabol. A formula szempontjabol az elso sum resz lesz a lenyeges mivel a masodik a vegtelenig megy, de mivel folyton csokken az erteke igy elobb utobb eler egy hatart aminel elhanyagolhato lenne, de a lebegopontos-aritmetika is veges a gepunkon elobb-utobb. A szamlalobn torteno kifejezest kiszamithatjuk szorzatokra bontassal, erre van is egy algoritmus melyet kisebb modositasokkal felhasznaltunk. Nem pontos vegeredmenyt kapunk szoftveri es hardverbeli okok miatt. A toString fuggveny segitsegevel sztringge alakitjuk az objektumot, a floor fuggveny pedig a nala kisebbegyenlo legnagyobb egesz szamot adja eredmenyul, ez szukseges mivel az eredmenyt 0 es 1 kozti szamkent kapjuk meg.
 	</para>
 	</section>
 </chapter> 
