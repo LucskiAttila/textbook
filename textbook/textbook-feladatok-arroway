@@ -1,0 +1,550 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Arroway!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>OO szemlelet</title>
+	<para>
+	A módosított polártranszformációs normális generátor beprogramozása Java nyelven. Mutassunk rá, hogy a mi természetes saját megoldásunk (az algoritmus egyszerre két normálist állít elő, kell egy példánytag, amely a nem visszaadottat tárolja és egy logikai tag, hogy van-e tárolt vagy futtatni kell az algot.) és az OpenJDK, Oracle JDK-ban a Sun által adott OO szervezés ua.! Ugyanezt írjuk meg C++ nyelven is! (lásd még UDPROG repó: source/labor/polargen)
+	</para>
+	   <programlisting language="java">
+                <![CDATA[
+public class PolarGenerator {
+
+	boolean nincsTarolt = true;
+	double tarolt;
+
+	public PolarGenerator() {
+	nincsTarolt = true;
+	}
+
+	public double kovetkezo() {
+		if (nincsTarolt) {
+			double u1, u2, v1, v2, w;
+			do {
+				u1 = Math.random();
+				u2 = Math.random();
+				v1 = 2 * u1 - 1;
+				v2 = 2 * u2 -1;
+				w = v1 * v1 + v2 * v2;
+			} while (w > 1);
+			double r = Math.sqrt((-2 * Math.log(w)) / w);
+			tarolt = r * v2;
+			nincsTarolt = !nincsTarolt;
+			return r * v1;
+		} else {
+		nincsTarolt = !nincsTarolt;
+		return tarolt;
+		}
+	}
+public static void main(String[] args) {
+		PolarGenerator g = new PolarGenerator();
+		for (int i = 0; i < 10; ++i) {
+			System.out.println(g.kovetkezo());
+		}
+	}
+}
+]]>
+</programlisting>
+
+	   <programlisting language="c++">
+                <![CDATA[	
+#ifndef POLARGEN__H
+#define POLARGEN__H
+
+#include <cstdlib>
+#include <cmath>
+#include <ctime>
+
+class PolarGen
+{
+public:
+  PolarGen ()
+  {
+    nincsTarolt = true;
+    std::srand (std::time (NULL));
+  }
+   ~PolarGen ()
+  {
+  }
+  double kovetkezo ();
+
+private:
+  bool nincsTarolt;
+  double tarolt;
+
+};
+
+#endif
+]]>
+</programlisting>
+
+	   <programlisting language="c++">
+                <![CDATA[
+#include "polargen.h"
+
+double
+PolarGen::kovetkezo ()
+{
+  if (nincsTarolt)
+    {
+      double u1, u2, v1, v2, w;
+      do
+	{
+	  u1 = std::rand () / (RAND_MAX + 1.0);
+	  u2 = std::rand () / (RAND_MAX + 1.0);
+	  v1 = 2 * u1 - 1;
+	  v2 = 2 * u2 - 1;
+	  w = v1 * v1 + v2 * v2;
+	}
+      while (w > 1);
+
+      double r = std::sqrt ((-2 * std::log (w)) / w);
+
+      tarolt = r * v2;
+      nincsTarolt = !nincsTarolt;
+
+      return r * v1;
+    }
+  else
+    {
+      nincsTarolt = !nincsTarolt;
+      return tarolt;
+    }
+}
+]]>
+</programlisting>
+
+	   <programlisting language="c++">
+                <![CDATA[
+#include <iostream>
+#include "polargen.h"
+
+int
+main (int argc, char **argv)
+{
+  PolarGen pg;
+
+  for (int i = 0; i < 10; ++i)
+    std::cout << pg.kovetkezo () << std::endl;
+
+  return 0;
+}
+]]>
+</programlisting>
+        <para>
+	A módosított polártranszformációs normális generátor segitsegevel pszeudo-random szamokat gyarthatunk, ezek nem teljesen veltelenek mert valamilyen matematikai algoritmus segitsegevel gyartjuk le oket. A PolarGenerator objektummal ket kulonbozo veletlen valos szamot generalunk le a Math osztaly random fuggvenyevel amit a kovetkezo publikus fuggvenyben definialunk, de csak egyet kapunk eredmenyul, a paratlanadik fuggvenyhivsra kapjuk a masikat eredmenyul amit a parosadik fuggvenyhivaskor hozunk letre es tarolunk le. A kovetkezo fuggveny publikus mivel egy masik szamot is tarolunk igy tobbszor is meghivhatjuk a letrehozott objektumunkra, ezzel tobb szamot generalhatunk. Jelen esetben tiz szamot iratunk ki a kepernyore a System.out osztaly println fuggvenyenek segitsegevel. Nehany szintaktiaki modsitas segitsegevel atirhatjuk C++-ra. A Sun-os JDK-ban is ez az algoritmus talalhato, ez veletlenszeruen general szamokat a tizes alapu logaritmus 0 es 1 kozti vegtelen szamaira alapozva. 
+	</para>
+	</section>
+
+    <section>
+        <title>Homokozó</title>
+	<para>
+	Írjuk át az első védési programot (LZW binfa) C++ nyelvről Java nyelvre, ugyanúgy működjön! Mutassunk rá, hogy gyakorlatilag a pointereket és referenciákat kell kiirtani és minden máris működik(erre utal a feladat neve, hogy Java-ban minden referencia, nincs választás, hogy mondjuk egy attribútum pointer, referencia vagy tagként tartalmazott legyen). Miután már áttettük Java nyelvre, tegyük be egy Java Servletbe és a böngészőből GET-es kéréssel (például a böngésző címsorából) kapja meg azt a mintát, amelynek kiszámolja az LZW binfáját!
+	</para>
+
+	   <programlisting language="java">
+                <![CDATA[
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+class LZWBinaryTree
+{
+    public LZWBinaryTree ()
+    {
+    	root = new Node('/');
+    	currentNode = root;
+    }
+  
+    public void insert (char b)
+    {
+       
+        if (b == '0')
+        {
+           
+            if (currentNode.getLeftChild () == null)	
+            {
+                
+                Node n = new Node ('0');
+                
+                
+                
+                currentNode.newLeftChild (n);
+                
+                currentNode = root;
+            }
+            else			
+            {
+                
+                currentNode = currentNode.getLeftChild ();
+            }
+        }
+        
+        else
+        {
+            if (currentNode.getRightChild () == null)
+            {
+                Node n = new Node ('1');
+                currentNode.newRightChild (n);
+                currentNode = root;
+            }
+            else
+            {
+                currentNode = currentNode.getRightChild ();
+            }
+        }
+    }
+    
+   
+    public int getDepth ()
+    {
+    	 	depth = maxDepth = 0;
+    	    recDepth (root);
+    	    return maxDepth;
+    }
+    public double getMean ()
+    {
+    	depth = sumOfMean = numberOfNodes = 0;
+        recMean (root);
+        mean = ((double) sumOfMean) / numberOfNodes;
+        return mean;
+    }
+    public double getVariance ()
+    {
+    	mean = getMean ();
+        sumOfVar = 0.0;
+        depth = numberOfNodes = 0;
+
+        recVar (root);
+
+        if (numberOfNodes - 1 > 0)
+            variance = Math.sqrt (sumOfVar / (numberOfNodes - 1));
+        else
+            variance = Math.sqrt (sumOfVar);
+
+        return variance;
+    }
+
+    public void recDepth (Node  n)
+    {
+        if (n != null)
+        {
+            ++depth;
+            if (depth > maxDepth)
+                maxDepth = depth;
+            recDepth (n.getRightChild ());
+            
+            
+            recDepth (n.getLeftChild ());
+            --depth;
+        }
+    }
+
+
+public void recMean (Node  n)
+{
+    if (n != null)
+    {
+        ++depth;
+        recMean (n.getRightChild ());
+        recMean (n.getLeftChild ());
+        --depth;
+        if (n.getRightChild () == null && n.getLeftChild () == null)
+        {
+            ++numberOfNodes;
+            sumOfMean += depth;
+        }
+    }
+}
+
+public void recVar (Node  n)
+{
+    if (n != null)
+    {
+        ++depth;
+        recVar (n.getRightChild ());
+        recVar (n.getLeftChild ());
+        --depth;
+        if (n.getRightChild () == null && n.getLeftChild () == null)
+        {
+            ++numberOfNodes;
+            sumOfVar += ((depth - mean) * (depth - mean));
+        }
+    }
+}
+    public void printTree (PrintWriter os)
+    {
+        depth = 0;
+        printTree (root, os);
+    }
+
+    class Node
+    {
+      
+        Node (char b)
+        {
+        	if(b == '0' || b == '1')
+        		value = b;
+        	else
+        	value = '/';
+        };
+ 
+        Node getLeftChild () 
+        {
+            return leftChild;
+        }
+        
+        Node getRightChild () 
+        {
+            return rightChild;
+        }
+        
+        void newLeftChild (Node gy)
+        {
+            leftChild = gy;
+        }
+        
+        void newRightChild (Node gy)
+        {
+            rightChild = gy;
+        }
+      
+        char getValue () 
+        {
+            return value;
+        }
+       
+
+        
+        private char value;
+       
+        private Node leftChild;
+        private Node rightChild;
+    };
+
+   
+    Node currentNode;
+    
+    private int depth, sumOfMean, numberOfNodes;
+    private double sumOfVar;
+    
+
+    
+    public void printTree (Node  n, PrintWriter os)
+    {
+        
+        if (n != null)
+        {
+            ++depth;
+            printTree (n.getLeftChild (), os);
+            
+            
+            for (int i = 0; i < depth; ++i)
+                os.print("---");
+            os.print(n.getValue () + "(" + depth + ")\n");
+            printTree (n.getRightChild (), os);
+            --depth;
+        }
+    }
+   
+	protected final Node root;
+    protected int maxDepth;
+    protected double mean, variance;
+
+
+    public static void usage ()
+    {
+        System.out.println("Usage: lzwtree in_file -o out_file");
+    }
+
+    public static void  main (String[] args) throws FileNotFoundException, IOException
+    {
+        
+        
+        
+   
+    	
+        
+        if (args.length  < 3)
+        {
+        	
+            
+            usage ();
+            
+            return;
+        }
+
+        
+        String inFile = args[0];
+
+        
+        if(!args[1].equals("-o"))
+        {
+        	 System.out.println(args[1]);
+        	 usage ();
+             return;
+        }
+
+        
+        BufferedReader input = new BufferedReader(new FileReader(inFile));
+
+        
+        if (input == null)
+        {
+            System.out.println("Nem létezik");
+            usage ();
+            return;
+        }
+        PrintWriter output = new PrintWriter(args[2]);
+
+        int b;		
+        LZWBinaryTree bincurrentNode = new LZWBinaryTree();		
+        
+
+        while ((b = input.read ()) != -1)
+        {
+             if ((char)b == '1' || (char)b == '0')
+                	bincurrentNode.insert((char)b);
+
+        }
+
+        
+        bincurrentNode.printTree(output);		
+
+        output.print("depth " + bincurrentNode.getDepth () + "\n");
+        output.print("mean " + bincurrentNode.getMean () + "\n");
+        output.print("var " + bincurrentNode.getVariance () + "\n");
+
+        output.close ();
+        input.close ();
+
+        return;
+    }   
+};
+]]>
+</programlisting>
+        <para>
+	Java-ban nincsennek include-alt header file-ok, helyettuk import-olni kell a megfelelo konyvtarakat, osztalyokat. A konstruktoroknal a valtozo incializalas a : operatorral nem mukodik, helyette a torzs reszben {} kozott kell megadnunk a megfelelo kezdoertekeket. A memoria felszabaditast a garbage collector vegzi automatikusan igy destruktor haszalata nincsen. Az operator tulterheles helyett az insert fuggvenyt hasznaljuk. Egy objektum tagfuggvenyere hivatkozni -> helyett . -tal kell. A fuggvenyek, valtozok hozzaferhetoseget kulon minden fuggveny, valtozo eseten kell feltuntetni, nem blokkban irva. Pointerek helyett referencia van, igy torolni kell a * jeloleseket, mivel referenciakkal hivatkozunk az objektumokra. Az sqrt fuggvenyt a Math objektum fuggvenyekent hasznaljuk. A nullptr helyett null-t hasznalunk mivel nincsenek pointerek csak referenciak. Az ostream helyett a PrintWinter objektumot hasznaljuk. Const kulcsszot nem hasznaljuk mivel nincs Java-ban, ehelyett final kulcsszoval hasznaljuk a gyokeret mivel az erteke nem fog valtozni a program futasa soran. Masolo konstruktor nincs Java-ban igy nem hasznaljuk. A parancssori argumentumok szamat args.length segitsegevel ellenorizzuk. A pancssori argumentumokat hasznaljuk a kodban mivel a FileReader,NufferedReader,Printwriter objektumok letrehozasahoz szukseges megadni hogy hova illetve honnan tortenjen az iras olvasas, nem csak a parancssorba iranyitjuk a fajlba a dolgokat. Ellenorizzuk meg az equals fuggveny segitsegevel hogy a megfelelo parancssori argumentumkent hasznaltuk e az o kapcsolot kimeneti fajl megadasahoz. A print fuggveny segitsegevel a megadott kimeneti fajlba kiirjuk a megfelelo adatokat a melyseghez, atlaghoz. Majd meghivjuk a close fuggvenyeket a bemenet es kimenet lezarasara. A webes kornyezet hasznalatahoz telepiteni kell a tomcat szervert. 
+	</para>
+	</section>
+
+<section>
+        <title>Gagyi</title>
+	<para>
+	Az ismert formális „while (x kisebb= t eses x >= t eses t != x);” tesztkérdéstípusra adj a szokásosnál (miszerint x, t az egyik esetben az objektum által hordozott érték, a másikban meg az objektum referenciája) „mélyebb” választ, írj Java példaprogramot mely egyszer végtelen ciklus, más x, t értékekkel meg nem! A példát építsd a JDK Integer.java forrására 3 , hogy a 128-nál inkluzív objektum példányokat poolozza!
+	</para>
+	   <programlisting language="java">
+                <![CDATA[
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Kilepeshez irja: x");
+		//Integer t = new Integer(127);
+		//Integer x = new Integer(127);				
+		Integer t;
+		Integer x;		
+		if(sc.nextLine().equals("x")){
+			x = 127;
+			t = 127;
+		}
+		else{
+			t = 128;
+			x = 128;
+		}
+		while (x <= t && x >= t && t != x);
+	}
+]]>
+</programlisting>
+        <para>
+	A JDK Integer.java forrasban leirast kapunk az Integer objektumok letrehozasaval kapcsolatban, hogy ha [-128,127] kozti szamot adunk meg akkor egyseges meglevo memoriacimhez rendeli az objektumot, igy az x es t objektum memoriacime megegyezik tehat nem teljesul a while ciklus t=!x resze, igy kilep a ciklusbol. Ha mas szamot adunk megg vagy a new kulcsszo segitsegevel hozunk letre uj objektumot ezzel ugy kulon memoriat foglalunk az objektumainknak igy a while ciklus minden feltetele teljesul es vegtelen ciklust kapunk. 
+	</para>
+        <title>Yoda</title>
+	<para>Írjunk olyan Java programot, ami java.lang.NullPointerEx-el leáll, ha nem követjük a Yoda conditions-t! https://en.wikipedia.org/wiki/Yoda_conditions	
+	</para>
+	   <programlisting language="java">
+                <![CDATA[
+public class Main {
+    public static void main(String[] args) {
+	 String a = null;
+         //Yoda condition
+         if("alma".equals(a)){
+            System.out.println("Egyenlo.");
+         }
+         //NullPointerEx.
+         if(a.equals("alma")){
+         System.out.println("egyenlo");
+    }
+}
+]]>
+</programlisting>
+        <para>
+	A java.lang.NullPointerEx kivetel akkor keletkezik ha null ertekhez hasonlitunk azaz nem letezo ertekhez hasonlitunk mivel ennek nem lenne ertelme. Ezt a hibat kijavithatjuk a Yoda conditions alkalmazasaval mivel ugyanazt a feltetelt ellenorizzuk maskepp leirva azaz felcsereljuk a feltetel jobb es bal oldalan levo kifejezeseket, nyilvan a null-t feltetelkent csak egyenloseg operatorral hasznaljuk mivel a kisebb, nagyobb feltetelnek nem lenne ertelme, ekkor egyebkent a kacsacsor is fordulna. Tehat a program kiirja az Egyenlo. szoveget a kijelzore, de az egyelno sztringet nem.
+	</para>
+        <title>Kódolás from scratch</title>
+	<para>
+	Induljunk ki ebből a tudományos közleményből: http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/bbp-alg.pdf és csak ezt tanulmányozva írjuk meg Java nyelven a BBP algoritmus megvalósítását! Ha megakadsz, de csak végső esetben: https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/apbs02.html#pi_jegyei (mert ha csak lemásolod, akkor pont az a fejlesztői élmény marad ki, melyet szeretném, ha átélnél).
+	</para>
+	   <programlisting language="java">
+                <![CDATA[
+public class PiBBP {
+    String d16PiHexaJegyek;
+    public PiBBP(int d) {
+        double d16Pi = 0.0d;
+        double d16S1t = d16Sj(d, 1);
+        double d16S4t = d16Sj(d, 4);
+        double d16S5t = d16Sj(d, 5);
+        double d16S6t = d16Sj(d, 6);
+        d16Pi = 4.0d * d16S1t - 2.0d * d16S4t - d16S5t - d16S6t;
+        d16Pi = d16Pi - StrictMath.floor(d16Pi);
+        StringBuffer sb = new StringBuffer();
+        Character hexaJegyek[] = { 'A', 'B', 'C', 'D', 'E', 'F' };
+        while (d16Pi != 0.0d) {
+            int jegy = (int) StrictMath.floor(16.0d * d16Pi);
+            if (jegy < 10)
+                sb.append(jegy);
+            else
+                sb.append(hexaJegyek[jegy - 10]);
+            d16Pi = (16.0d * d16Pi) - StrictMath.floor(16.0d * d16Pi);
+        }
+        d16PiHexaJegyek = sb.toString();
+    }
+    public double d16Sj(int d, int j) {
+        double d16Sj = 0.0d;
+        for (int k = 0; k <= d; ++k)
+            d16Sj += (double) n16modk(d - k, 8 * k + j) / (double) (8 * k + j);
+        return d16Sj - StrictMath.floor(d16Sj);
+    }
+    public long n16modk(int n, int k) {
+        int t = 1;
+        while (t <= n)
+            t *= 2;
+        long r = 1;
+        while (true) {
+            if (n >= t) {
+                r = (16 * r) % k;
+                n = n - t;
+            }
+            t = t / 2;
+            if (t < 1)
+                break;
+            r = (r * r) % k;
+        }
+        return r;
+    }
+    public String toString() {
+        return d16PiHexaJegyek;
+    }
+    public static void main(String args[]) {
+        System.out.print(new PiBBP(1000000));
+    }
+}
+]]>
+</programlisting>
+        <para>
+	A BBP algoritmus segitsegevel kiszamitjuk n-bol a pi hexadecimalis n+1-edik szamjegyet az elotte levo szamjegyek meghatarozasa nelkul. Az algoritmust a {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}} kepletre epitettuk, ahol {16^dSj} = 
+	</para>
+</chapter> 
