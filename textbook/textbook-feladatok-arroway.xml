@@ -462,6 +462,9 @@ public void recVar (Node  n)
         <para>
 	A JDK Integer.java forrasban leirast kapunk az Integer objektumok letrehozasaval kapcsolatban, hogy ha [-128,127] kozti szamot adunk meg akkor egyseges meglevo memoriacimhez rendeli az objektumot, igy az x es t objektum memoriacime megegyezik tehat nem teljesul a while ciklus t=!x resze, igy kilep a ciklusbol. Ha mas szamot adunk megg vagy a new kulcsszo segitsegevel hozunk letre uj objektumot ezzel ugy kulon memoriat foglalunk az objektumainknak igy a while ciklus minden feltetele teljesul es vegtelen ciklust kapunk. 
 	</para>
+	</section>
+
+<section>
         <title>Yoda</title>
 	<para>Írjunk olyan Java programot, ami java.lang.NullPointerEx-el leáll, ha nem követjük a Yoda conditions-t! https://en.wikipedia.org/wiki/Yoda_conditions	
 	</para>
@@ -484,6 +487,9 @@ public class Main {
         <para>
 	A java.lang.NullPointerEx kivetel akkor keletkezik ha null ertekhez hasonlitunk azaz nem letezo ertekhez hasonlitunk mivel ennek nem lenne ertelme. Ezt a hibat kijavithatjuk a Yoda conditions alkalmazasaval mivel ugyanazt a feltetelt ellenorizzuk maskepp leirva azaz felcsereljuk a feltetel jobb es bal oldalan levo kifejezeseket, nyilvan a null-t feltetelkent csak egyenloseg operatorral hasznaljuk mivel a kisebb, nagyobb feltetelnek nem lenne ertelme, ekkor egyebkent a kacsacsor is fordulna. Tehat a program kiirja az Egyenlo. szoveget a kijelzore, de az egyelno sztringet nem.
 	</para>
+	</section>
+
+<section>
         <title>Kódolás from scratch</title>
 	<para>
 	Induljunk ki ebből a tudományos közleményből: http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/bbp-alg.pdf és csak ezt tanulmányozva írjuk meg Java nyelven a BBP algoritmus megvalósítását! Ha megakadsz, de csak végső esetben: https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/apbs02.html#pi_jegyei (mert ha csak lemásolod, akkor pont az a fejlesztői élmény marad ki, melyet szeretném, ha átélnél).
@@ -547,4 +553,5 @@ public class PiBBP {
         <para>
 	A BBP algoritmus segitsegevel kiszamitjuk n-bol a pi hexadecimalis n+1-edik szamjegyet az elotte levo szamjegyek meghatarozasa nelkul. Az algoritmust a {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}} kepletre epitettuk, ahol {16^dSj} = 
 	</para>
+	</section>
 </chapter> 
