@@ -485,7 +485,6 @@ public class Main extends HttpServlet {
 	<para>
 	A szerver inditasa elott lekell forditani a java kodot a -d kapcsolo segitsegevel hogy mentse a classe mappaba a fajlt, a -cp pedig hasznalja a szerver lib mappajaban levo servlet-api.jar csomagot. A szervert a bin mappabol inditjuk a startup.sh fajl segitsegevel.
 	</para>
-	</para>
 	</section>
 
 <section>
