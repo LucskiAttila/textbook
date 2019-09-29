@@ -84,7 +84,21 @@
                 <emphasis>XInclude: textbook-feladatok-gutenberg.xml file not found</emphasis>
             </para>
         </xi:fallback>
-    </xi:include>    
+    </xi:include>  
+     <xi:include href="textbook-feladatok-arroway.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-feladatok-arroway.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include> 
+     <xi:include href="textbook-feladatok-liskov.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: textbook-feladatok-liskov.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include> 
     
             
 </part>  
