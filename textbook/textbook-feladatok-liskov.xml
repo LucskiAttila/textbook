@@ -122,6 +122,7 @@ class Liskov
         </mediaobject>
         <para>
         C++ programozási nyelvre átfordítva, ahol már override-olni fogjuk a repül függvényt.
+	 </para>
         <programlisting language='c++'>
             <![CDATA[
 #include <iostream>
@@ -327,17 +328,19 @@ public class App
                 <imagedata fileref="nonoZone.png"></imagedata>
             </imageobject>
         </mediaobject>
+	    
         <mediaobject>
             <imageobject>
                 <imagedata fileref="nonoZoneJava.png"></imagedata>
             </imageobject>
         </mediaobject>
-    </section>  
-    <para>
+	<para>
     Mindkét esetben hibaüzenetet kaptunk a fordítótól a nem megfelelő függvényhivatkozások miatt, melyre javítási javaslatot is adott.
-    </para>
+    	</para>
+    </section>  
 
-   </section>     
+
+     
     <section>
         <title>Anti OO</title>
         <para>
@@ -865,13 +868,9 @@ public class PiBBPBench {
                                 A programok nagyjából azonos idő alatt végezték el az egyes méréseket, leszámítva a C#-os esetet.
                                 Az átlagos futási idők rendre 1.6, 20 és 250 másodpercek voltak.
                                 A 10<superscript>6</superscript> mérésben a C-s bináris végzett legelőször, utolsó volt a C#-os program, utobbi majdnem minden tesztben igaz lesz.
-                                A 10<superscript>7</superscript> mérésben és az utolsó 10<superscript>6</superscript> mérésben a C bájtkód került a trónra, ez nem objektum-orientált nyelv. Az objektum orientáltság előnye többnyire a fejlesztés sebességének optimalizálása, azonban ennek egyik áldozata a gép számára történő optimalizáció romlása
-
-
-        
+                                A 10<superscript>7</superscript> mérésben és az utolsó 10<superscript>6</superscript> mérésben a C bájtkód került a trónra, ez nem objektum-orientált nyelv. Az objektum orientáltság előnye többnyire a fejlesztés sebességének optimalizálása, azonban ennek egyik áldozata a gép számára történő optimalizáció romlása.
         </para>
         
-
                 <mediaobject>
             <imageobject>
                 <imagedata fileref="bbtable.png"></imagedata>
@@ -912,7 +911,8 @@ RAM: 8 GB 2133 MT/s DDR4
     
     <section>
         <title>Hello, Android!</title>
-        <para>Élesszük fel az SMNIST for Humans projektet!
+        <para>
+		Élesszük fel az SMNIST for Humans projektet!
             https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main
             Apró módosításokat eszközölj benne, pl. színvilág.
         </para>
@@ -977,9 +977,10 @@ public class SMNISTE3Activity extends AppCompatActivity {
             Miután töröltük e idősíkról az eredeti fájl fordítását akadályozó bugokat rákapcsolhatunk
             a zöld kicsi háromszögre és végül...
         </para>
-<para>
+	<para>
 A színvilág módosításához pl. az <filename>SMNISTforHumansExp3/app/src/main/java/hu/blog/bhaxor/smnistforhumansexp3/SMNISTSurfaceView.java</filename> fájlt is használhatjuk.
 Ha az RGB paramétereket átírjuk a bgColor-ban, akkor az app háttérszíne módosul.
+	</para>
 <programlisting language="Java"><![CDATA[
 int[] bgColor =
             {
@@ -987,10 +988,11 @@ int[] bgColor =
                     android.graphics.Color.rgb(11, 250, 180)
             };]]>
 </programlisting>
-</para>
 
-<para>
+
+	<para>
 A képernyőn megjelenő üzeneteket is tudjuk ebben a fileban módosítani, vagy akár kibővíteni új Stringek létrehozásával.
+	</para>
 <programlisting language="Java"><![CDATA[
 private static String msg1 = "How many dots can you see?";
 private static String msg2 = "Touch the appropriate number.";]]>
@@ -1039,10 +1041,10 @@ static StringBuilder sb2 = new StringBuilder();
         msg1 = sb.toString();
         msg2 = sb2.toString();]]>
         </programlisting>
-</para>
 
-<para>
+	<para>
 Többek között a szövegek, felugró üzenetek, szegélyek színét, elhelyezkedését és méretét is tudjuk befolyásolni.
+	</para>
 <programlisting language="Java"><![CDATA[
         textPaint.setColor(android.graphics.Color.GRAY);
         textPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
@@ -1067,18 +1069,20 @@ Többek között a szövegek, felugró üzenetek, szegélyek színét, elhelyezk
         fillPaint.setStyle(android.graphics.Paint.Style.FILL);
         fillPaint.setColor(android.graphics.Color.YELLOW);]]>
 </programlisting>
-</para>
 
-<para>
+
+	<para>
 Az <filename>SMNISTforHumansExp3/app/src/main/res/values/strings.xml</filename> tartalmazza az app nevét, természetesen ezt is lehet módosítani.
+	</para>
 <programlisting><![CDATA[
 <resources>
     <string name="app_name">SMNISTforHumansExp3, v0.0.3</string>
 </resources>]]>
 </programlisting>
+	    <para>
 Ebben az xml fájlban tárolódnak nemcsak a további lehetséges string nevek, de pl. a status állapotokhoz tartozó stringek is (a színmódosítás itt is megvalósítható lenne).
-</para>
-
+	    </para>
+	    
                 <mediaobject>
             <imageobject>
                 <imagedata fileref="wow.jpg"></imagedata>
@@ -1088,7 +1092,7 @@ Ebben az xml fájlban tárolódnak nemcsak a további lehetséges string nevek, 
             </section>  
 
         
-<section>)
+<section>
         <title>Ciklomatikus komplexitás</title>
         <para>
             Számoljuk ki valamelyik programunk függvényeinek ciklomatikus komplexitását!
@@ -1147,15 +1151,17 @@ Metódusok ciklomatikus bonyolultságának meghatározása:
                 </para>
             </listitem>
         </itemizedlist>
-<para>
+	
+	<para>
             Például:
         </para>
+	
         <mediaobject>
             <imageobject>
                 <imagedata fileref="manual.png" scale='55'></imagedata>
             </imageobject>
             <caption>
-                <para> Itt <literal>CNN=7</literal>, kisebb programok esetén megnézhetjük manuálisan is.</para>
+		 <para> Itt <literal>CNN=7</literal>, kisebb programok esetén megnézhetjük manuálisan is.</para>
             </caption>
         </mediaobject>
         <para>
