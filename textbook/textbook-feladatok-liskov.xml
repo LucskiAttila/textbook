@@ -1,0 +1,374 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Liskov!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+ <section>
+        <title>Liskov helyettesítés sértése</title>
+        <para>
+            Írjunk olyan OO, leforduló Java és C++ kódcsipetet, amely megsérti a Liskov elvet! Mutassunk rá a
+            megoldásra: jobb OO tervezés.
+        </para>
+        <para>
+        Az objektumorientált programozás öt fő tervezési elve közül a harmadik a Liskov helyettesítési elv, ami szerint minden osztály legyen helyettesíthető a leszármazott osztályával anélkül, hogy a program helyes működése megváltozna. Másképp fogalmazva ha S altípusa T-nek, akkor minden olyan helyen ahol T-t felhasználjuk S-t is minden gond nélkül behelyettesíthetjük anélkül, hogy a programrész tulajdonságai megváltoznának. A jelenlegi példában a biológia tantárgyból ismert állatani osztályozás egy részét használjuk fel mégpedig a madarak osztályát és annak néhány alosztályát repülési tulajdonságaikkal. Ugye a T a Madarak osztaly, az S-ek pedig a Pingvinek es a Sasok osztályok. Tehát az elv szerint minden S alosztalyba, azaz a Pingvinek es a Sasok osztályokba is behelyettesíthetjük a T azaz a Madarak főosztályba anélül hogy a program helyes működése sérüljön. Ha a Sasok osztályba helyettesitjuk be a Madarak osztályt helyesen fog működni a program továbbra is változatlanul, mivel mindkettő a repülni függvényt tartalmazza és a Sasok továbbra is repül. Ha viszont a másik alosztályba azaz a Pingvinek osztályba helyettesitjük be a Madarak osztályt akkor a program nem fog helyesen működni mivel a Pingivenk osztályának nem része a repülni függvény, de a behelyettetés utána része lesz, viszont a pingvinek nem tudnak repülni.
+        </para>
+        <programlisting language='Java'>
+            <![CDATA[
+class Madarak
+{
+    public void  repül()
+    {
+            System.out.println("Hiba\n");
+    }
+}
+
+class Sasok extends  Madarak
+{
+    public void repül()
+    {
+        System.out.println("...\n");
+    }
+}
+class Pingivnek extends  Madarak
+{
+}
+
+class Liskov
+{
+
+    public static void repülő(Madarak b)
+    {
+        b.repül();
+    }
+
+    public static void main(String[] args)
+    {
+        Bird Sas = new Sasok();
+        Bird Pingvin = new Pingvinek();
+        
+        repülő(Sas);
+        repülő(Pingvin);
+        
+        
+    }
+
+}            
+]]>
+        </programlisting>
+        <para>
+        A megoldás hogy külön főoszyályokat hozunk létre a repülni tudó es repülni nem tudó madaraknak, jelen esetben a Sasok es Pingvinek alosztalyoknak, a Madarak osztalyt igy üresen hagyjuk es interfezkent hasznaljuk mivel többszörös öröklődés van.
+        </para>
+        <programlisting language='Java'>
+            <![CDATA[
+interface Madarak
+{
+    
+}
+
+interface RepülőMadarak extends Madarak
+{
+    public void  repül();
+}
+interface NemRepülőMadarak extends Madarak
+{
+}
+class Sasok implements RepülőMadarak
+{
+    public void repül()
+    {
+        System.out.println("...\n");
+    }
+}
+class Pingvinek implements NemRepülőMadarak
+{
+}
+
+class Liskov
+{
+
+    public static void repülő(ReülőMadarak b)
+    {
+        b.repülő();
+    }
+
+    public static void main(String[] args)
+    {
+        Sas Sasok = new Sasok();
+       Pingvin Pingvinek = new Pingvinek();
+        
+        repülő(Sas);
+        repülő(Pingvin); 
+        
+        
+    }
+
+}            
+]]>
+        </programlisting>
+        <para>
+        Amint látjuk a második esetben csak a ... szerepel igy helyesen mukodik, mivel csak a Sasok osztályának függvénye hívódik meg. Az első esetben szerepel a Hiba is igy hibásan működik mivel a Pingivnek nem tudnak repülni, de mégis meghívódik a repülni függvény az öröklődés miatt.  
+        </para>
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskovJava.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskovJavaCorrect.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <para>
+        C++ programozási nyelvre átfordítva, ahol már override-olni fogjuk a repül függvényt.
+        <programlisting language='c++'>
+            <![CDATA[
+#include <iostream>
+
+class Madarak
+{
+    
+public:
+   
+    virtual void  repül()
+    {
+        std::cout << "Hiba\n" ;
+    }
+};
+
+class Sasok : public Madarak
+{
+public:
+  
+    void repül() override
+    {
+        std::cout << "...\n";
+    }
+};
+
+class Pingvinek : public Madarak
+{
+};
+
+static void repülő(Madarak& b)
+{
+    b.repülő();
+}
+
+int main()
+{
+    Sasok Sas;
+    Pingvinek Pingvin;
+    
+    repülő(Sas);
+    repülő(Pingvin);
+    
+    return 0;
+}
+            
+]]>
+        </programlisting>
+
+ <programlisting language='c++'>
+            <![CDATA[
+#include <iostream>
+
+class Madarak
+{
+    
+};
+
+class RepülőMadarak : public Madarak
+{
+public:
+    virtual void repül(); 
+};
+class NemRepülőMadarak : public Madarak
+{
+};
+
+class Sasok : public RepülőMadarak
+{
+public:
+  
+    void repül() override
+    {
+        std::cout << "...\n";
+    }
+};
+
+class Pingvinek : public NemRepülőMadarak
+{
+};
+
+static void repülő(RepülőMadarak& b)
+{
+    b.repülő();
+}
+
+int main()
+{
+    Sasok Sas;
+    Pingvinek Pingvin;
+    
+    repülő(Sas);
+    repülő(Pingvin); 
+    
+    return 0;
+}
+            
+]]>
+        </programlisting>
+
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskovViolation.png"></imagedata>
+            </imageobject>
+        </mediaobject>                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskovCorrect.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </section>        
+
+    <section>
+        <title>Szülő-gyerek</title>
+        <para>
+            Írjunk Szülő-gyerek Java és C++ osztálydefiníciót, amelyben demonstrálni tudjuk, hogy az ősön
+            keresztül csak az ős üzenetei küldhetőek!
+        </para>
+        <para>
+        Az objektumorientált programozási nyelvekben ha egy osztályt ősosztályként használunk akkor annak alosztályai öröklik annak függvényeit, változóit melyeket fejleszhetünk is, ezekre hivatkozhatunk az ősosztályon keresztül. De azokat a függvényeket nem hívhatjuk meg az ősosztályon keresztül amelyek csak az alosztályban vannak definiálva, illetve azokra a változókra sem hivatkozhatunk.  
+        </para>
+ <programlisting language='C++'>
+            <![CDATA[
+#include <iostream>
+#include <string>
+
+class Parent
+{
+public:
+        void saySomething()
+    {
+        std::cout << "Parent says: BLA BLA BLA\n";
+    }
+};
+class Child : public Parent
+{
+public:
+        void echoSomething(std::string msg)
+    {
+       std::cout << msg << "\n";
+    }
+};
+
+
+
+class App
+{
+   int main()
+    {
+        Parent* p = new Parent();
+        Parent* p2 = new Child();
+        
+        std::cout << "Invoking method of parent\n";
+        p->saySomething();
+        
+        std::cout << "Invoking method of child through parent ref\n";
+        p2->echoSomething("This won't work");
+        
+        delete p;
+        delete p2;
+        
+    }
+};
+            
+]]>
+        </programlisting>
+
+ <programlisting language='Java'>
+            <![CDATA[
+class Parent
+{
+    public void saySomething()
+    {
+        System.out.println("Parent says: BLA BLA BLA");
+    }
+}
+class Child extends Parent
+{
+    public void echoSomething(String msg)
+    {
+        System.out.println(msg);
+    }
+}
+public class App
+{
+    public static void main(String[] args)
+    {
+        Parent p = new Parent();
+        Parent p2 = new Child();
+        
+        System.out.println("Invoking method of parent");
+        p.saySomething();
+        
+        System.out.println("Invoking method of child through parent ref");
+        p2.echoSomething("This won't work");
+        
+    }
+}
+            
+]]>
+        </programlisting>
+
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="nonoZone.png"></imagedata>
+            </imageobject>
+        </mediaobject>                <mediaobject>
+            <imageobject>
+                <imagedata fileref="nonoZoneJava.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </section>  
+    <para>
+    Mindkét esetben hibaüzenetet kaptunk a fordítótól a nem megfelelő függvényhivatkozások miatt, melyre javítási javaslatot is adott.
+    </para>
+
+   </section>     
+    <section>
+        <title>Anti OO</title>
+        <para>
+            A BBP algoritmussal4 a Pi hexadecimális kifejtésének a 0. pozíciótól számított
+            10<superscript>6</superscript>, 10<superscript>7</superscript>,10<superscript>8</superscript>
+            jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
+        </para>
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+       
+        
+        
