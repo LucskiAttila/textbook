@@ -326,7 +326,8 @@ public class App
             <imageobject>
                 <imagedata fileref="nonoZone.png"></imagedata>
             </imageobject>
-        </mediaobject>                <mediaobject>
+        </mediaobject>
+        <mediaobject>
             <imageobject>
                 <imagedata fileref="nonoZoneJava.png"></imagedata>
             </imageobject>
@@ -344,30 +345,851 @@ public class App
             10<superscript>6</superscript>, 10<superscript>7</superscript>,10<superscript>8</superscript>
             jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
         </para>
+        
+         <para>
+          Az előző fejezet 'Kódolás from scratch' feladatában a BBP algoritmus Java változatának segítségével számítottuk ki a Pi hexa jegyeit.
+          Ezúttal a 0. pozíciótól számított 10^6, 10^7 és 10^8 darab jegyét határozzuk meg C, C++, C# és Java nyelveken, majd összehasonlítjuk a kapott futási időket.
+          A BBP algoritmusnak jóvoltából képesek vagyunk másodpercek alatt kiszámoltatni a Pi hexadecimális kifejtésének 0. pozíciótól számított szinte akárhány darab jegyét. Viszont minnél távolabbi értékeket vizsgálunk, annál inkább számít a teljesítmény. Először vizsgáljuk meg a java verziót. A d+1. hexa jegytől számoljuk a hexa jegyeket, amely deklarálása a <function>for</function> ciklus fejlécében szerepel.
+
+        </para>
+
+        <programlisting language="java"><![CDATA[
+
+/*
+ * PiBBPBench.java
+ *
+ * DIGIT 2005, Javat tanítok
+ * Bátfai Norbert, nbatfai@inf.unideb.hu
+ *
+ */
+/**
+ * A PiBBP.java-ból kivettük az "objektumorientáltságot", így kaptuk
+ * ezt az osztályt.
+ *
+ * (A PiBBP osztály a BBP (Bailey-Borwein-Plouffe) algoritmust a Pi hexa
+ * jegyeinek számolását végző osztály. A könnyebb olvahatóság
+ * kedvéért a változó és metódus neveket megpróbáltuk az algoritmust
+ * bemutató [BBP ALGORITMUS] David H. Bailey: The BBP Algorithm for Pi.
+ * cikk jelöléseihez.)
+ *
+ * @author Bátfai Norbert, nbatfai@inf.unideb.hu
+ * @version 0.0.1
+ */
+public class PiBBPBench {
+    /**
+     * BBP algoritmus a Pi-hez, a [BBP ALGORITMUS] David H. Bailey: The
+     * BBP Algorithm for Pi. alapján a {16^d Sj} részlet kiszámítása.
+     *
+     * @param   d   a d+1. hexa jegytől számoljuk a hexa jegyeket
+     * @param   j   Sj indexe
+     */
+    public static double d16Sj(int d, int j) {
+        
+        double d16Sj = 0.0d;
+        
+        for(int k=0; k<=d; ++k)
+            d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+        
+        /* (bekapcsolva a sorozat elejen az első utáni jegyekben növeli pl.
+            a pontosságot.)
+        for(int k=d+1; k<=2*d; ++k)
+            d16Sj += Math.pow(16.0d, d-k) / (double)(8*k + j);
+         */
+        
+        return d16Sj - Math.floor(d16Sj);
+    }
+    /**
+     * Bináris hatványozás mod k, a 16^n mod k kiszámítása.
+     *
+     * @param   n   kitevő
+     * @param   k   modulus
+     */
+    public static long n16modk(int n, int k) {
+        
+        int t = 1;
+        while(t <= n)
+            t *= 2;
+        
+        long r = 1;
+        
+        while(true) {
+            
+            if(n >= t) {
+                r = (16*r) % k;
+                n = n - t;
+            }
+            
+            t = t/2;
+            
+            if(t < 1)
+                break;
+            
+            r = (r*r) % k;
+            
+        }
+        
+        return r;
+    }
+    /**
+     * A [BBP ALGORITMUS] David H. Bailey: The
+     * BBP Algorithm for Pi. alapján a
+     * {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}}
+     * kiszámítása, a {} a törtrészt jelöli. A Pi hexa kifejtésében a
+     * d+1. hexa jegytől
+     */
+    public static void main(String args[]) {
+        
+        double d16Pi = 0.0d;
+        
+        double d16S1t = 0.0d;
+        double d16S4t = 0.0d;
+        double d16S5t = 0.0d;
+        double d16S6t = 0.0d;
+        
+        int jegy = 0;
+        
+        long delta = System.currentTimeMillis();
+        
+        for(int d=100000000; d<100000001; ++d) {
+            
+            d16Pi = 0.0d;
+            
+            d16S1t = d16Sj(d, 1);
+            d16S4t = d16Sj(d, 4);
+            d16S5t = d16Sj(d, 5);
+            d16S6t = d16Sj(d, 6);
+            
+            d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+            
+            d16Pi = d16Pi - Math.floor(d16Pi);
+            
+            jegy = (int)Math.floor(16.0d*d16Pi);
+            
+        }
+        
+        System.out.println(jegy);
+        delta = System.currentTimeMillis() - delta;
+        System.out.println(delta/1000.0);
+    }
+} 
+
+
+$  java PiBBPBench
+
+6
+
+1.803
+
+
+
+$ java PiBBPBench
+
+7
+
+21.935
+
+
+
+$ java PiBBPBench
+
+12
+
+243.427
+
+]]>
+
+        </programlisting>
+        
+   <programlisting language="c"><![CDATA[
+     
+        
+        #include <stdio.h>
+#include <math.h>
+#include <time.h>
+/*
+ * pi_bbp_bench.c
+ *
+ * DIGIT 2005, Javat tanítok
+ * Bátfai Norbert, nbatfai@inf.unideb.hu
+ *
+ * A PiBBP.java-ból kivettük az "objektumorientáltságot", így kaptuk
+ * a PiBBPBench osztályt, amit pedig átírtuk C nyelvre.
+ *
+ */
+
+/*
+ * 16^n mod k
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+long
+n16modk (int n, int k)
+{
+  long r = 1;
+
+  int t = 1;
+  while (t <= n)
+    t *= 2;
+
+  for (;;)
+    {
+
+      if (n >= t)
+	{
+	  r = (16 * r) % k;
+	  n = n - t;
+	}
+
+      t = t / 2;
+
+      if (t < 1)
+	break;
+
+      r = (r * r) % k;
+
+    }
+
+  return r;
+}
+
+/* {16^d Sj}
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+double
+d16Sj (int d, int j)
+{
+
+  double d16Sj = 0.0;
+  int k;
+
+  for (k = 0; k <= d; ++k)
+    d16Sj += (double) n16modk (d - k, 8 * k + j) / (double) (8 * k + j);
+
+  /*
+     for(k=d+1; k<=2*d; ++k)
+     d16Sj += pow(16.0, d-k) / (double)(8*k + j);
+   */
+
+  return d16Sj - floor (d16Sj);
+}
+
+/*
+ * {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}}
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+main ()
+{
+
+  double d16Pi = 0.0;
+
+  double d16S1t = 0.0;
+  double d16S4t = 0.0;
+  double d16S5t = 0.0;
+  double d16S6t = 0.0;
+
+  int jegy;
+  int d;
+
+  clock_t delta = clock ();
+
+  for (d = 100000000; d < 100000001; ++d)
+    {
+
+      d16Pi = 0.0;
+
+      d16S1t = d16Sj (d, 1);
+      d16S4t = d16Sj (d, 4);
+      d16S5t = d16Sj (d, 5);
+      d16S6t = d16Sj (d, 6);
+
+      d16Pi = 4.0 * d16S1t - 2.0 * d16S4t - d16S5t - d16S6t;
+
+      d16Pi = d16Pi - floor (d16Pi);
+
+      jegy = (int) floor (16.0 * d16Pi);
+
+    }
+
+  printf ("%d\n", jegy);
+  delta = clock () - delta;
+  printf ("%f\n", (double) delta / CLOCKS_PER_SEC);
+} 
+]]>
+
+        </programlisting>
+        
+ <programlisting language="c++"><![CDATA[
+
+  
+        #include <iostream>
+#include <cmath>
+#include <string>
+#include <ctime>
+
+/*
+ * 16^n mod k
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+long
+n16modk (int n, int k)
+{
+  long r = 1;
+
+  int t = 1;
+  while (t <= n)
+    t *= 2;
+
+  for (;;)
+    {
+
+      if (n >= t)
+	{
+	  r = (16 * r) % k;
+	  n = n - t;
+	}
+
+      t = t / 2;
+
+      if (t < 1)
+	break;
+
+      r = (r * r) % k;
+
+    }
+
+  return r;
+}
+
+/* {16^d Sj}
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+double
+d16Sj (int d, int j)
+{
+
+  double d16Sj = 0.0;
+  int k;
+
+  for (k = 0; k <= d; ++k)
+    d16Sj += (double) n16modk (d - k, 8 * k + j) / (double) (8 * k + j);
+
+  /*
+     for(k=d+1; k<=2*d; ++k)
+     d16Sj += pow(16.0, d-k) / (double)(8*k + j);
+   */
+
+  return d16Sj - floor (d16Sj);
+}
+
+/*
+ * {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}}
+ * [BBP ALGORITMUS] David H. Bailey: The
+ * BBP Algorithm for Pi. alapján.
+ */
+main ()
+{
+
+  double d16Pi = 0.0;
+
+  double d16S1t = 0.0;
+  double d16S4t = 0.0;
+  double d16S5t = 0.0;
+  double d16S6t = 0.0;
+
+  int jegy;
+  int d;
+
+  clock_t delta = clock ();
+
+  for (d = 1000000; d < 1000001; ++d)
+    {
+
+      d16Pi = 0.0;
+
+      d16S1t = d16Sj (d, 1);
+      d16S4t = d16Sj (d, 4);
+      d16S5t = d16Sj (d, 5);
+      d16S6t = d16Sj (d, 6);
+
+      d16Pi = 4.0 * d16S1t - 2.0 * d16S4t - d16S5t - d16S6t;
+
+      d16Pi = d16Pi - floor (d16Pi);
+
+      jegy = (int) floor (16.0 * d16Pi);
+
+    }
+
+  std::cout << jegy << "\n";
+  delta = clock () - delta;
+  std::cout << (double) delta / CLOCKS_PER_SEC << "\n";
+} 
+
+   ]]>
+
+        </programlisting>     
+        
+        
+    <programlisting language="c#"><![CDATA[
+    
+        /*
+ * FileName: PiBBPBench.cs
+ * Author: Bátfai Norbert, nbatfai@inf.unideb.hu
+ * DIGIT 2005, Javat tanítok
+ */
+/// <summary>
+/// A PiBBPBench C# átírata.
+/// </summary>
+/// <remark>
+/// A PiBBP.java-ból kivettük az "objektumorientáltságot", így kaptuk
+/// a PiBBPBench osztályt, amit pedig átírtuk C# nyelvre.
+///
+/// (A PiBBP osztály a BBP (Bailey-Borwein-Plouffe) algoritmust a Pi hexa
+/// jegyeinek számolását végző osztály. A könnyebb olvahatóság
+/// kedvéért a változó és metódus neveket megpróbáltuk az algoritmust
+/// bemutató [BBP ALGORITMUS] David H. Bailey: The BBP Algorithm for Pi.
+/// cikk jelöléseihez.)
+/// </remark>
+public class PiBBPBench {
+    /// <remark>
+    /// BBP algoritmus a Pi-hez, a [BBP ALGORITMUS] David H. Bailey: The
+    /// BBP Algorithm for Pi. alapján a {16^d Sj} részlet kiszámítása.
+    /// </remark>
+    /// <param>
+    /// d   a d+1. hexa jegytől számoljuk a hexa jegyeket
+    /// </param>
+    /// <param>
+    /// j   Sj indexe
+    /// </param>
+    public static double d16Sj(int d, int j) {
+        
+        double d16Sj = 0.0d;
+        
+        for(int k=0; k<=d; ++k)
+            d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+        
+        /*
+        for(int k=d+1; k<=2*d; ++k)
+            d16Sj += System.Math.pow(16.0d, d-k) / (double)(8*k + j);
+         */
+        
+        return d16Sj - System.Math.Floor(d16Sj);
+    }
+    /// <summary>
+    /// Bináris hatványozás mod k, a 16^n mod k kiszámítása.
+    /// </summary>
+    /// <param>
+    /// n   kitevő
+    /// </param>
+    /// <param>
+    /// k   modulus
+    /// </param>
+    public static long n16modk(int n, int k) {
+        
+        int t = 1;
+        while(t <= n)
+            t *= 2;
+        
+        long r = 1;
+        
+        while(true) {
+            
+            if(n >= t) {
+                r = (16*r) % k;
+                n = n - t;
+            }
+            
+            t = t/2;
+            
+            if(t < 1)
+                break;
+            
+            r = (r*r) % k;
+            
+        }
+        
+        return r;
+    }
+    /// <remark>
+    /// A [BBP ALGORITMUS] David H. Bailey: The
+    /// BBP Algorithm for Pi. alapján a
+    /// {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}}
+    /// kiszámítása, a {} a törtrészt jelöli. A Pi hexa kifejtésében a
+    /// d+1. hexa jegytől
+    /// </remark>
+     public static void Main(System.String[]args) { 
+        
+        double d16Pi = 0.0d;
+        
+        double d16S1t = 0.0d;
+        double d16S4t = 0.0d;
+        double d16S5t = 0.0d;
+        double d16S6t = 0.0d;
+        
+        int jegy = 0;
+        
+        System.DateTime kezd = System.DateTime.Now;
+        
+        for(int d=1000000; d<1000001; ++d) {
+            
+            d16Pi = 0.0d;
+            
+            d16S1t = d16Sj(d, 1);
+            d16S4t = d16Sj(d, 4);
+            d16S5t = d16Sj(d, 5);
+            d16S6t = d16Sj(d, 6);
+            
+            d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+            
+            d16Pi = d16Pi - System.Math.Floor(d16Pi);
+            
+            jegy = (int)System.Math.Floor(16.0d*d16Pi);
+            
+        }
+        
+        System.Console.WriteLine(jegy);
+        System.TimeSpan delta = System.DateTime.Now.Subtract(kezd);
+        System.Console.WriteLine(delta.TotalMilliseconds/1000.0);
+    }
+} 
+
+]]>
+
+        </programlisting>
+        
+        <para>
+            Megfigyelések:
+                                A programok nagyjából azonos idő alatt végezték el az egyes méréseket, leszámítva a C#-os esetet.
+                                Az átlagos futási idők rendre 1.6, 20 és 250 másodpercek voltak.
+                                A 10<superscript>6</superscript> mérésben a C-s bináris végzett legelőször, utolsó volt a C#-os program, utobbi majdnem minden tesztben igaz lesz.
+                                A 10<superscript>7</superscript> mérésben és az utolsó 10<superscript>6</superscript> mérésben a C bájtkód került a trónra, ez nem objektum-orientált nyelv. Az objektum orientáltság előnye többnyire a fejlesztés sebességének optimalizálása, azonban ennek egyik áldozata a gép számára történő optimalizáció romlása
 
 
         
+        </para>
+        
+
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="bbtable.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+        
+                <literallayout>
+
+* A számításokat az alábbi erőforrásokkal felszerelt gépen végeztem:
+
+OS: Ubuntu 18.04 Lts
+
+CPU: intel core i5 6300HQ
+
+RAM: 8 GB 2133 MT/s DDR4
+
+        </literallayout>
         
         
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskov_bench1.png"></imagedata>
+            </imageobject>
+        </mediaobject>
         
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskov_bench3.png"></imagedata>
+            </imageobject>
+        </mediaobject>
         
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="liskov_bench5.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </section>
+    
+    <section>
+        <title>Hello, Android!</title>
+        <para>Élesszük fel az SMNIST for Humans projektet!
+            https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main
+            Apró módosításokat eszközölj benne, pl. színvilág.
+        </para>
+        <para>
+            Az SMNIST for Humans projekt egy Android mobil operációs rendszerre készült
+            program.
+            Ezzel már a múlt félévben is foglalkoztunk, de többnyire csak a program kipróbálásának
+            szintjén.
+            Ennek a kezeléséhez érdemes használni egy specifikusan Androidra szánt IDE-t, ami
+            ebben a jelenlegi esetben az Android Studio lesz, talán mind közül a
+            legnépszerűbb.
+            Telepítéshez: git clone https://aur.archlinux.org/android-studio.git
+            Az Android alkalmazásainkat tudjuk debugolni akár saját Androidos készülékeinken is,
+            vagy akár emulátor segítségével is.
+            A <filename>.gradle</filename> fájl nélkül nem tudjuk importálni a projektet, így létrehozunk <emphasis>empty</emphasis> Android projectet és behozzuk
+            a leklónozott forrásokat.Els˝o lépésként átmásoljuk a activity_smniste3.xml fájlt a */layout mappába.
+            Ahhoz, hogy az aktivitásunk ezt a layout-ot használja át kell írni az AndroidManifest.xml fájlt:
+        </para>
+        <programlisting language='xml'>
+            <![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.forhumans">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".SMNISTE3Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>            
+]]>
+        </programlisting>
+        <para>
+            Az Android SDK-k egyik negatív jellemzője, hogy nagyon gyorsan változnak, mármint
+            nem csak featurekben, hanem szintaxisban és struktúrában, így hamar, akár 3-4 hónapon belül
+            máshova kerülhetnek a már gyakorlatban kipróbált, megtalált osztályaink. 
+            Például az eredeti állományban szereplő public class SMNISTE3Activity extends android.
+            support.v7.app.AppCompatActivity sor eseténél:
+        </para>
+<programlisting language='Java'>
+            <![CDATA[
+...            
+package com.example.forhumans;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SMNISTE3Activity extends AppCompatActivity {
+...        
+]]>
+        </programlisting>
+        <para>
+            Miután töröltük e idősíkról az eredeti fájl fordítását akadályozó bugokat rákapcsolhatunk
+            a zöld kicsi háromszögre és végül...
+        </para>
+<para>
+A színvilág módosításához pl. az <filename>SMNISTforHumansExp3/app/src/main/java/hu/blog/bhaxor/smnistforhumansexp3/SMNISTSurfaceView.java</filename> fájlt is használhatjuk.
+Ha az RGB paramétereket átírjuk a bgColor-ban, akkor az app háttérszíne módosul.
+<programlisting language="Java"><![CDATA[
+int[] bgColor =
+            {
+                    android.graphics.Color.rgb(11, 180, 250),
+                    android.graphics.Color.rgb(11, 250, 180)
+            };]]>
+</programlisting>
+</para>
+
+<para>
+A képernyőn megjelenő üzeneteket is tudjuk ebben a fileban módosítani, vagy akár kibővíteni új Stringek létrehozásával.
+<programlisting language="Java"><![CDATA[
+private static String msg1 = "How many dots can you see?";
+private static String msg2 = "Touch the appropriate number.";]]>
+</programlisting>
+
+<programlisting language="Java"><![CDATA[
+static StringBuilder sb = new StringBuilder();
+static StringBuilder sb2 = new StringBuilder();
+
+    public static void msg() {
+        sb.delete(0, sb.length());
+        sb2.delete(0, sb2.length());
+
+        sb.append("ms: (");
+        sb.append(decisionTimeLimit);
+        sb.append(") ");
+
+        sb2.append("lvl/[...]: (");
+        sb2.append(semValueLimit);
+        sb2.append(") ");
+
+        float ur = 0;
+        for (int i = SEM_VALUE_LIMIT_START; i < NUM_OF_DIGITS; ++i) {
+
+            sb.append(millisecs[i]);
+            sb.append(" ");
+            if (millisecs[i] != 0) {
+                sb2.append(i + 1);
+                ur += (((svmeans[i]+1.0)*(i + 1.0)) / millisecs[i]);
+                sb2.append("/");
+                sb2.append(svmeans[i]);
+            }
+            else {
+                sb2.append(0);
+                sb2.append("/");
+                sb2.append(0);
+            }
+            sb2.append(" ");
+
+        }
+
+        sb2.append(" <");
+        sb2.append(ur);
+        sb2.append(">");
+
+        msg1 = sb.toString();
+        msg2 = sb2.toString();]]>
+        </programlisting>
+</para>
+
+<para>
+Többek között a szövegek, felugró üzenetek, szegélyek színét, elhelyezkedését és méretét is tudjuk befolyásolni.
+<programlisting language="Java"><![CDATA[
+        textPaint.setColor(android.graphics.Color.GRAY);
+        textPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+        textPaint.setAntiAlias(true);
+        textPaint.setTextAlign(android.graphics.Paint.Align.CENTER);
+        textPaint.setTextSize(50);
+
+        msgPaint.setColor(android.graphics.Color.GRAY);
+        msgPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+        msgPaint.setAntiAlias(true);
+        msgPaint.setTextAlign(android.graphics.Paint.Align.LEFT);
+        msgPaint.setTextSize(40);
+
+        dotPaint.setColor(android.graphics.Color.BLACK);
+        dotPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+        dotPaint.setAntiAlias(true);
+        dotPaint.setTextAlign(android.graphics.Paint.Align.CENTER);
+        dotPaint.setTextSize(50);
+
+        borderPaint.setStrokeWidth(2);
+        borderPaint.setColor(android.graphics.Color.GRAY);
+        fillPaint.setStyle(android.graphics.Paint.Style.FILL);
+        fillPaint.setColor(android.graphics.Color.YELLOW);]]>
+</programlisting>
+</para>
+
+<para>
+Az <filename>SMNISTforHumansExp3/app/src/main/res/values/strings.xml</filename> tartalmazza az app nevét, természetesen ezt is lehet módosítani.
+<programlisting><![CDATA[
+<resources>
+    <string name="app_name">SMNISTforHumansExp3, v0.0.3</string>
+</resources>]]>
+</programlisting>
+Ebben az xml fájlban tárolódnak nemcsak a további lehetséges string nevek, de pl. a status állapotokhoz tartozó stringek is (a színmódosítás itt is megvalósítható lenne).
+</para>
+
+                <mediaobject>
+            <imageobject>
+                <imagedata fileref="wow.jpg"></imagedata>
+            </imageobject>
+        </mediaobject>
+
+            </section>  
+
         
+<section>)
+        <title>Ciklomatikus komplexitás</title>
+        <para>
+            Számoljuk ki valamelyik programunk függvényeinek ciklomatikus komplexitását!
+        </para>
+        <para>
+            A ciklomatikus komplexitás egy metrika ami, mint minden ehhez a szakmához tartozó
+            metrikai eszköz, az adott dolog, ez esetben metódusok, minőségét hivatott jellemezni.
+            A ciklomatikus komplexitás metódusok mellett kiterjeszthető modulokra, osztályokra is.
+             A ciklomatikus komplexitás a forráskódot jellemző tulajdonság, azt mondja meg, 
+            hogy egy adott programban hány lineárisan független út
+            található egy programban. Lefordítva, hogy hány féle képpen mehet a
+            vezérlés a program kezdetétől a végéig. Ha ez a kapott érték
+            kellően magas akkor azt jelenti, hogy a programunkon egyszerűsítenünk érdemes/kell, mert
+            nem karbantarható kódot írtunk stb. A 1-10 közötti értékek a legideálisabbak,
+            hiszen az azt jelenti, hogy jól megszervezett kódunk van, ami könnyen tesztelhető,
+            karbantartható. Egy 20-40 értéknél jobb lehet előről kezdeni a tervezést, ebben az esetben
+            ugyanis a függvényünk/metódusunk már nem csak egy dologért felelhet, ezért magas
+            ez az érték.
+        </para>
         
+    <para>
         
+Metódusok ciklomatikus bonyolultságának meghatározása:
+             Metódusonként végezzük el. Legyen adott egy <literal>n</literal> szám úgy, hogy <literal>n=1</literal>.
+            Minden egyes adott metódusban előforduló szelekciós, iterációs,...,vezérlést megváltoztató utasítás
+            esetén növeljük <literal>n</literal> szám értékét +1 értékkel.
+      </para>
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+     <para>
+            Tehát néznünk kell a következő elemeket:
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>
+                    <literal>return</literal>, csak akkor ha nem az utolsó utasítás adott metódusban
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Szelekciós utasítások: <literal>if-else,case,default</literal>
+                </para>
+            </listitem>
+             <listitem>
+                <para>
+                    Iterációs utasítások: <literal>for,while,do-while, break, continue</literal>
+                </para>
+            </listitem>
+             <listitem>
+                <para>
+                    A &amp;&amp; ||, ?, : operátorok..
+                </para>
+            </listitem>
+             <listitem>
+                <para>
+                    Kivételkezelés kulcsszavai: <literal>catch,finally,throw...</literal>
+                </para>
+            </listitem>
+        </itemizedlist>
+<para>
+            Például:
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="manual.png" scale='55'></imagedata>
+            </imageobject>
+            <caption>
+                <para> Itt <literal>CNN=7</literal>, kisebb programok esetén megnézhetjük manuálisan is.</para>
+            </caption>
+        </mediaobject>
+        <para>
+            A CNN kiszámítását nem csak kézzel végezhetjük, hanem a több tucat kiegészítő segítségével, ami
+            minden népszerű IDE-hez létezik. Ilyen például a 'metriculator' nevű plugin.
+        </para>
+   <para>
+A 'metriculator' a ciklomatikus komplexitást a McCabe oszlopban írja, ugyanis Thomas J. McCabe volt az, aki publikálta a metrikát.
+ Egy egyszerűbb program esetén, mégpedig a Liskov-elvet betartó C++ kódnál.
+    
+    Mivel a kapott érték 1, ezért elmondható, hogy a program nagyon egyszerű, kevés kockázattal.
+
+    Majd az LZWBinFa C++ átiratának mozgató szemantikás változatát teszteltem.
+
+       Az eredmény jóval nagyobb szám lett, mivel a ciklomatikus komplexitás elvének megfelelően a program bonyolult, magas kockázattal.
+          </para>
+    
+    <mediaobject>
+<imageobject>
+<imagedata fileref="cc_1.PNG" format="PNG" scale="100"/>
+</imageobject>
+</mediaobject>
+    
+<mediaobject>
+<imageobject>
+<imagedata fileref="cc_3.PNG" format="PNG" scale="100"/>
+</imageobject>
+</mediaobject>
+
+    </section>                  
+                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>
+
         
        
         
