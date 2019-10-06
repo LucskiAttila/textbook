@@ -85,14 +85,14 @@
             </para>
         </xi:fallback>
     </xi:include>  
-     <xi:include href="textbook-feladatok-arroway.xml">
+     <xi:include href="textbook-feladatok2-arroway.xml">
         <xi:fallback>
             <para>
                 <emphasis>XInclude: textbook-feladatok-arroway.xml file not found</emphasis>
             </para>
         </xi:fallback>
     </xi:include> 
-     <xi:include href="textbook-feladatok-liskov.xml">
+     <xi:include href="textbook-feladatok2-liskov.xml">
         <xi:fallback>
             <para>
                 <emphasis>XInclude: textbook-feladatok-liskov.xml file not found</emphasis>
