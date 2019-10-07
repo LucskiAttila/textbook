@@ -87,5 +87,61 @@
             Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről ( pl. use case és class diagramokat).
         </para>   
         <para>
-           Az UML diagramok rajzolására általam választott TeX csomag a TikZ. Ez lehetővé teszi számunkra, hogy emberileg átlátható, de pontos, szöveges formában adjuk meg diagramunk konkrétumait. A TeX kezelő szoftver amit alkalmaztam a TeXWorks, ami kényelmesebbé teszi a dokumentumszerkesztést, és ha megadunk egy csomagot, hogy használjuk, automatikusan kikeresi és installálja, tehát a TikZ-et is. A modellezés során az OOCWC projekt külső könyvtárait nem használtuk fel, illetve a TeX csomag szintaktikáját is figyelembe kellett vennünk.
+           Az UML diagramok rajzolására általam választott TeX csomag a TikZ. Ez lehetővé teszi számunkra, hogy emberileg átlátható, de pontos, szöveges formában adjuk meg diagramunk konkrétumait. A TeX kezelő szoftver amit alkalmaztam a TeXWorks, ami kényelmesebbé teszi a dokumentumszerkesztést, és ha megadunk egy csomagot, hogy használjuk, automatikusan kikeresi és installálja, tehát a TikZ-et is. A modellezés során az OOCWC projekt külső könyvtárait nem használtuk fel, illetve a TeX csomag szintaktikáját is figyelembe kellett vennünk. Használatához szükség van a <filename>texlive-pictures</filename> csomagra és a <filename>tikz-uml.sty</filename> fájlra, amit a TikZ-UML oldaláról tudsz letölteni. A program alapszerkezete:
         </para>
+     <programlisting><![CDATA[
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\begin{document}
+\begin{tikzpicture} 
+\begin{umlpackage}[x=0, y=0]{justine}
+\begin{umlpackage}[x=0, y=0]{robocar}
+\end{umlpackage}
+\begin{umlpackage}[x=10, y=0]{sampleclient}
+\end{umlpackage}
+\end{umlpackage} 
+\end{tikzpicture}
+\end{document}
+            ]]></programlisting>
+        <para>
+             Az osztályokat a <function>\umlclass</function> segítségével tudjuk létrehozni. Szintaxisa a következő:
+        </para>
+            <programlisting><![CDATA[
+                \umlclass{<név>}{<tagváltozók>}{<metódusok>}
+            ]]></programlisting>
+    <para>
+            Az egyes tagváltozókat és függvényeket a "\\" karakterekkel választjuk el. Ahogy már megtanultuk a korábbi fejezetekbe, "+"-al jelöljük a publikus tagokat és "-"-al a privátokat. Az osztály teljes implementációja a következő.
+    </para>
+            <programlisting><![CDATA[
+\begin{umlpackage}[x=0, y=0]{robocar}
+\umlclass{justine::robocar::CarLexer}{
+	- name : char[128] \\
+	- role : char \\
+	- route : std::vector<unsigned int>}{
+	+ yylex() : int \\
+	+ operator <<(os : std::ostream&, cl:CarLexer&) : std::ostream& <<friend>> \\
+	+ get\_name() : char* \\
+	+ get\_role() : char \\
+	+ get\_num() :int \\
+	+ get\_errnumber() : int \\
+	+ get\_guided() : bool \\
+	+ get\_cmd() : int \\
+	+ get\_id() : int \\
+	+ get\_route : std::vector<unigned int>& \\ + get\_from() : unsigned int \\
+	+ get\_to() : unsigned int \\
+	- m\_cmd() : int \\
+	- num () : int \\
+	- m\_errnumber() : int \\
+	- m\_guided() : bool \\
+	- m\_id() : int \\
+	- from() : unsigned int \\
+	- to() : unsigned int
+	}
+\end{umlpackage}
+            ]]></programlisting>
+     <mediaobject>
+            <imageobject>
+                <imagedata fileref=".png"></imagedata>
+            </imageobject>
+        </mediaobject>
