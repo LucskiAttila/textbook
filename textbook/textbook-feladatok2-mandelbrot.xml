@@ -66,7 +66,31 @@
         <para>
             A 13. fejezetben az UML-lel (Unified Modeling Language - egységes modellezőnyelv) kapcsolatos információkat olvashatunk. Az osztálydiagram lesz ismertetve, amiről az előző feladatokban írtam, így kiegészítem a könyvbeli anyaggal. Az osztályt téglalap jelöli, aminek a létrehozásához elég csak a nevét megadni, a multiplicitás tömbök esetén a tartalmazott elemek számának halmazát adja meg. Az egyfajta kapcsolatot üresháromszög nillal jelöljük. Az osztálysablonok sablonparamétereit  az osztály jobb felsős sarkában elhelyezett, szaggatott keretes téglalapban soroljuk fel.  A következő feladatban egy programot elemezhetünk mely egy számítógép alkatrészekkel kereskedő cég számára készült, ami fájlból tud olvasni és fájlba írni, illetve képernyőre listázni egyszerű szöveges fájlokból. A program létrehozásakor az is fontos volt hogy könnyen fejleszthető legyen. A megoldást esetünkben egy C++ könyvtár segítségével oldották meg, hiszen így felhasználható anélkül is, hogy kiadnák a forráskódját. Ez a létrehozott keretrendszer képes kezelni elemi, vagy összetett termékeket, egyszerűen úgy, hogy a terméket reprezentáló osztályban van egy termékeket tároló vektor, ami tartalmazza az ő alkatrészeit, amik szintén a termék osztály példányai.
         </para>
-  
+  <figure>
+            <title>Termékek létrehozásáért felelős osztályok kapcsolata.</title>
+            <mediaobject>
+                <imageobject>
+                <imagedata fileref="img/esettan-uml.png" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+<figure>
+            <title>Az programunk output-ja.</title>
+            <mediaobject>
+                <imageobject>
+                <imagedata fileref="img/esettan.png" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+<figure>
+            <title>computerproducts_out.txt file-ba való exportálás.</title>
+            <mediaobject>
+                <imageobject>
+                <imagedata fileref="img/product.png" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+
         </para>
           <title>BPMN</title>
         <para>
