@@ -59,6 +59,32 @@
             </imageobject>
         </mediaobject>
 
+     <title>Egy esettan</title>
+        <para>
+            A BMEs C++ tankönyv 14. fejezetét (427 444 elmélet, 445 469 az e settan) dolgozzuk fel!    
+        </para>  
+        <para>
             
+        </para>
+     
+          <title>BPMN</title>
+        <para>
+            Rajzoljunk le egy tevékenységet BPMN-ben! https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf (34 47 fólia)
+        </para>    
+        <para>
+            A BPMN az UML aktivitás diagramjához hasonló grafikus modellező nyelv, melyet például a yEd Graph Editor program segítségével használhatunk. Ezt a https://www.yworks.com/products/yed/download#download linkről töltöttem le, majd telepítettem. A program futtatása után New Document-re kattintunk, ezzel létrehozunk egy új dokumentumot. A program jobb oldalán a Palette mezőben lenyitjuk a BPMN fület majd a kiválasztott alakzatra kattintva majd azt behúzva a fehér lapra készíthetünk diagrammokat, az elemeket a kezdőelemre kattintva majd a célelemre húzva kapcsolhatjuk össsze az elemeket. Az elemeken jobb klikkelve majd az Add Label-re kattintva feliratokat adhatunk hozzá az egyes elemekhez. 
+            A példában a hazaérkezésem szimuláltam fizetős vagy ingyenes eszköz használatával. A zöld karika a tevékenység kezdetét jelenti, a piros a végét. A téglalap feladatot definiál, a rombusz pedig vagyos választásos kifejezést.
+        </para>
+                   <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml11.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+
+          <title>TeX UML</title>
+        <para>
+            Valamilyen TeX-es csomag felhasz nálásával készíts szép diagramo kat az OOCWC projektről ( pl. use case és class diagramokat).
+        </para>   
+        <para>
             
-            
+        </para>
