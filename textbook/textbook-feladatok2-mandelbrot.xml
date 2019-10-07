@@ -41,3 +41,24 @@
             </imageobject>
         </mediaobject>
         
+        <title>Forward engineering UML osztálydiagram</title>
+        <para>
+            UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
+        </para> 
+        <para>
+             Először létrehozunk egy új projektet és megnyitjuk azt a New-ra kattintva majd nevet adunk és UML adattípust állítunk be mivel osztálydiagramot hozunk létre, majd az Openüre kattintva megnyitjuk a létrehozott vpp kiterjesztésű projektünket, majd jobb klikkelve a projekt néven Model/New Model majd megjelink Add New Diagram amire klikkelve kikeressük a Class Diagram-omelyet elnevezhetünk létrehozunk egy osztály típúsu diagramot melyben dolgozunk osztályokkal. Class-ra klikkelve majd a fehér lapra klikkelve osztályokat illeszthetünk be majd elnevezzük aztán jobb klikkelve az alakzaton bővíthetjük is azt például attributumokkal. Osztályok közti kapcsolatot az osztály kijelölve majd a jobb felső sarkábs lévő ikonra kattintva hozhatunk létre, ahol megadhatjuk melyik osztályhoz csatlakozzon. A C++ kódot az előző feladathoz hasonlóan a Tools/Code/Generate C++ code-al hozhatjuk létre a kiválasztott mappába, amit kijelölve a Cpp Path és Source Path fülekre klikkelve majd a ...-ra kattintva módosíthatunk. Minden osztályhoz létrehoz egy header .h es egy .cpp kiterjesztésű fájlt, melyeket megtekinthetünk ha jobb klikkelve társítjuk a jegyzettömbbel.          
+        </para>
+                 <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml9.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+              <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml10.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+
+            
+            
+            
