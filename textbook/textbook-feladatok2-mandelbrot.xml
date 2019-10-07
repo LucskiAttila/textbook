@@ -168,7 +168,7 @@
     <para>
             Az egyes tagváltozókat és függvényeket a "\\" karakterekkel választjuk el. Ahogy már megtanultuk a korábbi fejezetekbe, "+"-al jelöljük a publikus tagokat és "-"-al a privátokat. Az osztály teljes implementációja a következő.
     </para>
-            <programlisting><![CDATA[
+
 
      <mediaobject>
             <imageobject>
@@ -176,7 +176,7 @@
             </imageobject>
         </mediaobject>
 	
-	
+            <programlisting><![CDATA[	
 	input metauml;
 
 beginfig(1);
