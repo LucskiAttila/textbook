@@ -30,6 +30,11 @@
                 <imagedata fileref="uml3.png"></imagedata>
             </imageobject>
         </mediaobject>
+      <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml5.png"></imagedata>
+            </imageobject>
+        </mediaobject>
          <mediaobject>
             <imageobject>
                 <imagedata fileref="uml7.png"></imagedata>
