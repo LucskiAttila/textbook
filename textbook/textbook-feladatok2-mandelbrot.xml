@@ -1,0 +1,38 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Mandelbrot!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+ <section>
+        <title>Reverse engineering UML osztálydiagram</title>
+        <para>
+              UML osztálydiagram rajzolása az első védési C++ programhoz. Az osztálydiagramot a forrásokból generáljuk (pl. Argo UML, Umbrello, Eclipse UML) Mutassunk rá a kompozíció és aggregáció kapcsolatára a forráskódban és a diagramon, lásd még: https://youtu.be/Td_nlERlEOs https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf (28 32 fólia)
+        </para>       
+        <para>
+              Az UML programozási nyelv egy objektum orientált modellező nyelv, melynek segítségével nagy méretű programokat vizualizálhatunk modellezés eszközével. A modellezés eszközével különböző szüveges és grafikus modellek készíthetőek, például osztálydiagramok amit a feladat is kér tőlünk. Az osztálydiagram egy statikus modell, ami tartalmazza a programunk jelen esetben a binfa program osztályait, annak attribitumaival együtt és az osztályszintű kapcsolatokat. Az osztélyoknak ugye vannak attributumai amik az osztály adatokkal leírható tulajdonságainak felsorolása és vannak operációi amik az osztály példányain végezhető műveletek felsorolása. Az attribitumok felépítése a következő: láthatóság név : típus = alapérték, ahol a láthatóságot az alábbi karakterek jelölik: + public vagy # protected vagy ~ csomagszintű vagy - private. Az operáció jelölése: láthatóság név(param) : típus{comment}. Az osztályok közötti vonalat áltlában egy egyszerű vonal jelöli, ezt asszociációnak nevezzük. A feladat szerint vizsgálnunk kell az aggregációt és a kompozíciót is. A kompozíció esetén a tartalmazott önmagában nem létezhet, csak valaminek a részeként, az aggregációnál viszont a rész hozzátartozik valamihez (esetleg csak időlegesen), de önállóan is létező entitás. A binfában a gyökér lehet aggregációban vagy kompozícióban a fával attól függően hogy a stacken vagy a heapen tároljuk az objektumát. Ezt a Helló, Welch fejezet Tag a gyükér és Mutató a gyökér feladataiban részletesen kidolgoztuk. Aggreáció esetén üres rombusz van a vonal végén, kompozíciónál pedig tömöt rombusz. Mivel a gyökér egy objektum nem külön osztály és nem két osztály közt van a kapcsolat így a diagrammon nem látunk sem ilyen fajta kompozicíót sem aggregációt, mivel csak osztályok közt van értelmezve. A forráskódot .h típusó header fájlba kell menteni és egy fehér hátterű jelölésű fájlba, amilyet találunk a gépen és másolatát felülírjuk a binfa forráskódjával és bemáasoljuk egy általunk megtalálható mappába. Majd a Visual Paradigsm programban a Tools/Code/Reverse C++ code paranccsal, majd kiválasztva a fájl mappáját leokézzuk és a megjelnő Class Repository sávban jobb klikkelve a mappán Reverse "fájlnév" to New Class Diagram opciót választva létrehozzuk az osztálydiagramot a C++ forráskódunkból.  
+              A feladat megoldásához Visual Paradigsm Standard programot használtam, melynek a telepítéséhez rendszergazda jogosultság szükséges 1gy a nálam Windowsra letöltött exe fájlra jobbklikkelve futtatás rendszergazdaként opcióval telepíthejük a programot, majd licenszünket generált kód segítségével kezdehtjük meg miután megadjuk az email címünket.
+              Sem az  Umbrella, sem az Argo Uml kiegészítók használatával sem múködött mivel nem támogattak néhány binfában használt eszközt.
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml1.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml2.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml3.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+         <mediaobject>
+            <imageobject>
+                <imagedata fileref="uml7.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+        
