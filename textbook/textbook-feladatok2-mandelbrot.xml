@@ -64,7 +64,7 @@
             A BMEs C++ tankönyv 14. fejezetét (427 444 elmélet, 445 469 az e settan) dolgozzuk fel!    
         </para>  
         <para>
-            
+            A 13. fejezetben az UML-lel (Unified Modeling Language - egységes modellezőnyelv) kapcsolatos információkat olvashatunk. Az osztálydiagram lesz ismertetve, amiről az előző feladatokban írtam, így kiegészítem a könyvbeli anyaggal. 
         </para>
      
           <title>BPMN</title>
@@ -83,7 +83,7 @@
 
           <title>TeX UML</title>
         <para>
-            Valamilyen TeX-es csomag felhasz nálásával készíts szép diagramo kat az OOCWC projektről ( pl. use case és class diagramokat).
+            Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről ( pl. use case és class diagramokat).
         </para>   
         <para>
             
