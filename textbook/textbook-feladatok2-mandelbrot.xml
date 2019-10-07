@@ -87,5 +87,5 @@
             Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről ( pl. use case és class diagramokat).
         </para>   
         <para>
-            
+           Az UML diagramok rajzolására általam választott TeX csomag a TikZ. Ez lehetővé teszi számunkra, hogy emberileg átlátható, de pontos, szöveges formában adjuk meg diagramunk konkrétumait. A TeX kezelő szoftver amit alkalmaztam a TeXWorks, ami kényelmesebbé teszi a dokumentumszerkesztést, és ha megadunk egy csomagot, hogy használjuk, automatikusan kikeresi és installálja, tehát a TikZ-et is.
         </para>
