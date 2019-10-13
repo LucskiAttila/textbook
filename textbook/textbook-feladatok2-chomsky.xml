@@ -1,0 +1,16 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Chomsky!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Encoding</title>
+     <para>
+     
+     </para>
+	<para>
+    Virtualbox-szal használok Ubuntu 18.í4.3 LTS verzióju operációs rendszert és forditási hiba nélkül lefordul, ha letöltöm és forditom előtte MandelbrotHalmaz néven a MandelbrotHalmaz.java fájlt. Ugye a Java objektum-orientált nyelv igy az egész program egy osztályban van és annak az osztálynak a nevével kell elnevezni a fájlt is amibe van. 
+    Windows alatt forditási hibát kapunk mivel a magyar ékezetes betűs nyelv, és alpértelmezetten UTF-8-ban kódol a terminál. A hiba helyreállitásához az encoding kapcsolóval forditjuk a programot majd a windows-1250 kódolást használjuk ami az Észak-Európa-i karakterkódolásba tartozik, ami illik Magyarországra.             
+  </para>  
