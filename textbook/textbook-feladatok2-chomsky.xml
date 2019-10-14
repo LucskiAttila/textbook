@@ -20,6 +20,11 @@
                 <imagedata fileref="encoding.png"></imagedata>
             </imageobject>
         </mediaobject>
+	    	   <mediaobject>
+            <imageobject>
+                <imagedata fileref="encoding1.png"></imagedata>
+            </imageobject>
+        </mediaobject>
      </section>
 	
      <section>
@@ -143,6 +148,11 @@ int yyFlexLexer::yylex(){return -1;}
 	<mediaobject>
             <imageobject>
                 <imagedata fileref="oocwclexer.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+		     	<mediaobject>
+            <imageobject>
+                <imagedata fileref="oocwclexer1.png"></imagedata>
             </imageobject>
         </mediaobject>
 	</section>
