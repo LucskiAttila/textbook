@@ -17,7 +17,7 @@
 	</para>  
 	   <mediaobject>
             <imageobject>
-                <imagedata fileref=".png"></imagedata>
+                <imagedata fileref="encoding.png"></imagedata>
             </imageobject>
         </mediaobject>
      </section>
@@ -142,7 +142,7 @@ int yyFlexLexer::yylex(){return -1;}
         </programlisting>
 	<mediaobject>
             <imageobject>
-                <imagedata fileref=".png"></imagedata>
+                <imagedata fileref="oocwclexer.png"></imagedata>
             </imageobject>
         </mediaobject>
 	</section>
@@ -226,7 +226,7 @@ System.out.println(new Leet(word).Encode().getLeet());
         </programlisting>
 	<mediaobject>
             <imageobject>
-                <imagedata fileref=".png"></imagedata>
+                <imagedata fileref="l334d1c45.png"></imagedata>
             </imageobject>
         </mediaobject>
 	</section>
@@ -242,7 +242,8 @@ System.out.println(new Leet(word).Encode().getLeet());
 	</para>
 	<programlisting language = "Java">
           <![CDATA[    
-	  import javafx.application.Application;
+import java.io.File;
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -276,7 +277,49 @@ Application.launch(args);
         </programlisting>
 	<mediaobject>
             <imageobject>
-                <imagedata fileref=".png"></imagedata>import java.io.File;
+                <imagedata fileref="fullscreen.png"></imagedata>
             </imageobject>
         </mediaobject>
 	</section>	    
+
+<section>
+        <title>Perceptron osztály</title>
+     <para>
+	Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát! Lásd https://youtu.be/XpBnR31BRJY     
+     </para>
+	<para>
+		A projekt elkészítéséhez szükséges telepíteni az alábbi kiegészítőket: a libpng dev könyvtárát és a png++ könyvtárat. A program alapját a nashorn projektből kimásolt Perceptron oszály adja. A kód elején beállítjuk a using namespace std,png parancsokkal hogy ne kelljen folton jelenzi az ősosztályt, majd kétrehozunk egy image típúsu rgb színkódolású képet ugye a png_image vektor néven az első parancssori argumentumból. Majd létrehozzuk a size egész típúsu változót, ami a kép méretét azaz pixel-területét adja meg az ismert matematikai képlet alapján, tehét szélesség*magasság. Ezen értékek a get_with és get_height függvények visszatérési értékei lesznek, a beolvasott képre vonatkozóan. Majd létrehozzuk a p nevű Perceptron osztály objektumot, a konstruktorának segítségével. Ez a perceptron 3 rétegű és egy kimeneti csomópontból áll, az egyes rétegek size változó értéke, 256, 1 szálakból állnak. Majd a számításhoz szükséges mátrix formára alakítjuk az adatokat, melyetket a heapen tárolunk a gyors számítás érdekében, majd ezeket a hleyeket felszabadítjuk a delete függvény segítségével manuálisan. A double típúsu value változóba mentjük a perceptron számítás eredményét, amit megjelnítünk a cout függvénnyel a szabványos kimeneten.
+		Futtatáshoz az alábbi parancsot használjuk a terminálba Ubuntu rendszereken: g++ mlp.hpp main.cpp -o test -lpng -std=c++11 , feltételezve hogy mlp.hpp néven hoztuk létre a programunkat.
+	</para>	
+	<programlisting language = "C++">
+          <![CDATA[ 	 
+	#include <iostream>
+#include "png++/png.hpp"
+#include "mlp.hpp"
+using namespace std;
+using namespace png;
+int main ( int argc, char *argv[] )
+{
+image <rgb_pixel> png_image (argv[1]);
+int size = png_image.get_width() * png_image.get_height();
+Perceptron* p = new Perceptron(3, size, 256, 1);
+double* image = new double[size];
+for (int i{0}; i < png_image.get_width(); i++)
+for (int j{0}; j < png_image.get_height(); j++)
+image[i * png_image.get_width() + j] = png_image[i][j].red;
+double value = (*p)(image);
+cout <<" "<< value << endl;
+delete p;
+delete [] image;
+}
+        ]]>
+        </programlisting>	
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref="perceptron.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+	</section>
+
+	
+	
