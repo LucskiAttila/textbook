@@ -153,117 +153,83 @@ int yyFlexLexer::yylex(){return -1;}
 	Írj olyan OO Java vagy C++ osztályt, amely leet cipherként működik, azaz megvalósítja ezt a betű helyettesítést: https://simple.wikipedia.org/wiki/Leet (Ha ez első részben nem tetted meg, akkor írasd ki és magyarázd meg a használt struktúratömb memóriafoglalását!)	
 	</para>
  <para>
-      A l33t nyelvről már volt szó korábban, most Javaban ismét elővesszük és OO, azaz objektum-orientált környezetben is dolgozunk vele egy kicsit. Ha már elfelejtettük volna akkor, a leet nyelv egy internetes nyelv vagy ábécé amely különböző ASCII karakterekre cseréli a hagyományos Latin betűket. Maga a szó az elite, azaz az elit szóból ered, amely vonatkozhatott arra, hogy aki megérti ezt a cifra nyelvet az az internet elitjébe tartozott. 
-      Kicsit egyszerűsítve, az ábécé poolokat és a randomizálást kihagyva, most egy betűnek csak egy leet megfelelője lesz. A program egy text inputot kér a felhasználótól, aminek minden karakterét sorra nézi és az annak megfelelő leet karaktert egy stringbuilde hozzáfűzi a l33t szóhoz.
-  
-	A struktúratömb mértetének vizsgálatához a l337d1c7.l fájlból az alábbi struktúra szükséges:
+      	A struktúratömb mértetének vizsgálatához a l337d1c7.l fájlból az alábbi struktúra szükséges:
 	struct chiper {
 		char c;
 	 	char* leet[4]; }
 	Az osztályból létrejövő objektumok mértetét meghatározhatjuk egy egyszerű számítással ógy hogy tudjuk hogy egy char típus 1 bájtot foglal, a char* pedit 8 bájtot, de ebből 4 van így a képletünk 1+4*8 ami 33 bájt lenne. Ha viszont a size függvénnyel határozzuk meg a tényleges méretet érdekes módon nem 33-at kapunk, hanem 40-et. Erre a magyarázat a padding jelenség, amit a fordító automatikusan végez. A padding azt jelenti hogy ha a egy struktúra elem előtt vagy mögött van egy nagyobb méretű elem akkor a kisebb méretű elem mérete módosul a nagyobbéra. Ezt a plusz tárhelyfoglálsi módszert a címzésből adódó hibák elkerülése végett találták ki. Így jön ki a 40 bájt mivel a char memóriamérete 8 bájtra módosult. A paddingot kikapcsolhatjuk a #pragma pack(1) macro segítségével, így a várt 33 bájt méretet kapjuk.                               		
-		
-		
+	A leet nyelv szleng nyelvek közé sorolható nyelvtanilag, ez egy az internetes felületeken kialakult nyelv, ami az angol abc betúire alapszik, a készített chiperben az adott linkről https://simple.wikipedia.org/wiki/Leet vettem ki a karaktereket, de csak az angol abc betűkre vonatkozó részt, mivel a többi már tartalmaz különböző szmájlikat is.
+	A karaktereket a kódjukkal együtt egy vektorba raktam, pontosabban a leet nevű vektorba a put parancsot használva. A feladat alapján java vagy c++ nyelven kellett írnunk, ezek közül mindketttő tartalmaz vektorokat. A vektor típusa fontos hogy Hasmap legyen ami beépített strujtúrája a java nyelvnek és importolni kell, ez térképezi a cserét. A StringBuilder osztályhoz hozunk létre minden karakter esetén egy objektumot, melynek értéke vagy nem változik vagy egy random generátor segítségével kiválasztott karakter lesz, melyet az append függvény segítségével adunk az aktuális sb objektumhoz. E művelet elvégzése után a Leet Encode függvény visszatérési értéke az aktuális sb objektum azaz karakter memóriacíme lesz. A random generátornál fontos hogy akkora számot generáljunk ahány karakter van az aktuális karakterhez, habár ez mindenütt 4, még ahol egyezik is a karakter. Majd a main függvényben beállítjuk hogy beolvassa a bemenetet soronként és meghívja a karaktervizsgáló Encode függvényt, majd kírja az eredményt a getLeet függvény segítségével ugye soronként egy végtelen függvény segítségével.                          
+	 
 </para>
-
 <programlisting language = "Java">
-          <![CDATA[ 
-          
-          import java.util.Scanner;
-
-
-
-public class Leet {
-
-    private static StringBuilder transform(String input, StringBuilder sb)
-    {
-
-        input=input.toUpperCase();
-        for(int i=0;i<input.length();i++)
-        {
-            switch (input.charAt(i)) {
-                case 'A' : sb.append("4");
-                    break;
-                case 'B' : sb.append("|3");
-                    break;
-                case 'C' : sb.append("(");
-                    break;
-                case 'D' : sb.append("|)");
-                    break;
-                case 'E' : sb.append("3");
-                    break;
-                case 'F' : sb.append("|=");
-                    break;
-                case 'G' : sb.append("6");
-                    break;
-                case 'H' : sb.append("|-|");
-                    break;
-                case 'I' : sb.append("|");
-                    break;
-                case 'J' : sb.append(".]");
-                    break;
-                case 'K' : sb.append("|<");
-                    break;
-                case 'L' : sb.append("1");
-                    break;
-                case 'M' : sb.append("|Y|");
-                    break;
-                case 'N' : sb.append("/V");
-                    break;
-                case 'O' : sb.append("Ø");
-                    break;
-                case 'P' : sb.append("|O");
-                    break;
-                case 'Q' : sb.append("(,)");
-                    break;
-                case 'R' : sb.append("®");
-                    break;
-                case 'S' : sb.append("§");
-                    break;
-                case 'T' : sb.append("7");
-                    break;
-                case 'U' : sb.append("|_|");
-                    break;
-                case 'V' : sb.append("V");
-                    break;
-                case 'W' : sb.append("\\^/");
-                    break;
-                case 'X' : sb.append(" }{");
-                    break;
-                case 'Y' : sb.append("¥");
-                    break;
-                case 'Z' : sb.append("2");
-                    break;
-                case ' ' : sb.append(" ");
-                    break;
-                    default: sb.append(input.charAt(i));
-            }
-
-
-        }
-
-        return sb;
-    }
-
-    public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
-        Scanner scan = new Scanner(System.in);
-        String input;
-
-        System.out.println("Please enter the text that you want to l33tify");
-        input=scan.nextLine();
-        System.out.println("The 1337 version of your input is: \n");
-
-        sb=transform(input,sb);
-
-        System.out.print(sb);
-        System.out.println("\n");
-
-        }
-
-    }
-          ]]>
+          <![CDATA[
+import java.io.BufferedReader; 
+import java.io.IOException; 
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+class Leet{        
+private HashMap<String, String[]> leet = new HashMap<String, String  -
+[]>() {{
+put("A", new String[] { "4", "4", "@", "-" });
+put("B", new String[] { "b", "8", "3", "}" });
+put("C", new String[] { "c", "(", "", "{" });
+put("D", new String[] { "d", ")", "]", "}" });
+put("E", new String[] { "3", "3", "3", "3" });
+put("F", new String[] { "f", "=", "ph", "#" });
+put("G", new String[] { "g", "6", "[", "[+" });
+put("H", new String[] { "h", "4", "-", "[-]" });
+put("I", new String[] { "1", "1", "", "!" });
+put("J", new String[] { "j", "7", "_", "_" });
+put("K", new String[] { "k", "", "1", "{" });
+put("L", new String[] { "l", "1", "", "_" });
+put("M", new String[] { "m", "44", "(V)", "" });
+put("N", new String[] { "n", "", "", "V" });
+put("O", new String[] { "0", "0", "()", "[]" });
+put("P", new String[] { "p", "o", "D", "o" });
+put("Q", new String[] { "q", "9", "O_", "(,)" });
+put("R", new String[] { "r", "12", "12", "2" });
+put("S", new String[] { "s", "5", "$", "$" });
+put("T", new String[] { "t", "7", "7", "’’" });
+put("U", new String[] { "u", "_", "(_)", "[_]" });
+put("V", new String[] { "v", "", "", "" });
+put("W", new String[] { "w", "VV", "", "()" });
+put("X", new String[] { "x", "%", ")(", ")(" });
+put("Y", new String[] { "y", "", "", "" });
+put("Z", new String[] { "z", "2", "7_", "_" });
+}};
+ 	public Leet Encode() {
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < word.length(); ++i) {
+char c = word.charAt(i);
+String loc = Character.toString(Character.toLowerCase(c));
+if (leet.containsKey(loc))
+sb.append(leet.get(loc)[rand.nextInt(leet.get(loc).length)]);
+else
+sb.append(c);
+}
+this.sb = sb.toString();
+return this;
+}
+	public static void main(String[] args) {
+Scanner console = new Scanner(System.in);
+String word;
+while (true) {
+word = console.nextLine();
+System.out.println(new Leet(word).Encode().getLeet());
+}
+}
+}
+        ]]>
         </programlisting>
-     
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref=".png"></imagedata>
+            </imageobject>
+        </mediaobject>
+	</section>
 		
 		
  
