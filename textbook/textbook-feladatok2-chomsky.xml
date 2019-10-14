@@ -155,7 +155,15 @@ int yyFlexLexer::yylex(){return -1;}
  <para>
       A l33t nyelvről már volt szó korábban, most Javaban ismét elővesszük és OO, azaz objektum-orientált környezetben is dolgozunk vele egy kicsit. Ha már elfelejtettük volna akkor, a leet nyelv egy internetes nyelv vagy ábécé amely különböző ASCII karakterekre cseréli a hagyományos Latin betűket. Maga a szó az elite, azaz az elit szóból ered, amely vonatkozhatott arra, hogy aki megérti ezt a cifra nyelvet az az internet elitjébe tartozott. 
       Kicsit egyszerűsítve, az ábécé poolokat és a randomizálást kihagyva, most egy betűnek csak egy leet megfelelője lesz. A program egy text inputot kér a felhasználótól, aminek minden karakterét sorra nézi és az annak megfelelő leet karaktert egy stringbuilde hozzáfűzi a l33t szóhoz.
-  </para>
+  
+	A struktúratömb mértetének vizsgálatához a l337d1c7.l fájlból az alábbi struktúra szükséges:
+	struct chiper {
+		char c;
+	 	char* leet[4]; }
+	Az osztályból létrejövő objektumok mértetét meghatározhatjuk egy egyszerű számítással ógy hogy tudjuk hogy egy char típus 1 bájtot foglal, a char* pedit 8 bájtot, de ebből 4 van így a képletünk 1+4*8 ami 33 bájt lenne. Ha viszont a size függvénnyel határozzuk meg a tényleges méretet érdekes módon nem 33-at kapunk, hanem 40-et. Erre a magyarázat a padding jelenség, amit a fordító automatikusan végez. A padding azt jelenti hogy ha a egy struktúra elem előtt vagy mögött van egy nagyobb méretű elem akkor a kisebb méretű elem mérete módosul a nagyobbéra. Ezt a plusz tárhelyfoglálsi módszert a címzésből adódó hibák elkerülése végett találták ki. Így jön ki a 40 bájt mivel a char memóriamérete 8 bájtra módosult. A paddingot kikapcsolhatjuk a #pragma pack(1) macro segítségével, így a várt 33 bájt méretet kapjuk.                               		
+		
+		
+</para>
 
 <programlisting language = "Java">
           <![CDATA[ 
