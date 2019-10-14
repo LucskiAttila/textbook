@@ -230,7 +230,53 @@ System.out.println(new Leet(word).Encode().getLeet());
             </imageobject>
         </mediaobject>
 	</section>
-		
-		
- 
-      
+
+    <section>
+        <title>Full screen</title>
+     <para>	    
+	     Készítsünk egy teljes képernyős Java programot! Tipp: https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek
+     </para>
+	<para>
+		Mivel grafikus beáll1tások elvégzését igényli a program 1gy valamilyen kiegészírőt kell használnunk hozzá. A programot a JavaFX platform seg1tségével készítettem el, ahogy az látszik az import-olt osztályok nevéből is. A programsegítségével egy tetszőleges méretű img.png nevű képet tudunk teljesképernyős méretre átméretezni. A kép teljesképernyőn történő megjelenítéséhez a főkijelzőt, legfőbb osztály méretén kell állítanunk. Nyilván nem csak egységes képernyőméretek léteznek így hogy teljesen magától működjön hasznos hogy van teljes képernyő beállítására vonatkozó boolen típúsu vátozó, egyébként is operációs rendszer szinten is értelmezett a teljes képernyőre rakás, így itt is lehetséges. A főablakkal sajnos a kép pixele nem módosul automatikusan így létrehozunk egy 2 dimenziós téglalapot melynek méret-tulajdonságai megeyeznek a teljesképernyős főképernyőjével, így kisebb konvertálgatás után már módosíthatjuk is a kép méretét is. Majd a Scense objektum segítségével beállítunk egy színpadot a képnek, amit szülő-osztályának állítjuk be örökli a tulajdonságait, hogy az futtatás után a teljes képernyőből
+		az ESC billenytű lenyomásásval kitudjunk lépni, pontosabban 600x600-as képet kapunk.
+	</para>
+	<programlisting language = "Java">
+          <![CDATA[    
+	  import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
+public class Controller extends Application {
+@Override
+public void start(Stage primaryStage) {
+Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+primaryStage.setTitle("Fullscreen"); 
+primaryStage.setFullScreen(true);
+StackPane root = new StackPane();
+Scene scene = new Scene(root, 600, 600);
+File file = new File("img.png");
+Image image = new Image(file.toURI().toString());
+ImageView iv = new ImageView(image);
+iv.setPreserveRatio(true);
+iv.setFitHeight( screenBounds.getHeight() );
+iv.setFitWidth( screenBounds.getWidth() );
+root.getChildren().add(iv);
+primaryStage.setScene(scene);
+primaryStage.show();
+}
+public static void main(String[] args) {
+Application.launch(args);
+}
+}  
+        ]]>
+        </programlisting>
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref=".png"></imagedata>import java.io.File;
+            </imageobject>
+        </mediaobject>
+	</section>	    
