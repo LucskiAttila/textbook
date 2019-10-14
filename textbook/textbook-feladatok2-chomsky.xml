@@ -29,9 +29,19 @@
 	     </para>
 	     <para>
 	A Robocar Világbajnokság (OOCWC) célja egy közös kutatási platform létrehozása a városi forgalomirányítási algoritmusok kidolgozására, valamint az intelligens városok és a robotautók kapcsolatának vizsgálatára, különös figyelmet fordítva a közeljövőben működő robotautók terjedésére.
-	A program kiterjesztése ll a lexer típusu, igy a meghatározott formátum alapján írtuk meg a programot, a beépített szimbólumok aktuális jelentéseinek felhasználásával. 
-	A lényeg, hogy ha a beolvasott stringekben előfordul valamelyik a fent felsorolt kifejezésekben, akkor az azoknak megfelelő kód fog lefutni. Ennek segítségével más osztályból örökölt változók értékeit módoítjuk. A kifejezések az elején vannak definiálta, például a {WS} a whitespace karakter, amely után a csillag, tehát a [ \t]* azt jelenti, hogy bármennyiszer előfordulhat, az INT [0123456789]+ után a + jel pedig azt jelenti, hogy felsorolt számok bármennyiszer és legalább egyszer előfordulhatnak. 
-	     </para>
+	Ahogy a carlexexer.ll fájl nevéből és kiterjesztéséből láthatjuk a programot lexer segítségével használjuk, ami egy lexikai elemzőt generáló program. Pontosabban először beolvassa a bemenetet, majd tokenizálja, lexálja azt, majd generálja az elemzőt C++ nyelven. Lexálás alatt azt értjük hogy egy karaktersorozatot token sorzattá alakítunk át, ehhez a tokeneknek egy név és érték mezőből kell állniuk, melyek segítségével a konvertálás végrehajtódhat. 
+	A lexer program felépítése a következő: 
+		     {definíciók}
+		     %%
+		     {szabályok}
+		     %%
+		     {felhasználói utasítások}
+	A CarLexer a FlexLexer alosztálya: figyeli, hogy az egyének milyen úton vannak, illetve hogy egy jármű kísérve van-e. A carlexer.hpp fájlt is includoltuk hogy a benne lévő globális változók értékeit módosíthassuk a programunk segítségével.
+	A definíciók részben hozzuk létr a lexáláshoz szükséges tokeneket, melynek megadjuk a nevét amivel azonosítjuk majd a felhasználói utasítások részben, illetve egy sztringet amiből a beolvasott szöveg fog állni. Ahogy például a STAT esetén a <stat sztringet olvassuk be. A WS esetén a /t a whitespacet jelenti, a csillag ugye hogy akárhányszor szerepelhet, akár 0-szor is a + jelöléssel ellentétben ugye. A WORLD esetén a ^ jelölés azt jelenti hogy a mögötte felsorolt karaktereken kívül bármi lehet, a {} pedig hogy a kapcsos zárójel közötti elemből áll a beolvasott karaktersorozat.	     
+	A szabályok részben megadjuk hogy az általunk képzett reguláris kifejezések illeszkedése esetén mikre módosuljanak a változók értékei. 
+	A felhasználói utasítások részben definiáljuk az yylex függvényt, ami ugye beolvassa a bemenetet az egyes CarLExer objektumokra.
+        A lex parancs segítségével hatjsuk végre a lexálást az adott forráskód alapján, ami jelen esetben a carlexer.ll: 
+	      </para>
 	           <programlisting language = "C++">
 
           <![CDATA[ 
@@ -130,6 +140,11 @@ int yyFlexLexer::yylex(){return -1;}
            ]]>
 
         </programlisting>
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref=".png"></imagedata>
+            </imageobject>
+        </mediaobject>
 	</section>
 	
 	<section>
