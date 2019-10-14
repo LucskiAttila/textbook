@@ -170,7 +170,7 @@ int yyFlexLexer::yylex(){return -1;}
 	Az osztályból létrejövő objektumok mértetét meghatározhatjuk egy egyszerű számítással ógy hogy tudjuk hogy egy char típus 1 bájtot foglal, a char* pedit 8 bájtot, de ebből 4 van így a képletünk 1+4*8 ami 33 bájt lenne. Ha viszont a size függvénnyel határozzuk meg a tényleges méretet érdekes módon nem 33-at kapunk, hanem 40-et. Erre a magyarázat a padding jelenség, amit a fordító automatikusan végez. A padding azt jelenti hogy ha a egy struktúra elem előtt vagy mögött van egy nagyobb méretű elem akkor a kisebb méretű elem mérete módosul a nagyobbéra. Ezt a plusz tárhelyfoglálsi módszert a címzésből adódó hibák elkerülése végett találták ki. Így jön ki a 40 bájt mivel a char memóriamérete 8 bájtra módosult. A paddingot kikapcsolhatjuk a #pragma pack(1) macro segítségével, így a várt 33 bájt méretet kapjuk.                               		
 	A leet nyelv szleng nyelvek közé sorolható nyelvtanilag, ez egy az internetes felületeken kialakult nyelv, ami az angol abc betúire alapszik, a készített chiperben az adott linkről https://simple.wikipedia.org/wiki/Leet vettem ki a karaktereket, de csak az angol abc betűkre vonatkozó részt, mivel a többi már tartalmaz különböző szmájlikat is.
 	A karaktereket a kódjukkal együtt egy vektorba raktam, pontosabban a leet nevű vektorba a put parancsot használva. A feladat alapján java vagy c++ nyelven kellett írnunk, ezek közül mindketttő tartalmaz vektorokat. A vektor típusa fontos hogy Hasmap legyen ami beépített strujtúrája a java nyelvnek és importolni kell, ez térképezi a cserét. A StringBuilder osztályhoz hozunk létre minden karakter esetén egy objektumot, melynek értéke vagy nem változik vagy egy random generátor segítségével kiválasztott karakter lesz, melyet az append függvény segítségével adunk az aktuális sb objektumhoz. E művelet elvégzése után a Leet Encode függvény visszatérési értéke az aktuális sb objektum azaz karakter memóriacíme lesz. A random generátornál fontos hogy akkora számot generáljunk ahány karakter van az aktuális karakterhez, habár ez mindenütt 4, még ahol egyezik is a karakter. Majd a main függvényben beállítjuk hogy beolvassa a bemenetet soronként és meghívja a karaktervizsgáló Encode függvényt, majd kírja az eredményt a getLeet függvény segítségével ugye soronként egy végtelen függvény segítségével.                          
-	 
+	A programból való kilépéshez Ctrl+c billentyűkombináció szükséges: 
 </para>
 <programlisting language = "Java">
           <![CDATA[
@@ -236,6 +236,11 @@ System.out.println(new Leet(word).Encode().getLeet());
 }
         ]]>
         </programlisting>
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref="l334d1c451.png"></imagedata>
+            </imageobject>
+        </mediaobject>
 	<mediaobject>
             <imageobject>
                 <imagedata fileref="l334d1c45.png"></imagedata>
