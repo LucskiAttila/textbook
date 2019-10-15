@@ -343,7 +343,7 @@ delete [] image;
             </imageobject>
         </mediaobject>
 	</section>
-	     </chapter>
+</chapter>
 
 	
 	
