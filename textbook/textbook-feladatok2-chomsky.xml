@@ -254,8 +254,8 @@ System.out.println(new Leet(word).Encode().getLeet());
 	     Készítsünk egy teljes képernyős Java programot! Tipp: https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek
      </para>
 	<para>
-		Mivel grafikus beáll1tások elvégzését igényli a program 1gy valamilyen kiegészírőt kell használnunk hozzá. A programot a JavaFX platform seg1tségével készítettem el, ahogy az látszik az import-olt osztályok nevéből is. A programsegítségével egy tetszőleges méretű img.png nevű képet tudunk teljesképernyős méretre átméretezni. A kép teljesképernyőn történő megjelenítéséhez a főkijelzőt, legfőbb osztály méretén kell állítanunk. Nyilván nem csak egységes képernyőméretek léteznek így hogy teljesen magától működjön hasznos hogy van teljes képernyő beállítására vonatkozó boolen típúsu vátozó, egyébként is operációs rendszer szinten is értelmezett a teljes képernyőre rakás, így itt is lehetséges. A főablakkal sajnos a kép pixele nem módosul automatikusan így létrehozunk egy 2 dimenziós téglalapot melynek méret-tulajdonságai megeyeznek a teljesképernyős főképernyőjével, így kisebb konvertálgatás után már módosíthatjuk is a kép méretét is. Majd a Scense objektum segítségével beállítunk egy színpadot a képnek, amit szülő-osztályának állítjuk be örökli a tulajdonságait, hogy az futtatás után a teljes képernyőből
-		az ESC billenytű lenyomásásval kitudjunk lépni, pontosabban 600x600-as képet kapunk.
+		Mivel grafikus beáll1tások elvégzését igényli a program 1gy valamilyen kiegészírőt kell használnunk hozzá. A programot a JavaFX platform seg1tségével készítettem el, ahogy az látszik az import-olt osztályok nevéből is. A programsegítségével egy tetszőleges méretű képet tudunk teljesképernyős méretre átméretezni, amit img.png néven hozunk létre a programmal. A kép teljesképernyőn történő megjelenítéséhez a főkijelzőt, legfőbb osztály méretén kell állítanunk. Nyilván nem csak egységes képernyőméretek léteznek így hogy teljesen magától működjön hasznos hogy van teljes képernyő beállítására vonatkozó boolen típúsu vátozó, egyébként is operációs rendszer szinten is értelmezett a teljes képernyőre rakás, így itt is lehetséges. A főablakkal sajnos a kép pixele nem módosul automatikusan így létrehozunk egy 2 dimenziós téglalapot melynek méret-tulajdonságai megeyeznek a teljesképernyős főképernyőjével, így kisebb konvertálgatás után már módosíthatjuk is a kép méretét is. Majd a Scense objektum segítségével beállítunk egy színpadot a képnek, amit szülő-osztályának állítjuk be örökli a tulajdonságait, hogy az futtatás után a teljes képernyőből
+		az ESC billenytű lenyomásásval kitudjunk lépni, pontosabban 600x600-as képet kapunk. A program használatához szüskséges importolni a java.io.File-t mivel a parancssori argumentumra hívjuk meg a programot, ahogy a main függvényben olvashatjuk:
 	</para>
 	<programlisting language = "Java">
           <![CDATA[    
@@ -343,6 +343,7 @@ delete [] image;
             </imageobject>
         </mediaobject>
 	</section>
+	     </chapter>
 
 	
 	
