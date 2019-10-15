@@ -297,6 +297,11 @@ Application.launch(args);
                 <imagedata fileref="fullscreen.png"></imagedata>
             </imageobject>
         </mediaobject>
+	    	<mediaobject>
+            <imageobject>
+                <imagedata fileref="fullscreen1.png"></imagedata>
+            </imageobject>
+        </mediaobject>
 	</section>	    
 
 <section>
