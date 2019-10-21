@@ -17,7 +17,98 @@
           unzip src.zip
           apt get install secure-delete
           srm -rv jdk-13 src.zip openjdk-13_linux-x64_bin.tar.gz
-          A feladat alapján boost C++ programot kell írnunk, ehhez azonban telepíteni kell a boost könyvtárakat, amiket tartalmaz például a libboost-all-dev csomag, amit a már általunk ismert apt-get install parancsori kifejezéssel tehtünk meg az alábbi módon:
+          A feladat alapján boost C++ programot kell írnunk, ehhez azonban telepíteni kell a boost könyvtárakat, amiket tartalmaz például a libboost-all-dev csomag, amit a már általunk ismert apt-get install parancsori kifejezéssel tehetjük meg az alábbi módon:
           sudo apt-get install libboost-all-dev
-          
-     </para>
+          A programunkat a g++ fordítóval fordítjuk használva az alaábbi kapcsolókat:
+          g++ program.cpp -o bejaro -lboost_system -lboost_filesystem -lboost_program_options -o p
+          A program futtatása az általunk elnevezett névvel történik amit a fordításkor adtunk meg az o kapcsolóval , majd második paraméterként meg kell adnunk a /home könytvártól a létrehozott mappánk elérési útvobalát az alábbi módon:
+          ./p /home/attila/Letöltések/jdk
+          Ezt a programunk elején hibakezeltem is egy parancssori argumentumainak számának ellenőrző feltétellel. Ha teljesül akkor kapunk egy hibaüzenetet a program használatáról, ha nem akkor példányozzuk az src mappa könyvtárrendszerét, melyre meghívjuk az általunk megírt read_files függvényt ami végigmegy a könyvtárszerkezet mappáin és a return_vec nevű vektorba menti a java kiterjesztésű fájlokat melynek értékét értékül adjuk a paths vektornak. Így az src mappának a java kiterjesztésű fájlainak neveit tartalmazza a paths vektor, melynek elemein az auto &path :paths kifejezés segítségével, majd a fájlok tartalmainak eléréséhez használjuk az ifstream kifejezést, illetve a getline függvénnyel az adott fájl sorain megyünk végig egy végtelen ciklussal, amíg nem találjuk meg a fájl nevét egy class kifejezés mögött. Ha megtaláltuk a keresett sztringet az adott fájl valamely sorában akkor kiiratjuk a szabványos kimenetre a fájl elérési útvonalát zárójelben, illetve a zárójel előtt az adott JDK osztály nevét és növeljük az n változó értékét eggyel,  mivel megszámoljuk a JDK osztályainak számát. A keresést az if(l.find(findstr) != std::string::npos) kifejezéssel végeztük ami akkor lesz igaz ha a find paramétreként megadott objektum legalább egyszer szerepel a find által meghívott objektumban.  A break kifejezéssel tudunk kilépni a végtelen while ciklusból ha megtaláltuk a keresett kifejezést. A c_str függvényt akkor használjuk, ha egy adott objektumra egy C függvényt hívunk meg, ami C típusó sztringet vár paraméterül, így meghívjuk rá a c_str függvényt a helyes működés érdekében. A stem függvény segítségével kapjuk meg a JDK osztályok neveit a fájnevükből, melyek java kiterjesztésűek és tartalmazzák a fájlenevet főosztályként.
+      </para>
+      <programlisting language = "C++"><![CDATA[
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
+std::vector<boost::filesystem::path> return_vec;
+std::vector<boost::filesystem::path>
+read_files(const boost::filesystem::path path) {
+    if (is_regular_file(path)) {
+        std::string ext(".java");	// We only care about .java files
+        if ( ! ext.compare(boost::filesystem::extension(path))) {
+            return_vec.push_back(path);
+        }
+    } else if (is_directory(path)) {
+        for (boost::filesystem::directory_entry & entry
+                :
+                boost::filesystem::directory_iterator(path)) {
+            read_files(entry.path());
+        }
+    }
+    return return_vec;
+}
+int
+main(int argc, char **argv) {
+    if(argc!=2){
+    std::cout << "Usage: ./<filename> <path>" << std:endl;
+    return -1;
+    }
+    else{
+    boost::filesystem::path sources_path { argv[1] };
+    std::vector<boost::filesystem::path> paths = read_files(sources_path);
+    std::string l;
+    int n = 0;
+    for (auto const &path : paths) {
+        std::ifstream in(path.c_str());
+        if (in) {
+            while (std::getline(in, l)) {
+                std::string find_str = "class " + path.stem().string();
+                if (l.find(find_str) != std::string::npos) {
+                    std::cout
+                        << path.stem().c_str()
+                        << " (file: " << path << ")"
+                        << std::endl;
+                    n++;
+                    break;
+                }
+            }
+        }
+    }
+    std::cout
+        << "There are "
+        << n
+        << " classes in JDK (sources dir: " << sources_path << ")."
+        << std::endl;
+    return 0;
+}
+}
+           ]]>
+        </programlisting>
+      	   <mediaobject>
+            <imageobject>
+                <imagedata fileref="jdk1.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+	    	   <mediaobject>
+            <imageobject>
+                <imagedata fileref="jdk.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+     </section>
+    
+    <section>
+	     <title>Másoló-mozgató szemantika</title>
+	     <para>
+              Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a C++11 másoló és a mozgató szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra! 
+        </para>    
+        <para>
+              
+        </para>    
+        
+        
+        
+        
+        
