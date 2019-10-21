@@ -148,9 +148,12 @@ main(int argc, char **argv) {
 	
     <section>
 	     <title>Hibásan implementált RSA törése</title>
-	     <para>	
-        	
-        
+	     <para>
+		  Készítsünk betű gyakoriság alapú törést egy hibásan implementált RSA kódoló: https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf (71 73 fólia) által készített titkos szövegen.
+	    </para>
+	    <para>
+		    
+	    </para>	    
         
         
         
