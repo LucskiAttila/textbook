@@ -417,14 +417,64 @@ A fordításhoz a C++11 szabványt használjuk, futtatáskor pedig megadjuk anna
 </para>
 <mediaobject>
 <imageobject>
-<imagedata fileref="perceptron.PNG" format="PNG" scale="65"/>
+<imagedata fileref="perceptron1.PNG" format="PNG" scale="65"/>
 </imageobject>
 </mediaobject>
     </section>
-    
+ 
+    <section>
+
+        <title>Összefoglaló</title>
+        <para>
+            Az előző 4 feladat egyikéről írj egy 1 oldalas bemutató „esszé" szöveget!
+        </para>
+        <para>
+            <emphasis role="strong">A mozgató és másoló konstruktor</emphasis>
+        </para>
+        <para>
+            A C++ objektum oreintált nyelv, vagyis lehetőséget biztosít a polimorfizmusra, az egységbezárást, és az adatrejtést. Definiálhatunk benne 
+            osztályokat, melyek olyan tagfüggvénnyel rendelkező struktúráknak lehet nevezni, természetesen kibővítve az objektum orientáltság alapelveivel.
+            Amikor egy osztályt példányosítunk, akkor az osztály konstruktora hívódik meg. Ha nem definiálunk konstruktort, akkor a fordító az alapértelmezett
+            konstruktort használja. A konstruktorok olyan függvények, melyeknek feladata az objektum inicializálása. Vagyis ebben szoktunk a 
+            az egyes tagváltozóknak értéket adni, bizonyos tagfüggvényeket meghívni, melyek szükséegese az objektum alapjának elkészítéséhez. Egy másik
+            szembetűnő tulajdonsága a konstruktoroknak, hogy a nevük megegyezik az osztály nevével. A konstruktor ellentéte a destruktor, mely az objektum 
+            törlésével együtt hívódik meg, és felszabadítja a már nem használt memóriaterületeket. Egy jól megírt C++ programban viszont nem elég ennek a 
+            kettőnek a megléte, szükség van még másoló és mozgató konstruktorokra.
+            A másoló és mozgató konstruktorok segítségével szintén objektumok inicializálását hajthatjuk végre, viszont egy másik azonos osztályú objektum
+            alapján. Ha nem szeretnénk megírni ezeket, akkor a legegyszerűbb, ha letiltjuk használatukat, vagyis privát taggá tesszük őket. Erre azért van szükség,
+            mert ha nem tiltjuk le őket, akkor a fordító az alapértelmezett másoló/mozgató konstruktort hívja meg, ami váratlan eredményekhez vezethet, kiszámíthatatlanná
+            teszi a program működését. 
+            A másoló konstruktor, ahogy a nevében is benne van egy objektumot másol le, és az alapján készít egy másikat. Onnan lehet felismerni, hogy 
+            paraméterként mindig az őt magábafoglaló osztállyal azonos osztályú objektumrefenciát vár. Két fajta másolásról beszélhetünk: sekély és mély 
+            másolás. A sekély másolás lényege, hogy csak létrehozunk egy másik mutatót, ami a paraméterként megadott onjektumra mutat. Ennek implementálása a 
+            legegszerűbb, viszont használata problémákat okozhat. A legfőbb hátrány eme megoldási módnak, hogy közös a memóriaterület, tehát ha az egyiket
+            módosítjuk, akkor az a másikr is kifejti hatását. Tehát ez nem egy igazi másolat, nevezhetnénk alias-nak. A mély másolás ezzel szemben egy különálló 
+            onjektumot hoz létre, mely megegyezik a paraméterül kapott elemmel, viszont külön memóriacímen. Sekély társához képest implementálása összetettebb,
+            viszont magabiztos használata jobb C++ programozóvá tesz.
+            A 2. feladatban megvalósított másoló konstruktor a mély másolást implementálja. Tehát a forrásként kapott LZW fát bejárjuk, és 
+            minden elemének a másolatát elkészítjük a konstruálandó fában is. Ennek következtében lesz két külön fánk a meóriában, külön 
+            gyökér és fa mutatóval. Binárisfa bejárások közül létezik preorder, postorder és inorder. Ezek közül bármelyiket használhatjuk, mindegyik a 
+            megfelelő eredményhez vezet. A mi programunk a postorder bejárást alkalmazza, vagyis elsőnek dolgozzuk fel a gyemekeket, majd gyökeret.
+            A mozgató konstruktor a többi konstruktorhoz megfelelően egy inicializálást hajt végre, a másoláshoz hasonlóan ez is egy másik 
+            objektumra alapul. A különbség annyi, hogy a míg a másolásnál a másolásban részt vevő objektumok megmaradnak, addig a 
+            mozgatásnál a forrás objektum megszűnik, pontosabban nem determináns állapotba kerül. A mozgató konstruktor arról ismerszik meg, hogy a 
+            paramétere egy jobbérték referencia. A jobbérték refernciát a <![CDATA[&&]]> jelöli. Annak érdekében, hogy ez a konstruktor hívódjon meg, a 
+           <function>std::move</function> függvényt kell meghívni. Gyakori tévedés, köszönhetően ennek a függvénynek a félreérthető nevének, hogy 
+            mozgatást hajt végre. Valójában a paraméteréül kapott objektum jobbérték refernciájával tér vissza.
+            Az LZWBinFa programunkban maga a mozgató konstruktor a mozgató értékadásra van alapozva. Az alap koncepció az, hogy az inicializálni kívánt 
+            fa gyökerét null mutatóvá tesszük, majd megcseréljük a forrás és a cél fa gyökér mutatójának értékét, ezzel megvalósítva a mozgatást. Ezt
+            úgy érjük el, hogy a mozgató konstruktoron keresztül meghívjuk a mozgató értékadást. Fontos látni, hogy mikor hívódik meg a konstruktor és mikor 
+            az értékadás. Ha egy még nem inicializát objektumot szeretnénk másolással, mozgatással inicializálni, akkor a konstruktor hívódik. Ezzel szemben
+            egy már inicializát objektumba szeretnénk másolni, mozgatni, akkor már az értékadás hajtódik végre. Ennek tudatában szerepel a 
+            mozgató konstruktorban a következő sor:
+            <programlisting language="c++">
+                *this = std::move(forras);
+            </programlisting>
+            Szóval meghívódik a mozgató értékadás, ahol a pointer értékek cseréjét hajtjuk végre. Ehhez a <function>std::swap</function> függvényt 
+            használjuk. Természetesen lehetne saját cserét is írni, ebben a könyvben több megoldást adtunk erre, de összességében elmondható, hogy
+            érdemes a már előre implementált függvényeket, metódusokat használni. 
+	    Összegezve a leírtakat, a másoló és mozgató szemantika a C++ nyelvben kiemelt szerepet játszik. Magabiztos használatuk elsajátítása nélkülözhetetlen a megbízható programok készítéséhez. 
+        </para>
+    </section> 
 
 </chapter>	    
-	    
-        
-        
-        
