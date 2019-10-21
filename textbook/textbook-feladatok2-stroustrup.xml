@@ -105,9 +105,51 @@ main(int argc, char **argv) {
               Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a C++11 másoló és a mozgató szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra! 
         </para>    
         <para>
-              
-        </para>    
-        
+             A konstruktorok segítségével példányosítjuk az osztályokat, kezdőértéket adunk nekik ezzel létrehozzuk az objektumokat. A konstruktor nevének meg kell egyeznie annak az osztálynak a nevével amelyikre meghívtuk, a létrehozott objektumok által lefoglalt tárterületet a destruktorok segítségével szabadítjuk fel, melynek a neve megeyezik az osztályéval és ~ jel van előtte. 
+	     Ha a konstruktorok paraméterének objektumokat adunk meg akkor meghívódik a másoló konstruktor, ami létrehozza létrehoz egy új objektumot a paraméterként megadott azonos osztálybeli objektum értékéivel: 
+		osztály(const osztály& paraméter){
+		size_t size = strlen(paraméter.adat);
+		data = new char[size-1];
+		memcpy(adat, paraméter.adat, size);
+		}
+	     Ez a kódcsipet hívódik meg ha egy osztály típusú objektumot próbálunk létrehozni egy másik osztály típusú objektum segítségével, annak értékeievel. A konstruktort úgy definiáltuk hogy megnézi a másolandó objektum változójának méretét, majd lefoglal annyi méretet az aktuális objektum ugyanazon nevű változójába, majd a memcpy függvénnyel átmásoljuk a paraméter objektum adott heap memória tartalmát amit a változó névvel azonosítunk a hozzátartozó aktuális objektumba. A new kifejezéssel heapen lefoglalt memóriát a delte függvénnyel nekünk kellessz törölni, jelen esetben delete data[] mivel memóriatömbről van szó.
+	     A másoló értékadás akkor hívódik meg ha két már létező azonos osztálybeli objektum közt egyenlőség jel van, ekkor nyilván a baloldali objektumnak akarjuk értékül adni a jobb oldali objektumot. Ehhez túlterheltük az egyenlőségjel operátort:
+		osztály& operator=osztály(const osztály& paraméter){
+		size_t size = strlen(const paraméter.adat);
+		data = new char[size-1];
+		memcpy(adat, paraméter.adat, size);
+		return *this
+		}
+	     Itt is hasonló művelet hajtódik végre mint a másoló konstruktornál, de ennek a konstruktornak lesz visszatérési értéke mégpedig a dereferenciált this kifejezés, ami az aktuális objektum memóriacíme, *-gal viszont maga az objektum.
+	     Amint láthatjuk mindkét esetben megmaradt az eredeti objektum heapen foglalt területe és emellé hoztunk létre egy újat ugyanazon értékekekkel. Azonban ha nincs szükségünk már az eredeti objektumunk egyes részeire és ezeket egy másik hasonló osztálybeli objektumban akarjuk tovább használni akkor hasznos a C++11 által bevezetett mozgató szemantikák, azaz a mozgató konstruktor és mozgató értékadás. Ezek akkor hívódnak meg ha a konstruktor objektuma jobbérték típusú kell hogy legyen, mivel ha alapértelmezettként balérték típusú akkor a másolószemntika hívódna meg. Ezek definiálásakor &&-et használunk referenciának:
+		osztály (osztály&& paraméter ){
+		adat = paraméter.adat;
+		paraméter.adat = nullptr;
+		}
+	     Amint láthatjuk a mozgató konstruktor esetén, ami akkor hívódik meg ha létrehakarunk hozni jobbérték objektumból vele azonos osztálybeli objektumot, az átmozgatni kívánt változó memóriacímét értékül adtuk az aktuális objektuméhoz tartozó változónak, majd az eredeti objektuménak nullptr értéket adtunk, így töröltük. Mivel törlés nélkül probléma lett volna a memóriafelszabadításkor is mivel két változó is ugyanarra a memóriacímre mutatott és C++ ezeket nekünk kell törölni és a duplatörlés memóriaszivárágst eredményezhet. Egyébként Java nyelvben az objektumoknak csak a nevét kell módosítani, azaz több objektum használhatja ugyanazt a memóriacímet így ha módosul az egyik, vele módosul a másik, azonban itt a memóriafelszabadítás automatikusan végződik a garbage collapter segítségével.
+	     A mozgató értékadás akkor hívódik meg ha egynelőség jelet használunk két azonos típósó objektum között, melynek jobb oldalán jobbértékű, baloldalán balértékű objektum szerepel:
+		osztály& operator=osztály(const osztály&& paraméter){
+		swap(adat,paraméter.adat);
+		return *this;
+		}
+	     Ez is hasonló szemantikájú a másoló konstruktorhoz annyiban hogy az egyenlőség jel operátort terheljük túl benne, azaz átdefiniáljuk a működését az alapértelmezettől eltérő módon. Itt a swap függvény segítségével felcseréljük az átadni kívánt változók értékeit, így egymás már egymás memóriacímeire fognak mutatni, itt az adat alapértelmezettként nullptr.	
+	     A feladat alapján a mozgató konstruktorunkat alapoznunk kell a mozgató értékadásra:
+		osztály (osztály&& paraméter ){
+		adat = nullptr;
+		*this = move(paraméter);
+		}
+		osztály& operator=osztály(const osztály&& paraméter){
+		swap(adat, paraméter.adat);
+		return *this
+		}
+	      Ez ugye akkor hívódik meg amikor a mozgató konstruktorba ágyazzuk a mozgató értékadást és hasonlóképpen működik a mozgató konstruktorhoz. Először is nullptr értéket adjuk az aktuális objektum adat változójának, aminek az értékét ugye felakarjuk cserélni a paraméterként adott objektuméval, ehhez segítségül hívjuk a mozgató értékadást amiben ugyanis értelmezett a swap függvény. Ahhoz hogy meghívjuk a move függvénnyel jobbértékűre kell állítanunk a paraméter objektum típusát baloldaliról, így egyenlővé téve az aktuális objektumunkkal. Ezzel teljesül a feltétetele a mozgató értékadásnak és meg is hívódik, ami azt eredményezi hogy a mozgató értékadás által megfelően módosított objektumot értékül adjuk a mozgató konstruktor aktuális objektumának. 
+	    </para>
+	</section>
+	
+    <section>
+	     <title>Hibásan implementált RSA törése</title>
+	     <para>	
+        	
         
         
         
