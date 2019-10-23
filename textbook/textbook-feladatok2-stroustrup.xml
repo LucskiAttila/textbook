@@ -477,4 +477,17 @@ A fordításhoz a C++11 szabványt használjuk, futtatáskor pedig megadjuk anna
         </para>
     </section> 
 
+	
+    <section>
+	     <title>Hibásan implementált RSA törése</title>
+	     <para>
+		  Készítsünk betű gyakoriság alapú törést egy hibásan implementált RSA kódoló: https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf (71 73 fólia) által készített titkos szövegen.
+	    </para>
+	<para>
+	    Az RSA egy kódolási módszer melyet 1976-ban implementáltak és amit a mai napig használnak. Használatához az USA-ban egészen 2000-ig díjat kellett fizetni. Az eljárás a maradékos osztásra alapszik, melynek során először választanunk kell nagy prímszámot, melyeket nevezzünk p és q-nak. Majd számoljuk ki N-et a p és q szorzatából, ez lesz a modulusa a két kulcsnak. Majd számoljuk ki f(N)=(p-1)*(q-1) értékét, ezek alapján meghatározzuk e értékét úgy hogy 1<e<f(N), illetve e és f(N) legnagyobb közös osztója 1, azaz relatív prímek. Ennek az e egész számnak a segítségével kódoljuk a szöveget az alábbi módon: c= m^e mod N, ahol m a kódolandó szöveg, mely ha betűkből áll először át kell konvertálnunk számmá. Az e értéke nyilvános kell hogy legyen gyakran használják egységésen a 65537-et, illetve az N értéke a kommunikáció tagjainak eltérő kell hogy legyen, ezek segítségével tudnak küldeni egy tagnak üzenetet, aki a saját d értékével megfejtheti. A d értékét a d*e=k*f(N)+1 egeyenlet segítségével határozzuk meg, ahol k pozitív egész. Így a d és N ismeretében visszakaphatjuk az eredeti szöveget, azaz m-et az alábbi módon m=c^d mod N.
+	    Az RSA asszimetrikus kódolás mivel két kulcsa van, de a feladat megoldásához elég a nyilvános kulcsot meghaatroznunk, azaz az N értékét ha az e-t 65537-tel használjuk. Ez azért elegnedő mivel a kódolt üzenetet a hibás kódolás miatt feltörhetjük. A hibásan kódolás alatt azt értjük, hogy betünként kell lekódolnunk a szöveget, nem az egészet egybe, emiatt válik feltörhetővé a szöveg, mivel kódolásnál betűnként azonos szimbólumokat rendeltünk az egyes karakterekhez, így egy gyakorisági vizsgálatot elvégezve visszakaphatjuk az eredeti szöveget a titkos kulcs, azaz a d értékének ismerete nélkül. Ehhez szüskégünk lesz egy betű gyakorisági táblázatra lehetőleg az adott nyelvhez, ezt az alábbi linkről hasnzáltam fel: https://bs-gerillanyelveszet.blog.hu/2012/08/18/a_jellegzetesen_magyar_betuk_betukapcsolatok_es_hangjelolesek_vizsgalata.
+	    	
+ 	
+	    
+	</para>	
 </chapter>	    
