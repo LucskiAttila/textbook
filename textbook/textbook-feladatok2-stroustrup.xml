@@ -489,7 +489,100 @@ A fordításhoz a C++11 szabványt használjuk, futtatáskor pedig megadjuk anna
 	    A program elején static kulcsszóval definiáljuk a program során használt változókat, függvényeket, tömböket, ezek a program működéséig a memóriában lesznek. A freq függvény visszadja a már beolvasott betűgyakorisági táblázat leggyakoribb betűjét, majd ha találtunk leggyakoirbbat akkor töröljük a táblázatból. A leggyakoribb elem meghatározásához egy for ciklussal végigmegyünk a has tábla minden során, majd ha az adott sor értéke nagyobb mint az i változójé, akkor i-nek értékül adjuk az aktuális értéket és elmentjük a hozzátartozó kulcsértékét. Majd a main függvényben létrehozunk két nagy prímszámot, melyeknek meghatározzuk a szorzatát a multiply függvény segítségével és publickey nagy egész számot létrrehozzuk 65537 értékkel. Majd a try blokkban beolvassuk a parancssorban megadott kódolandó szöveget, ehhez ismernünk kell a szöveg szavainak számát, majd ezt for ciklussal menjük egy sztringbe parancssor argumentumonként szókösökkel elválasztva. Majd a megfelelő parancssori argumentumot felhasználva beolvassuk a megadott fájlból a betűgyakorisági táblázatot soronként egy hash táblázatba. Ehhez soronént létrehozunk egy String típusú tömböt, melynek elemeit egy tabulátor választja el, így az első sor betűjét mentjük egy változóba és a számát egésszámmá konvertálva egy másik változóba, majd ezeket a put függvénnyel mentjük egy hash táblába. Ezt a try blookot hibakezeljük a catch függvényben leírt módon, ha rossz parancssori argumentumokat adnánk meg. Majd a beolvasott szöveg betűit kisbetűkre állítjuk, majd byte típusú tömb segítségével kódoljuk a beolvasott szöveget kivéve a szóköz és pont karaktereket, vesszőt, pontosvesszőt, gondolatjelet, számokat jelen esetben. A többi betűkre végrehajtjuk az RSA kódolást, azaz vesszük a modulus-adik modolusát a publicKey értéknek. Majd kiirajtjuk az eredeti és kódolt sztringeket, majd a frequency hasmapba mentjük a beolvasott már kódolt szöveg egyes karaktereinek gyakoriságát úgy hogy mentjük az adott karakterhelyen szerplő karaktert egy értékkel, majd ha újra az fordul elő akkor növeljük az értékét eggyel a put, get, contains függvények segítségével. Majd a kódolt szöveg leggyakoribb betűjét kicseréljük a beolvasott táblázat leggyakoribb betűjével így megfelelő táblázat esetén visszakaphatjuk az eredeti szöveget, az egyes cserék után töröljük a mindkét tábla használt karakterének sorát. A freq függvényben új változót használtunk mivel anélkül végtelen ciklust kapnánk, mert módosítaná a while ciklust változóját is így mindkét cserélendő karakter egy betű lenne majd nulla, ezek viszont nem szerepelnek a kódolt szövegben.
 	</para>
 		<programlisting language="java"><![CDATA[
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
+public class rsa {
+	static int i;
+	static char c;
+	static HashMap<Character, Integer> charRank  = new HashMap<Character, Integer>();
+	static String str = new String();
+	static char freq(){
+		char v = 0;
+		i = 0;
+		for(Entry<Character, Integer> e : charRank.entrySet()) {
+			if (e.getValue() > i) {
+				i = e.getValue();
+				v = e.getKey();
+			}
+		}
+		if (charRank.containsKey(v))
+			charRank.remove(v);
+		return v;
+		}
+	public static void main(String[] args) {
+		i = 2100;
+		
+		SecureRandom random = new SecureRandom();
+		
+		BigInteger p = BigInteger.probablePrime(i/2, random);
+		BigInteger q = BigInteger.probablePrime(i/2, random);
+		
+		BigInteger publicKey = new BigInteger("65537");
+		BigInteger modulus = p.multiply(q);
+
+		try {		
+		int d =Integer.parseInt(args[1]);
+
+		for(i = 2; i < d; i++)
+		str = str + ' ' + args[i];
+		
+		BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+			String line;
+			while((line = reader.readLine()) != null) {
+				String[] arg = line.split("\t");
+				c = arg[0].charAt(0);
+				i = Integer.parseInt(arg[1]);
+				charRank.put(c, i);
+			}
+		} catch (Exception e) {
+			System.out.println("Usage: java rsa táblázatelérésiútvonala kódolandószavakszáma+2 szöveg\n" + "ahol a betűgyakorisági-táblázat formája:\nbetű1\tgyakoriság1\nbetűn\tgyakoriságn\n" + "Error-> " + e.getMessage());
+		}
+		
+		str = str.toLowerCase();
+		byte[] out = new byte[str.length()];
+		for (i = 0; i < str.length(); i++) {
+			c = str.charAt(i);
+			if (c == ' ' || c == '.' || c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == ',' || c == ';')
+				out[i] = (byte)c;
+			else
+				out[i] = new BigInteger(new byte[]{(byte)c}).modPow(publicKey, modulus).byteValue();
+		}
+
+		System.out.println("Eredeti: " + str);
+		String code = new String(out);
+		System.out.println("Kódolt:" + code);
+
+		HashMap<Character, Integer> frequency = new HashMap<Character, Integer>();
+		for (i = 0; i < code.length(); i++) {
+			 c = code.charAt(i);
+			if (c != ' ' && c !='.' && c !='0' && c !='1' && c !='2' && c !='3' && c !='4' && c !='5' && c !='6' && c !='7' && c !='8' && c !='9' && c !=',' && c !=';')
+				if(frequency.containsKey(c))
+					frequency.put(c, frequency.get(c) + 1);
+				else
+					frequency.put(c, 1);
+		}
+
+		while (frequency.size() > 0) {
+			i = 0;
+			c = 0;
+			for (Entry<Character, Integer> e : frequency.entrySet()) {
+				if (i < e.getValue()) {
+					i = e.getValue();
+					c = e.getKey();
+				}
+			}
+			code = code.replace(c, freq());
+			frequency.remove(c);			
+		}
+
+		System.out.println("Visszafejtett: " + code);
+						}
+	}
 ]]>
 </programlisting>
 	<mediaobject>
