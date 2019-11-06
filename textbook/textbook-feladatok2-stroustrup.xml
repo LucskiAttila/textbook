@@ -617,6 +617,35 @@ public class rsa {
 	     <para>
 		Készítsünk olyan példát, amely egy képet tesz az alábbi projekt Perceptron osztályának bemenetére és a Perceptron ne egy értéket, hanem egy ugyanakkora méretű képet ” adjon vissza. (Lásd még a 4 hét/Perceptron osztály feladatot is.)	    </para>
 	<para>
-	
+		A Perceptron osztály konstruktora változó argumentumszámú konstruktor melynek működését már korábbi Perceptronos feladatban leírtam, röviden annyit jelent hogy akárhány értékszámú konstruktorral használhatjuk az osztályt csak az első elem mindig a rajta kívüli elemek számát jelenti. Ennek elemszáma adja meg a neurális háló rétegeinek számát, eddigi feladatainkban egyrétegűt használtunk ugye bemeneti és kimeneti réteggel. A jelen feladatban az előző feladathoz képest módosításokat kell végeznünk, mivel most nem egy számot akarunk kapni, hanem egy ugyanakkorra méretű képet.
+		Először is módosítanunk kell az mlp.hpp header fájl operátor túlterhelő függvényét, mivel ezzel végezzük a számításokat és határozzuk meg a végeredményt, ami most nem egy szám, hanem egy tömb lesz. Így mödosítanunk kell a visszatérési értéket double* -ra mivel így a visszatérési érték egy double típúsu tömb memóriacíme lesz. Illetve a paraméterül kapott double típúsu image tömbbe mentjük a kiszámolt értékeket, mivel ugyanannyi elemű lesz a bemenet mint a kimenet, hogy azonos képet kapjunk. 
+		<programlisting language="C++"><![CDATA[		
+		 double* operator() ( double image [] )
+                 {
+		...
+		for(int i = 0; i < n_units[n_layers - 1]; i++)
+      		image[i] = units[n_layers - 1][i];
+    		return image;
+  		}
+]]>
+</programlisting>
+		Majd a main.cpp programot is módosítanunk kell, hogy a Perceptron osztály konstruktorának a kimeneti rétegének értéke ugye size legyen, azaz képmértetnyi. Majd a kiszámolt értéket tároló value változó típusát módosítanunk kell double*-ra mivel az mlp.hpp-ben a kiszámolt értékeket double* típusú tömbjének címét kapjuk vissza a () operátort használva. Majd két egymásba ágyazott for ciklussal módosítjuk a beolvasott png kép rgb színkódjának a red érétékeit a Perceptron által kiszámítottakra, melyet ugye az eredeti red értékekből számítottunk ki. Majd a write függvényt meghívjuk a beolvasott képre újkép.png paraméterrel, így mentjük a módosított képet újkép.png néven.
+		<programlisting language="C++"><![CDATA[
+		
+]]>
+</programlisting>
 	</para>	
+	<mediaobject>
+		<imageobject>
+		<imagedata fileref="vált1.PNG" format="PNG" scale="65"/>
+		</imageobject>
+	</mediaobject>
+	<mediaobject>
+	     <imageobject>
+		<imagedata fileref="vált2.PNG" format="PNG" scale="65"/>
+	     </imageobject>
+	</mediaobject>	
+	</section>	
+	
+	
 </chapter>	    
