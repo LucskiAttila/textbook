@@ -675,7 +675,15 @@ int main ( int argc, char *argv[] )
 		<imagedata fileref="vált2.PNG" format="PNG" scale="65"/>
 	     </imageobject>
 	</mediaobject>	
-	</section>	
+	<para>
+		Amint láthatjuk a red értéket 0 körüli értékekre csökkenthettük, illetve akörül maradhattak fehér és fekete szímkód esetén, mivel az eredeti kép ezekből állt. Valószínüleg a sigmoid függvény exponenciális tagja miatt ami -1 és 1 közti értékeket ad vissza ugye, így a fekete rész fekete marad mivel annak RGB(0,0,0) körül kell lennie, a fehér pedig cyan kékszerű lesz mivel a fehér RGB(255,255,255) red tagja csökkent 0 körülire.
+	</para>
+	<mediaobject>
+		<imageobject>
+		<imagedata fileref="vált3.PNG" format="PNG" scale="65"/>
+		</imageobject>
+	</mediaobject>
+</section>	
 	
 	
 </chapter>	    
