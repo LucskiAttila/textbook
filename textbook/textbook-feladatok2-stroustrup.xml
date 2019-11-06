@@ -631,7 +631,37 @@ public class rsa {
 </programlisting>
 		Majd a main.cpp programot is módosítanunk kell, hogy a Perceptron osztály konstruktorának a kimeneti rétegének értéke ugye size legyen, azaz képmértetnyi. Majd a kiszámolt értéket tároló value változó típusát módosítanunk kell double*-ra mivel az mlp.hpp-ben a kiszámolt értékeket double* típusú tömbjének címét kapjuk vissza a () operátort használva. Majd két egymásba ágyazott for ciklussal módosítjuk a beolvasott png kép rgb színkódjának a red érétékeit a Perceptron által kiszámítottakra, melyet ugye az eredeti red értékekből számítottunk ki. Majd a write függvényt meghívjuk a beolvasott képre újkép.png paraméterrel, így mentjük a módosított képet újkép.png néven.
 		<programlisting language="C++"><![CDATA[
-		
+		#include <iostream>
+#include "png++/png.hpp"
+#include "mlp.hpp"
+
+using namespace png;
+
+int main ( int argc, char *argv[] )
+{
+	image <rgb_pixel> png_image (argv[1]);
+
+	int size = png_image.get_width() * png_image.get_height();
+
+	Perceptron* p = new Perceptron(3, size, 256, size);
+	
+	double* image = new double[size];
+
+	for (int i{0}; i < png_image.get_width(); i++)
+		for (int j{0}; j < png_image.get_height(); j++){
+			image[i * png_image.get_width() + j] = png_image[i][j].red;
+			
+		}
+	double* value = (*p)(image);
+	for (int i = 0; i < png_image.get_width(); i++)
+		for (int j = 0; j < png_image.get_height(); j++)
+			png_image[i][j].red = value[i * png_image.get_width() + j];
+
+	png_image.write("újkép.png");
+
+	delete p;
+	delete [] image;
+}
 ]]>
 </programlisting>
 	</para>	
