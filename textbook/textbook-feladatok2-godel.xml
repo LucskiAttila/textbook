@@ -42,6 +42,7 @@ std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangst
          </para>    
                 <programlisting language="c++">
 <![CDATA[
+#include <vector>
 #include <stddef.h>
 #include <cxxabi.h>
 #include <iostream>
