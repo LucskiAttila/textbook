@@ -19,12 +19,14 @@
            A feladatban a gengsztereket a rendőröktől való távolságuk alapján rendezzük növekvő sorrendben. A lambda függvények előnye hogy nem kell elneveznünk, de ezáltal nem hívhatjuk meg később őket, de így kevesebb táhelyet is igényelnek. 
         </para>
         <programlisting language="c++">
-<![CDATA[std::vector<Gangster> gangsters;
+<![CDATA[
+std::vector<Gangster> gangsters;
 [...]
 std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangster y )
 {
     return dst ( cop, x.to ) < dst ( cop, y.to );
-} );]]>
+} );
+]]>
         </programlisting>
     </section>
     
@@ -38,7 +40,57 @@ std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangst
             A feladatban használjuk a template <typname azonosító> segítségével elérjük hogy a mögötte defifinált függvénynek a paramétereként használjuk az azonosító értékét, így nincs szükségünk konstruktor definiálásra. A using álnév = név segítségével megadjuk hogy milyen néven hivatkozhatunk majd az egyenenlőségjel jobb oldalán álló kifejezésre, ezzel egyszerűbben hivatkozunk rá. Az allocate beépített függvényt felüldefinálva használjuk hogy a paramétereként kapott típúsból lefoglalt n darab memóriacím helyett a visszatérési értékét a return kifejezésben manuálisan számítjuk ki és ez lesz a visszatérési értéke, illetve kiíratjuk a függvény által lefoglalt helyek számát, a lefoglalt bájtok számát, majd az adott típus name magolt és demangolt nevét. A name mangle-t a fordító végzi automatikusan hogy linker megkülönböztesse az egyes neveketet és minnél töb szemantikai információt adjon át, például a void pelda(int i, char b) függvényt FvicE-re nevezi át. Ezt a nevet a typedid(pelda).name() függvény adja meg, az FvicE-ben a v a void azaz a visszatérési érték típusa, az i az int az első paraméter típusa, a c a char a második paraméter típusa. A __cxa_demangle függvény az eredeti azza a demangle-s névre ad vissza egy mutatót, ennek a címét állítsuk egy p változójéra, a függvény első paramétere a visszafejtendő név, a második a memóriacím ahova mentjük a demangolt nevet, 0 esetén automatikusan allokál a malloc függvénnyel, a harmadik parméter a demangle-t név hossza, 0 esetén nem veszi figyelembe, a negyedik paraméter egy egész szám ami a státuszt adja vissza: 0 esetén sikerült a demangle, -1 esetén memóriafoglalási hiba, -2 esetén mangled_name azaz az első paraméterként megadott név hibás, -3 esetén az egyik függény argumentum hibás. A reinterpret_cast <data_type *>(pointer_variable) függvény segítségével módosítjuk a argumentumként kapott mutató értékét a parméterként megadott adattípusra. A p változó által foglalt memóriát felszabadítjuk a free függvénnyel. Fontos hogy a free-vel a malloc, calloc által foglalt memóriát szabadítsuk fel mivel C programozási nyelvből átvett, a delete viszont a new kulcsszó által lefoglaltakat. A void deallocate (pointer p, size_type n) függvény segítségével felszabadítjuk az allocate függvény által foglalt memóriaterületet, amit az első paraméter azonosít, a második parméterként pedig az allokátor álltal lefoglalt memóriamenyiséget adjuk meg. A deallocate függvényben is az allocate-hez hasonló információkat írunk ki a szabványos kimenetre. A porgramunkat egy 16 elemszámú vektoron teszteljük, melynek definiálásakor megadjuk hogy egész típúsu értékekből áll majd és memóriafoglaláshoz a mi allokátorunkat használja, így függvényhívás nélkül automatikusan használja avektor a memóriakezeléshez. 
             A program futtatása után észrevehetjük a vektor dinamikusan foglal helyet a memóriában azaz akármennyit lefoglalhat úgyhogy ha megtelik a lefogalalt tárhely akkor duplaannyit foglal le és módosítja a régi címeket az ójéra, persze ezt a reserve függvénnyel felülírhatjuk. 
          </para>    
-        mediaobject>
+                <programlisting language="c++">
+<![CDATA[
+#include <stddef.h>
+#include <cxxabi.h>
+#include <iostream>
+
+
+template<typename T>
+class CustomAlloc
+{
+public:
+    CustomAlloc() {}
+    CustomAlloc(const CustomAlloc&) {}
+    ~CustomAlloc() {}
+
+    using size_type = size_t;
+    using value_type = T;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+    using difference_tyoe = ptrdiff_t;
+
+    pointer allocate( size_type n){
+        int s;
+        char* p = abi::__cxa_demangle( typeid (T).name(), 0, 0, &s);
+        std::cout << "Allocating "
+                  << n << " objects of "
+                  << n*sizeof (T)
+                  << " bytes. "
+                  << typeid (T).name() << "=" << p
+                  << std::endl;
+        delete p;
+        return reinterpret_cast<T*>(new char[n*sizeof(T)]);
+    }
+
+    void deallocate (pointer p, size_type n){
+        delete[] reinterpret_cast<char *>(p);
+        std::cout << "Deallocating "
+                  << n << " objects of "
+                  << n*sizeof (T)
+                  << " bytes. "
+                  << typeid (T).name() << "=" << p
+                  << std::endl;
+
+    }
+};
+]]>
+        </programlisting>   
+            
+            mediaobject>
             <imageobject>
                 <imagedata fileref="custom.png"></imagedata>
             </imageobject>
