@@ -11,5 +11,22 @@
              Gengszterek rendezése lambdával a Robotautó Világbajnokságban https://youtu.be/DL6iQwPx1Yw (8:05 től)              
         </para>
         <para>
-        
+           A Robocar Világbajnokság (OOCWC) célja, hogy közös kutatási platformot kínáljon a városi forgalomirányítási algoritmusok kidolgozására, valamint az intelligens városok és a robotautók közötti kapcsolat vizsgálatára, különös figyelmet fordítva a közeljövőbeli robotkocsikra. 
+           Ebben az OOCWC projektben használunk egy gyors rendezést a sort beépített függvény segítségével, melyet kétféleképpen használhatunk aszerint hogy megadjuk e a rendezési függvényt vagy nem. Fontos hogy a rendezéshez megadott függvény bool visszatérési értékű és kétparaméteres legyen melyeken nem módosít. A sort függvény első paramétere a rendezni kívánt lista első eleme, a második parmamétere a lista utolsó eleme, a harmadik opcionális ugye a rendező függvény. 
+           Jelen esetben ugye a gengsztereket kell rendeznünk így a gangsters vektort használjuk fel a sort függvényben mivel ebben tároljuk a gengsztereket. A rendezéshez a vektor első és utolsó elemére lesz szükségünk mivel az összes gengsztert rendezzük, ehhez a vektorra hívjuk meg a begin és end függvényeket. Majd  mivel a gegngsztereket a rendőröktől való távolságuk alapján akarjuk rendezni, így szükségünk lesz egy harmadik paraméterre is, egy rendező függvényre. Ehhez használjuk a már ősosztályban megírt dst függvényt, azonban ezt egy függvénybe kell beleírnunk, erre használhatjuk a lambda azaz névtelen függvényeket, mivel erre a függvényre csak most lesz szükségünk, ennek a szintaktikája a következő:
+                [](paraméterek)-> visszatérési típusa {utasítások}            
+           A [] jelek közt függvényen kívüli objektumokat adhatunk meg, a visszatérési értéket nem kötelező megadni ekkor void lesz ha nem ad eredmént a függvény egyébként  egyértelműen meghatározhatónak kell lennie, mint jelen esetben az egyenlőtlenségi vizsgálatnak a bool lesz. A belső, új paraméterek a két gengszter, a külső, már meglévő a rendőrök ami az összehasonlításhoz szükséges, illetve az aktuális objektum ami az összehasonlítást segítő függvényhez.
+           A feladatban a gengsztereket a rendőröktől való távolságuk alapján rendezzük növekvő sorrendben. A lambda függvények előnye hogy nem kell elneveznünk, de ezáltal nem hívhatjuk meg később őket, de így kevesebb táhelyet is igényelnek. 
         </para>
+        <programlisting language="c++">
+<![CDATA[std::vector<Gangster> gangsters;
+[...]
+std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangster y )
+{
+    return dst ( cop, x.to ) < dst ( cop, y.to );
+} );]]>
+        </programlisting>
+    </section>
+    
+    <section>
+        
