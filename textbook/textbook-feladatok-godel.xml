@@ -29,4 +29,12 @@ std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangst
     </section>
     
     <section>
-        
+        <title>C++11 Custom Allocator</title>
+        <para>
+            https://prezi.com/jvvbytkwgsxj/high level programming languages 2 c11 allocators/ a CustomAlloc os példa, lásd C forrást az UDPROG repóban!              
+        </para>
+        <para>
+            C++ progrmozási nyelvben ha létrehozunk egy objektumot akkor memóriát foglalunk le, ezt manuálisan végezzük el a new kulcsszó segítségével. Ezt a memóriafoglalást úgynevezett allokátorok végzik, az alpértelmezett allokátor az std::allocator<T>. Azonban a C++11 verziója óta mi is létrehozhatunk saját allocatorokat úgynevezett custom allocator-t, ekkor ezt használja a fordító a standard allocator helyett.
+            A feladatban használjuk a template <typname azonosító> segítségével elérjük hogy a mögötte defifinált függvénynek a paramétereként használjuk az azonosító értékét, így nincs szükségünk konstruktor definiálásra. A using álnév = név segítségével megadjuk hogy milyen néven hivatkozhatunk majd az egyenenlőségjel jobb oldalán álló kifejezésre,
+        </para>    
+     
