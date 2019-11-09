@@ -104,7 +104,7 @@ public:
             Például: https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cp p#L180
         </para>
         <para>
-            Az STL azaz a Standard Template Libary-nek a része a map típúsu adatszerkezet, ami két elemtípusból áll egy kulcsból és egy értékből. A kulcsok egyediek, azaz egy mapen belül egyszer fordulhatnak elő és a map értékei kulcsszerint növekvő sorrendben vannak. A jelen példában a fénykard.cpp fájlban az egyes hallgatók azonosítója van a hozzájuk tartozó jegyekkel, ezt a tábláazatot akarjuk rendezni jegyek azaz érték szerint. Erre azonban nincs lehetőségünk mivel nem támogatja az std::sort rendezést, de használhatjuk az std::pair típust melynek segítségével a vektorok elemeit a map-hez hasonlóan párokban tárolhatjuk. Létre is hoztunk egy sort_map nevű függvényt melynek visszatérési értéke egy sztring, egész értékpárokból álló vektor, bemenete pedig egy map hasonló típúsu paraméterekkel, azaz sztring-egész értékpárokból álló map memóriacíme. A függvényben létre is hozunk egy sztring,egész párokból álló vektort ordered néven, majd a megszokott módon az auto &i : mapneve segítségével végigmegyünk a paraméterül kapott map elemein, úgy hogy ha a map második eleme azaz az értéke létezik, akkor létrehozunk egy párt p néven a vektor adott kulcs-érték párjéból majd a pushback függvényt meghívjuk az ordered vektorra p paraméterrel így eleme lesz a vektornak p. Az if feltételes ellenőrzésre valószínüleg azért van szükség mert nem minden hallgatónak van jegye, őket azonban nem kezeltük. Majd az std::sort függvénnyel sorba rendezzük a vektort a második értékei alapján csökkenő sorrendben. Jelen példában a begin és end függvényeket zárójeles alakban használjuk pontozott helyett, illetve a lambda függvényt most [=] jellel használjuk mivel a környezeti változókat most másolással vesszük át nem memóriacímmel. Az auto kifejezést C++11 óta vezették be ennek segítségével a fordító automatikusan kitalálja a változók típusát. Majd a sort_map függvény visszatérési értéke az ordered vektor lesz.                       
+            Az STL azaz a Standard Template Libary-nek a része a map típúsu adatszerkezet, ami két elemtípusból áll egy kulcsból és egy értékből. A kulcsok egyediek, azaz egy mapen belül egyszer fordulhatnak elő és a map értékei kulcsszerint növekvő sorrendben vannak. A jelen példában a fénykard.cpp fájlban az egyes hallgatók azonosítója van a hozzájuk tartozó jegyekkel, ezt a tábláazatot akarjuk rendezni jegyek azaz érték szerint. Erre azonban nincs lehetőségünk mivel nem támogatja az std::sort rendezést, de használhatjuk az std::pair típust melynek segítségével a vektorok elemeit a map-hez hasonlóan párokban tárolhatjuk. Létre is hoztunk egy sort_map nevű függvényt melynek visszatérési értéke egy sztring, egész értékpárokból álló vektor, bemenete pedig egy map hasonló típúsu paraméterekkel, azaz sztring-egész értékpárokból álló map memóriacíme. A függvényben létre is hozunk egy sztring,egész párokból álló vektort ordered néven, majd a megszokott módon az auto &i : mapneve segítségével végigmegyünk a paraméterül kapott map elemein, úgy hogy ha a map második eleme azaz az értéke létezik, akkor létrehozunk egy párt p néven a vektor adott kulcs-érték párjéból majd a pushback függvényt meghívjuk az ordered vektorra p paraméterrel így eleme lesz a vektornak p. Az if feltételes ellenőrzésre valószínüleg azért van szükség mert nem minden hallgatónak van jegye, őket azonban nem kezeltük. Majd az std::sort függvénnyel sorba rendezzük a vektort a második értékei alapján csökkenő sorrendben. Jelen példában a begin és end függvényeket zárójeles alakban használjuk pontozott helyett, illetve a lambda függvényt most [=] jellel használjuk mivel a környezeti változókat most másolással vesszük át nem memóriacímmel. Az auto kifejezést C++11 óta vezették be ennek segítségével a fordító automatikusan kitalálja a változók típusát. Majd a sort_map függvény visszatérési értéke az ordered vektor lesz. Majd a main függvényben az insert kifejezéssel feltöltjük adatokkal a map-ünket a rendezéshez, majd használjuk a megírt függvényünket a rendezéshez és kiiratjuk a létrehozott rendezett vektor elemeit a szabványos kimentere.                    
         </para>    
         <programlisting language="c++">
 <![CDATA[   
@@ -162,9 +162,46 @@ int main() {
         </mediaobject>        
         </section>
             
-            
-            
-            
+        <section>
+        <title>Alternatív Tabella rendezése</title>
+        <para>
+	    Mutassuk be a https://progpater.blog.hu/2011/03/11/alternativ_tabella a programban a java.lang        
+	</para>
+        <para>
+	    A feladatban a magyar labdarúgó bajnokság eredményeit alternatívan rendező program rendezési algoritmusát elmezzük. Ez a hagyományos rendezéstől annyiban tér el hogy itt figyelembe vesszük hogy az adott csapat milyen erősségű csapattal megy meccset, így nem ugyanannyit ér egy győzelem pédául a leggengébb csapat ellen ha a legerősebb csapatot hasonlítjuk. Ez a módszer hasonlít a PageRank algoritmushoz csak itt oldalak mutatása helyett csapatok legyőzése van. Tehát a pontokat nem a hagyományos módon határozzuk meg hogy a győzelem 3, vereség 0, döntetlen 1, hanem a győztes csapat 1 pontot kap, a vesztes nem kap pontot, döntetlen sesetén 1-1 pont jár. Ezzel a wikipédiáról átmásolt kereszttáblázatból számítjuk ki pontokat majd a PageRank algoritmussal meghatározzuk a végpontokat, az így kapott tábláazatot pedig rendezzük csökkenő sorendben és kiiratjuk a szabványos kimenetre. A PageRank algoritmussal már korábban foglalkoztunk. A feladatban az értékpárokat most objektumokkal kezeljük, tehát a kiszámolt pontokhoz amik már egy egydimenziós tömbben tárolódnak összevonjuk a hozzátartozó csapatneves táblázathoz, ezért fontos hogy a program elején a két mátrixban a csapatok sorrendje eggyezzen. Ahhoz hogy az objektuomokból álló listát rendezzük a sort függvénnyel az objektumunknak ősosztályának kell lennie a Comparable osztálynak, ehhez viszont override-olnunk kell a comperTo függvényt melynek a lényege hogy 3 visszatérési értéke legyen hogy ha az aktuális objektum kisebb a Comparable-s objektumtól akkor -1, ha nagyobb akkor 1, ha egyenlő akkor 0. Ahogy láthatjuk a feladatunkban is így csináltuk, így már hibaüzenet nélkül rendezhetjük a sort függvénnyel az objektumokból képztt listát melyet a java.util.Arrays.asList() függvénnyel hozunk létre. A sort-os rendezés után ha meghívjuk a reverse függvényt a rendezett listára akkor a rendezett lista ford1tottját kapjuk vissza, theát a jelen feladatban megkapjuk a pontok szerint csökkenő sorrendben a csapatok neveivel  a pontos listát.	
+	</para>	
+        <programlisting language="c++">
+<![CDATA[ 		    
+class Csapat implements Comparable<Csapat> {
+
+  protected String nev;
+  protected double ertek;
+
+  public Csapat(String nev, double ertek) {
+    this.nev = nev;
+    this.ertek = ertek;
+  }
+
+  public int compareTo(Csapat csapat) {
+    if (this.ertek < csapat.ertek) {
+      return -1;
+    } else if (this.ertek > csapat.ertek) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+  ]]>
+        </programlisting>             
+    </section>
+		
+    <section>
+        <title>STL map érték szerinti rendezése</title>
+        <para>
+            Például: https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cp p#L180
+        </para>
+        <para>		
             
             
             
