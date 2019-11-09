@@ -104,8 +104,53 @@ public:
             Például: https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cp p#L180
         </para>
         <para>
-            
+            Az STL azaz a Standard Template Libary-nek a része a map típúsu adatszerkezet, ami két elemtípusból áll egy kulcsból és egy értékből. A kulcsok egyediek, azaz egy mapen belül egyszer fordulhatnak elő és a map értékei kulcsszerint növekvő sorrendben vannak. A jelen példában a fénykard.cpp fájlban az egyes hallgatók azonosítója van a hozzájuk tartozó jegyekkel, ezt a tábláazatot akarjuk rendezni jegyek azaz érték szerint. Erre azonban nincs lehetőségünk mivel nem támogatja az std::sort rendezést, de használhatjuk az std::pair típust melynek segítségével a vektorok elemeit a map-hez hasonlóan párokban tárolhatjuk. Létre is hoztunk egy sort_map nevű függvényt melynek visszatérési értéke egy sztring, egész értékpárokból álló vektor, bemenete pedig egy map hasonló típúsu paraméterekkel, azaz sztring-egész értékpárokból álló map memóriacíme. A függvényben létre is hozunk egy sztring,egész párokból álló vektort ordered néven, majd a megszokott módon az auto &i : mapneve segítségével végigmegyünk a paraméterül kapott map elemein, úgy hogy ha a map második eleme azaz az értéke létezik, akkor létrehozunk egy párt p néven a vektor adott kulcs-érték párjéból majd a pushback függvényt meghívjuk az ordered vektorra p paraméterrel így eleme lesz a vektornak p. Az if feltételes ellenőrzésre valószínüleg azért van szükség mert nem minden hallgatónak van jegye, őket azonban nem kezeltük. Majd az std::sort függvénnyel sorba rendezzük a vektort a második értékei alapján csökkenő sorrendben. Jelen példában a begin és end függvényeket zárójeles alakban használjuk pontozott helyett, illetve a lambda függvényt most [=] jellel használjuk mivel a környezeti változókat most másolással vesszük át nem memóriacímmel. Az auto kifejezést C++11 óta vezették be ennek segítségével a fordító automatikusan kitalálja a változók típusát. Majd a sort_map függvény visszatérési értéke az ordered vektor lesz.                       
         </para>    
+        <programlisting language="c++">
+<![CDATA[   
+     std::vector<std::pair<std::string, int>> sort_map ( std::map <std::string, int> &rank )
+        {
+                std::vector<std::pair<std::string, int>> ordered;      
+
+                for ( auto & i : rank ) {
+                        if ( i.second ) {
+                                std::pair<std::string, int> p {i.first, i.second};
+                                ordered.push_back ( p );
+                        }
+                }
+      
+
+                std::sort ( std::begin ( ordered ), std::end ( ordered ), [ = ] ( auto && p1, auto && p2 ) {
+                        return p1.second > p2.second;
+                }
+                );
+                      return ordered; 
+      }
+  ]]>
+        </programlisting>   
+            mediaobject>
+            <imageobject>
+                <imagedata fileref="stl.png"></imagedata>
+            </imageobject>
+        </mediaobject>        
+        </section>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
