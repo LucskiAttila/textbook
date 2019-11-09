@@ -193,7 +193,17 @@ class Csapat implements Comparable<Csapat> {
   }
 }
   ]]>
-        </programlisting>             
+        </programlisting> 
+            <mediaobject>
+            <imageobject>
+                <imagedata fileref="alt1.png"></imagedata>
+            </imageobject>
+        </mediaobject> 
+	    <mediaobject>
+            <imageobject>
+                <imagedata fileref="alt3.png"></imagedata>
+            </imageobject>
+        </mediaobject> 	
     </section>
 		
     <section>
