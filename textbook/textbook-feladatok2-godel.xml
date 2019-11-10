@@ -214,7 +214,16 @@ class Csapat implements Comparable<Csapat> {
         <para>		
             A Prolog családfa program egy pl kiterjesztésű fájl, így prolog programozási nyelvet használtuk a megírásához, ez látszik a kódból is mivel formulákból épül fel, amiket az elsőrendű logikából tanult módon értelmezhetünk. A programban a férfi(nándi) alakú kifejezéseket tényeknek nevezzük, az apa(X) :- férfi(X), gyereke(_Y, X). alakú kifejezéseket szabályoknak nevezzük. Ezeket predikátumként értelmezzük, tehát nándi férfi illetve apa ha férfi és van gyereke. A prolog programozási nyelv volt az első logikai programozási nyelv amit 1972-ben fejlesztettek ki. A lényege az hogy a program bemenete egy célformula és többi formulákból áll, ahol a kimenetet az adja hogy a célformula következménye e a többi formulának. Tehát ez egy deklreatív programozási nyelv ami annyit jelent hogy ugye nem algoritmusokat adunk meg hogy mitkezdjen a program az adatokkal, hanem a végeredményt és ezt ellenőrzi hogy helyes e. 	
 	</para>	
-	
+        <programlisting language="java">
+<![CDATA[ 
+     
+  ]]>
+        </programlisting> 
+	<mediaobject>
+            <imageobject>
+                <imagedata fileref="prolog.png"></imagedata>
+            </imageobject>
+        </mediaobject> 
             
             
             
