@@ -40,46 +40,31 @@
              A feladat az volt hogy javítsunk valamit a kódon, így kibővítettem egy törlés funkcióval amivel törölhetjük a mappáit vagy fájlait a megjelenített könyvtárszerkezetnek a gyökér mappa kivételével, mivel azt az ActivityEditor programunkban hozzuk létre a fa gyökereként nem fájlból olvassuk be. Ahogy az Én magam elemet is létrehozzuk faelemként nem beolvasással hozzuk létre, így ez a két elem fog látszani ha elindeítjuk a programot a City, gaming.props, initF6actFS.sh, me.props, programming.props fájlok használata nélkül. A program könyvtárszerkezete működik a  gaming.props, initF6actFS.sh, me.props, programming.props fájlok használata nélkül is. 
         </para>
         <programlisting language="Java"><![CDATA[
-        		javafx.scene.control.MenuItem deleteMenuItem = new 		javafx.scene.control.MenuItem("Törlés");
-            addMenu.getItems().add(deleteMenuItem);
-		deleteMenuItem.setOnAction((javafx.event.ActionEvent evt) -> {
-                                           
-                java.io.File file = getTreeItem().getValue();
-javafx.scene.control.TreeItem item = getTreeItem();
-
-    javafx.scene.control.TreeItem parent = item.getParent();
-    if (parent == null )
-    {
-        System.out.print("Cannot remove the root node.\n");
-    }
-    else
-    {
-        parent.getChildren().remove(item);
-	deleteDirectory(file);
-	
-    }
-		});
-
-        }
-
-public boolean deleteDirectory(java.io.File directory) {
-    if(directory.exists()){
-        java.io.File[] files = directory.listFiles();
-        if(null!=files){
+             javafx.scene.control.MenuItem deleteMenuItem = new javafx.scene.control.MenuItem("Törlés");
+             addMenu.getItems().add(deleteMenuItem);
+	     deleteMenuItem.setOnAction((javafx.event.ActionEvent evt) -> {
+             java.io.File file = getTreeItem().getValue();
+             javafx.scene.control.TreeItem item = getTreeItem();
+             javafx.scene.control.TreeItem parent = item.getParent();
+             if (parent == null ){
+             System.out.print("Cannot remove the root node.\n");}
+             else{
+            parent.getChildren().remove(item);
+	    deleteDirectory(file);}});}
+            public boolean deleteDirectory(java.io.File directory) {
+            if(directory.exists()){
+            java.io.File[] files = directory.listFiles();
+            if(null!=files){
             for(int i=0; i<files.length; i++) {
-                if(files[i].isDirectory()) {
-                    deleteDirectory(files[i]);
-                }
-                else {
-                    files[i].delete();
-                }
-            }
-        }
-    }
-    return(directory.delete());
-}
+            if(files[i].isDirectory()) {
+            deleteDirectory(files[i]);}
+            else {
+            files[i].delete();}}}}
+            return(directory.delete());} 
         ]]></programlisting>
-            
+	<para>
+	    	
+	</para>    
             
             
             
