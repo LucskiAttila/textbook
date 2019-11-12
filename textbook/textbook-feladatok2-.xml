@@ -64,7 +64,13 @@
         ]]></programlisting>
 	<para>
 	    	
-	</para>    
+	</para> 
+            mediaobject>
+            <imageobject>
+                <imagedata fileref="future.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </section>	    
             
             
             
