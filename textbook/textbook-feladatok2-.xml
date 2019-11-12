@@ -11,4 +11,43 @@
              Javítsunk valamit a ActivityEditor.java JavaFX programon! https://github.com/nbatfai/future/tree/master/cs/F6 Itt láthatjuk működésben az alapot: https://www.twitch.tv/videos/222879467
         </para>
         <para>
-           
+             A Future projekt a városok jövőbeli kutatására irányult a város lakóira alapozva, hogy azok innovatív és környezettudatos technológiai megoldásokat használjanak mindennapi feladatai megoldásában és hosszú távú céljai elérésében. Az F6-os projekt arra készült hogy a hallgatók a napi tevékeknységeiket feljegyezzék ugye környezettudatosan. 
+             Az F6 projekt java programozési nyelven írt programja az ActivityEditor.java így ezt kellessz fordítanunk és futtatnunk, de ehhez szükségesek a többi fájlok is a projektből, illetve társítani kell a JavaFX-es könyvtárakat is. Mivel ebből elég sokat fog használni a programunk így egy szkriptet készítettem hozzá run néven melynek segítségével fordítom és futtatom is a programot:
+        </para>
+        <programlisting><![CDATA[
+             #!/usr/bin/env bash
+             export PATH_TO_FX="/usr/share/openjfx/lib"
+             java_modules="javafx.controls,javafx.graphics,javafx.media,javafx.swing,javafx.web"
+             rm -f *.class
+             /usr/lib/jvm/java-11-openjdk-amd64/bin/javac\
+                 --module-path $PATH_TO_FX\
+                 --add-modules=$java_modules ActivityEditor.java
+             /usr/lib/jvm/java-11-openjdk-amd64/bin/java\
+                 --module-path $PATH_TO_FX\
+                 --add-modules=$java_modules ActivityEditor
+             rm -f *.class
+        ]]></programlisting>
+        <para>
+             Az F6 projektet pedig az alábbi módon tölthetjük le, és indíthatjuk el miután megírtuk a run szkriptet:
+        </para> 
+        <programlisting><![CDATA[
+             git clone https://github.com/nbatfai/future.git
+             cd future/cs/F6
+             gedit run
+             ./run
+        ]]></programlisting>
+        <para>     
+             A feladat az volt hogy javítsunk valamit a kódon, így kibővítettem egy törlés funkcióval amivel törölhetjük a mappáit vagy fájlait a megjelenített könyvtárszerkezetnek a gyökér mappa kivételével, mivel az szükséges a működéshez.
+        </para>
+        <programlisting language="Java"><![CDATA[
+        
+        ]]></programlisting>
+            
+            
+            
+            
+            
+            
+            
+            
+            
