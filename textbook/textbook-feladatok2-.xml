@@ -69,9 +69,32 @@
                  <imagedata fileref="future.png"></imagedata>
              </imageobject>
          </mediaobject>
-    </section>	    
-            
-            
+    </section>	 
+
+    <section>
+        <title>OOCWC Boost ASIO hálózatkezelése</title>
+        <para>
+             Mutassunk rá a scanf szerepére és használatára! https://github.com/nbatfai/robocaremulator/blob/master/justine/rcemu/src/carlexer.ll
+        </para>
+        <para>
+	     A sscanf függvény annyiban tér el a scanf változatától hogy ez az általunk meghatározott forrásból olvassa ki a szöveget, a scanf pedig a szabványos bemenetről. Mindkét függvény visszatérési értéke egy egész szám a parméterül adott referenciáknak a száma amikebe a szövegből beolvastunk értékeket, hiba esetén EOF karakterrel tér vissza, ami olyan karakter ami a char értékkészletén kívül esik. Mindkét függvény használatához az #include <stdio.h> header használata szükséges, illetve az std:: névtér. A sscanf függvény első paramétere az hogy honnan próbálja meg ráilleszteni a második paraméterként megadott mintára a szöveget. A formátumot " " jelek között kell megadni, ahol akármilyen karaktereket megadhatunk akár whitespace-eket például szökózt is, illetve használhatunk karaktertípusokat is ekkor meg kell adni ugye a hozzátartozó változó referenciákat ahova mentse a beolvasott típus értékét illeszkedés esetén, ezeket a függvény további paramétereként adjuk meg. A karaktertípusoknak speciális jelölésük van például a char-nak c, string-nek s, decimal int d, f float point, ahol ugye a char az egy karaktert, a string szöveget, decimal int decimális azaz tízesszámrendszerbeli egész számot, a float point egy tizedes vesszőt tartalmazó nem valós számot. Sztring esetén egy white spac-ig olvas be karaktereket, ehhez char*, a char-hoz is, a float point-hoz float*, az int-hez int* referencia szükséges hogy tároljuk.   
+	</para>
+        <programlisting language="Java"><![CDATA[
+	while ( std::sscanf ( data+nn, "<OK %d %u %u %u>%n", &idd, &f, &t, &s, &n ) == 4 ){
+	nn += n;
+	gangsters.push_back ( Gangster {idd, f, t, s} );}	
+        ]]></programlisting>
+        <para>
+	     Ebben a példában a sccanf függvényt arra használjuk hogy a data sztring <OK %d %u %u %u> alakú szövegrészeiből Gangster objektumokat hozzunk létre melyeket a gangsters vektorba tárolva különítünk el egymástól, mivel a vektor elemeit lekérdezhetjük majd. Ehhez ugye override-oltuk azaz túlterheltük a scanf függvényt, az nn változót valószínüleg 0 kezdőértékkel definiáltuk egész típussal, melynek értékét az n egész változó értékével növeljük minden beolvasott Gangster objektum után. Az n változó értékét minden beolvasás után a beolvasott sztring karakterjeinek számára módosítja a függvény, beleszámolja a nem illeszkedüket is, ezt a %n speciális karakter adja meg. Fontos hogy ez nem ugyanaz mint a függvény visszatérési értéke mert az fix szám és azoknak a paraméterül adott referenciáknak a száma amikbe beolvasunk a bemenetből. A visszatérési értéke jelen esetben 4, ha jól működik a függvényünk, azaz betud olvasni egy Gangster objektum létrehozásához elegendő változókat, azaz a konstruktorának változóit. A while ciklus addig fogja újból meghívni a scanf függvényt ameddig tud beolvasni újabb gangsters vektor elemet azaz Gangster objektumot. Ahhoz hogy ne olvassuk be kétszer ugyanazt a Gangster objektumot ahhoz növeljük a beolvasási pointer értékét a már beolvasott sztringek hosszával. A %u az unsigned decimal int-eket jelenti azaz aláírás nélküli decimélis egész számokat. Ennek a decimális szava a számjegyeire utal ami tizes számrendszerbeli az 0,1,2,3,4,5,6,7,8,9 számjegyekből épül fel. Az aláírás nélküli rész pedig arra hogy nem tartalmaz negatív egészeket, ehelyett dupla akkora pozitív egészeket tartalmaz 0-val kezdődően mint a sima int típus.           
+	</para>
+    </section>
+		
+    <section>
+        <title>SamuCam</title>
+        <para>
+	     Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben: https://github.com/nbatfai/SamuCam
+	</para>
+        <para>            
             
             
             
