@@ -95,8 +95,43 @@
 	     Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben: https://github.com/nbatfai/SamuCam
 	</para>
         <para>            
-            
-            
+             A SamuCam projekt segítségével a számítógépünk kamerája felismeri az arcunkat, ehhez azonban szükségünk van egy kamerára, ha viszont nincs akkor az Androidos telefonunkra telepítenünk kell az IP WEBCAM applikációt, melyben a Start server opcióval elindíthatjuk a vidó streamet a telefon kameráján keresztül, ez megad nekünk egy ip címet amit a programunk futtatásakor az --ip ipcím kapcsolóval kell csatolni. Ahhoz hogy a gépen tudjuk futtatni az alábbiakat kell tennünk:
+	     <programlisting><![CDATA[
+		sudo apt-get install libopencv-dev qt5-default
+		git clone https://github.com/nbatfai/SamuCam.git
+		cd SamuCam/
+		wget https://github.com/Itseez/opencv/raw/master/data/lbpcascades/lbpcascade_frontalface.xml
+		qmake SamuLife.pro
+ 		make
+ 		./SamuCam
+	     ]]></programlisting>
+	     A libopencv-dev csomag az OpenCV osztályok használatához szüskéges mivel ezekkel dolgozzuk fel a kamera által streamelt adatokat, illetve ezzel végezzük el az arcfelismerést. A QT keretrendszert is telepítjük mivel használunk a programban például a QT slot-sigal mehacnizmusát, illetve ezzel fogjuk fordítani a projektet a hozzátartozó qmake paranccsal. A git clone paranccsal pedig letöltjük magát a SamuCam projektet és a wget parancsal pedig letöltünk egy xml fájlt ami az arcfelismerő működéséhez szükséges adatokat tartalmazza.
+	     <programlisting language="C++"><![CDATA[
+		SamuCam::SamuCam ( std::string videoStream, int width = 176, int height = 144 )
+		  : videoStream ( videoStream ), width ( width ), height ( height ){
+		  openVideoStream();}
+		SamuCam::~SamuCam (){}
+		void SamuCam::openVideoStream(){
+  		videoCapture.open ( 0 );
+  		videoCapture.set ( CV_CAP_PROP_FRAME_WIDTH, width );
+  		videoCapture.set ( CV_CAP_PROP_FRAME_HEIGHT, height );
+  		videoCapture.set ( CV_CAP_PROP_FPS, 10 );}
+	     ]]></programlisting>
+	     A feladat alapján a webcam működéséről kell írnunk ezt pedig a SamuCam.cpp fájl tartalmazza. A program elején definiáltuk a SamuCam konstruktorát, melynek elsőparamétere az általunk megadott ip cím lesz de ezt ugye a main függvénybe definiáltuk ahol kezeljük a parancssori argumentumokat egy SamuCam konstruktor meghívással. Ezt az értéket mentjük egy videoStream sztring típusú változóba, a második és harmadik paraméter értékét megadtuk. Ezen értékekekkel inicializáljuk az aktuális objektumunk változóit, majd meghívjuk az openVideoStream függvényt. Ennek a függvénynek nincs visszatérési értéke sem paramétere, de ősosztálya a SamuCam osztálynak így örökli az aktuális objektum változóinak értékét, a videoCapture.open függvénnyel nyitjuk meg a videósztreamet, majd beáll1tjuk a set függvénnyel a stream képernyő méretét, illetve a maximum fps értékét. Ezek a beáll1tások azért szükségesek mert a programunk eléggé erőforrásigényes és ezzel próbáljuk meg elérni hogy lefusson lefagyás nélkül. Az open függvény paramétere lehetne 0 is ekkor a laptopunk webkameráját használná a program, illetve ip cím helyett megadhatnánk már létező videót is. A run függvényben hajtjuk végre az arcfelismerést, ez örökli az aktuális SamuCam objektum tulajdonságait, mivel felhasználjuk a videoCapture objektumát, illetve a SamuCam örökli a QThread osztályt mivel a run függvényt az tartalmazza. A run függvény indítja el a szálak működését, de jelen esetben overridoltuk, mivel példányosítottunk benne egy CascadeClassifier objektumot, mivel ez az osztály felelős azért hogy felismerjünk egy objektumot a videósztreamből. Ehhez az oszályhoz tartoznak a load és detectMultiScale függvények. A load függvény segítségével töltjük be a detektáláshoz szükséges xml fájlokat, jelen esetben az arcfelismeréshez szükséges fájlt, a betöltést hibakezeltük egy if feltétellel. A detectMultiScale függvény végzi az objektumok detektálását, melynek első paramétere egy Mat objektum referenciája, ezen fogja végezni a detektálást, a második paraméter <Rect> típusú vektor referenciája, ebbe fogja tárolni a detektált objektumokat, a harmadik paraméterben a skálafaktor, ami azt adja meg milyen mértékben csökkenjen a képméret skálázásonként, a harmadik paraméter azt adja meg minimum hány szomszádos téglalapnak kell lennie az adott téglalapnak, minSize a minimális objektum méret, maxSize a maimális objektum méret. Tehát mivel a felismerő függvény bemenetje egy Mat típusú objektum így létrehozunk egyet, és beleolvassuk a videósztreamet a read függvény segítségével. A read függvényt egy while ciklusba rakjuk hgoy addig olvasson amíg van bemenet, ezt pedig egy másik while ciklusba hogy addig olvasson amíg meg van nyitva a videósztream. A beolvasás után ellenőrizzük hogy üres e beolvasott Mat objektum, ha nem akkor a resize függvénnyel visszaméretezzük a már beolvasott képet az eredeti méretre, majd a cvtColor függvénnyel módosítjuk a beolvasott kép színét fekete-fehérre, ez is arc felismeréshez szükséges, mivel fekete-fehér képre van az xml forrásfájl. A fejete-fehér kép egy új Mat objektumba kerül, ezt az equalizeHist függvénnyel javítunk a képminőségen. Majd létrehozunk egy <rectangle> elemekből álló vektort amibe mentjük a detektált objektumokat a detectMultiScale függvény. Ha sikeres volt az arcfelismerés tehát a vektorunk elemszáma nagyobb 0 akkor készítünk egy másik Mat objektumot a vektorunk 0-ik elemének másolatával, amit a clone függvénnyel másolunk le, illetve ezzel allokálunk neki memóriát is, hogy a többi objektum ne módosuljon. Ebből az új objektumból létrehozunk egy új képet. Majd létrehozunk két pontot a Point objektumok létrehozásával, melyre illesztünk egy téglalpot a rectangle függvénnyel a Scalar függvényt felhasználva halványkék színnel a Mat objektumra ahova beolvastuk a videósztreamet részletet. Majd meghívjuk az emit függvénnyel a slot-signal mehanizmust, majd létrehozunk egy újabb képet az objektumból ahova beolvastuk a videósztream részletet és ismét meghívunk egy emit signal-slot mehacnizmust. A sleep függvényekkel késleltetjük a szálat a paraméterül adott miliszekundomokig, ezt valószínüleg a hatékonyabb működés érdekében használjuk. A signal-slot mehacnizmus lehet felelős azért hogy kommunikáljon másik objektummal hogy jelenítse meg a képeket. Az if feltétellel azt ellenőrizzük hogy megvan e még nyitva a videósztream, ha nincs újra megnyitjuk.                               
+	</para>    
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="samucam.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>	 
+
+    <section>
+        <title>BrainB</title>
+        <para>
+	   Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: https://gi thub.com/nbatfai/esporttalent-search
+	</para>
+        <para>            
             
             
             
