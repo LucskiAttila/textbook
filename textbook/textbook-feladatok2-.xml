@@ -165,7 +165,7 @@
 	     Alternatívaként készíthetsz egy GoogleMaps alapú Androidos „GPS trackert”, 2007 óta csinálok ilyen példát: https://youtu.be/QStgBZ6JfAU az aktuális a Bátfai Haxor Stream keretében: https://bhaxor.blog.hu/-2018/09/19/nandigps_ismerkedes_a_gps-el
 	</para> 
         <para>
-	     Mivel Andoid alapú programot fogunk használni így ennek létrehozásához szükségünk van egy androidos programozó felületre, erre biztosít lehetőséget az Anroid Studio, melyben Google Maps projektet hozhatunk létre java programozási nyelven, ehhez az alábbi linkről kell letöltenünk az Android Studio alkalmazást: https://developer.android.com/studio/?gclid=Cj0KCQiAtrnuBRDXARIsABiN-7AOcYGiI4BAzjPgInOkVafrF-lJ7njwOuvMZK-hvrLQhOPgHiYpQtoaApe6EALw_wcB ,majd a parancssorban az alábbi műveletet kell végrehajtanunk:
+	     Mivel Andoid alapú programot fogunk használni így ennek létrehozásához szükségünk van egy androidos programozó 0felületre, erre biztosít lehetőséget az Anroid Studio, melyben Google Maps projektet hozhatunk létre java programozási nyelven, ehhez az alábbi linkről kell letöltenünk az Android Studio alkalmazást: https://developer.android.com/studio/?gclid=EAIaIQobChMI56_f0a3t5QIVyYGyCh0arw8kEAAYASAAEgILFPD_BwE ,majd a parancssorban az alábbi műveletet kell végrehajtanunk:
 	     <programlisting><![CDATA[
 		cd ~Letöltések
 		
