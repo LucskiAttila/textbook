@@ -168,7 +168,7 @@
 	     Mivel Andoid alapú programot fogunk használni így ennek létrehozásához szükségünk van egy androidos programozó 0felületre, erre biztosít lehetőséget az Anroid Studio, melyben Google Maps projektet hozhatunk létre java programozási nyelven, ehhez az alábbi linkről kell letöltenünk az Android Studio alkalmazást: https://developer.android.com/studio/?gclid=EAIaIQobChMI56_f0a3t5QIVyYGyCh0arw8kEAAYASAAEgILFPD_BwE ,majd a parancssorban az alábbi műveletet kell végrehajtanunk:
 	     <programlisting><![CDATA[
 		cd ~/Letöltések
-		tar xzvf 
+		tar xzvf android-studio-ide-191.5977832-linux.tar.gz
  		make
  		./BrainB
 	     ]]></programlisting>		
