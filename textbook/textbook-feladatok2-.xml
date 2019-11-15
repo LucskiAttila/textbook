@@ -129,10 +129,39 @@
     <section>
         <title>BrainB</title>
         <para>
-	   Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: https://gi thub.com/nbatfai/esporttalent-search
+	     Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: https://gi thub.com/nbatfai/esporttalent-search
 	</para>
         <para>            
-            
-            
-            
-            
+             A BrainB projekt a játékbeli karakterelvesztést szimulálja, mivel a Samu Entropy négyzet közepén lévő fekete ponton kell tartani az egeret, ha ez sikerül akkor elkezd mozogni és megsokszorozódni a négyzetek száma. Ha viszon elvesztjük Samu Entropy-t azaz nem tudjuk a fekete pontján tartani a kurzort akkor csökkeni fog a négyzetek száma és lassul a mozgása is. A teszt 10 percig tart, erről kapunk információt az ablak felső sorában, az eredméyeinket a README.md fájl tartalmazza. Ez lost/found részekből áll a karakter elvesztése és megtalálásáról, én kb. két perc után kiléptem, így meghívódott a Close Event melyben definiáltuk hogy hívja meg a save függvényt ami menti az teszt adatait és leállítja a programot beépített signal-slot mechanizmus segítségével Test néven bővítve az eeltelt milliszekundumok számával. A projekt működéséhez szüskégesek az alábbi lépések végrehajtása a parancssorban:
+	     <programlisting><![CDATA[
+		sudo apt-get install libopencv-dev qt5-default
+		git clone https://github.com/nbatfai/esport-talent-search.git
+		cd esport-talent-search
+		qmake BrainB.pro
+ 		make
+ 		./BrainB
+	     ]]></programlisting>		
+            A program használatához szükségesek az opencv és qt kiegészítőket telepíteni, a QT fájlokból a qmake paranccsal létrehozzuk a MakeFile-t amiből a make paranccsal létrehozzuk a futtatható állományokat. A QT keretkrendszer segítségével tudjuk használni a signal-slot mechanizmust ami az objektumok közötti kommunikációt valósítja meg. A signal-ok függvények visszatérési értél és definícó nélkül, azonban rendelkeznek deklarációval és paraméterekkel. Illetve a signálokat nem a hagyományos módon lehet meghívni, hanem az emit kulcsszó seg1tségével. A signal függvények meghívódása esetén automatikusan meghívódinak a hozzákapcsolt slot-ok.  A slot-okat már meghívhatjuk a hagyományos módon, lehet definíciójuk, paraméterük, de visszatérési értékük nem. A signal és slot-ok összekapcsolását a connect függvény véggzi, ehhez azonban az szükséges hogy a signalok paramétere megeggyezzen a slot-ével vagy a slot-nak ne legyen paramétere mivel a szignal átadhatja neki. A connect függvényeket kéféleképpen használhatjuk megadhatjuk a SIGNAL() SLOT() kifejezéseket, de el is hagyhatjuk belőle ekkor azonban &osztálynév:: -tal kell helyettesíteni őket. Mivel az utóbbi eset a frissebb verzió így célszerű úgy használni a connect függvényeket. A connect függvény első paramétere az objektum ami a szignált küldi, a második paraméter a szignál amit meghívhatunk majd, a harmadik paraméter a slot objektuma, a negyedik paraméter a slot amit meghív a signal. A QT osztályok mindegyike tartalmaz beépített szignál-okat és slot-okat, ezeket akár felül is definiálhatjuk. Ha viszont saját osztályokat használunk akkor leszármazottja kell hogy legyen a QObject osztálynak és tartalmaznia kell a Q_OBJECT makrót. Ez a QT osztályokra nem érvényes mivel azok leszármazottjai a QObject osztálynak. Fontos megjegyezni hogyha túl sok szignál-slot kifejezéseket tartalmaz a programunk akkor jóval lassabban fog működni mint azok nélkül. 
+	    <programlisting language="c++"><![CDATA[
+	       connect ( brainBThread, SIGNAL ( heroesChanged ( QImage, int, int ) ),
+    	       this, SLOT ( updateHeroes ( QImage, int, int ) ) );
+
+	       connect ( brainBThread, SIGNAL ( endAndStats ( int ) ),
+    	       this, SLOT ( endAndStats ( int ) ) );
+	    ]]></programlisting>		
+            Az első esetben brainBThread objektum heroesChanged szignál-ja Samu Entropy objektumunk pozíciójának aktuális koordinátáit illetve az abalkunknak az aktuális képét adjuk tovább az aktuális objektum updateHeroes függvényének ami ugye a BrainBWin objktum része. Az updateHeroes függvény a kapott értékekből kiszámítja a MouseEvent értékeinek segítségével azaz az egérpozíciókból hogy elvesztettük e a karakterünket azaz Samu Entropy-t vagy nem, illetve ha 12-nél többször bekövetkezik egymás után egy eset akkor meghívunk rá egy függvényt. Ez esetenként eltérő, karakterelvesztéskor törlünk egy New Entropy-t azaz a többi karakter közül egyet, illetve csökkentünk a mozgási sebesség értékén, de ezek itt még nem valósulnak meg a képernyőn. A másik esetben kilépünk a progrmaból ha 300-nál több New Samu objektumunk van, illetve mindkét esetben végzünk statisztikai mentéseket is. Majd pixmap-pá alakítjuk az ugye paramétertőlkapott képünket és meghívjuk az update() függvényt mellyel Paint Event-et hívunk meg és frissítjük az ablakot.
+	    A második esetben az emit függvény a run függvényben van azaz az endAndStats függvény ott hívódik meg. A run függvény egy while ciklussal kezdődik  ami addig fut amíg le nem tellik a 10 perc, ezt minden ciklus után ellenőrzi, ha letellik akkor meghívódik az endAndStat szignál ami kiírja a szabványos kimenetre hogy köszönjük a program használatát és hogy hova mentette a tesztünk eredményét, ezt a mentést el is végzi és leállítja a program működését a save függvénnyel és a Close Event-et meghívó close függvénnyel. A run függvény ciklusában meghívjuk a devel függvényt, mely a move függvény és egy kondíciós feltétel segítségével a vektor objektumainak kisebbik elemét elosztja tízzel, ezzel módosíthatjuk a téglalpok elhelyezkedését. Majd még meghívódik a draw függvény amely a kirajzolást végzi, elkészíti az ablak alakzatait, majd meghívja az emit függvénnyel az előbbi herosChanged szignált.
+	</para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="brainb.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>	 
+
+    <section>
+        <title>GPS Tracker</title>
+        <para>
+	     Alternatívaként készíthetsz egy GoogleMaps alapú Androidos „GPS trackert”, 2007 óta csinálok ilyen példát: https://youtu.be/QStgBZ6JfAU az aktuális a Bátfai Haxor Stream keretében: https://bhaxor.blog.hu/-2018/09/19/nandigps_ismerkedes_a_gps-el
+	</para>
+        <para>  	    
