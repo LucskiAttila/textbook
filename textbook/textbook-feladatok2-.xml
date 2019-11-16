@@ -348,7 +348,7 @@
     			}	
 		}
 	     ]]></programlisting>		
-		
+	Használhatjuk az applikációt Ubuntu alatt is úgy hogy rámegyünk az Anroid Stuido-ba a Run/Select Device.../Open AVD Manager ahol alpértelmezett beállításokkal létrehozhatunk egy virtuális telefont, ehhez azonban a CPU-nknak támogatnia kell az SVM és VTX-et. 
 	</para>
              mediaobject>
              <imageobject>
