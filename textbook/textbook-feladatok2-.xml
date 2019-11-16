@@ -169,9 +169,9 @@
 	     <programlisting><![CDATA[
 		cd ~/Letöltések
 		tar xzvf android-studio-ide-191.5977832-linux.tar.gz
- 		make
- 		./BrainB
+ 		cd android-studio/bin
+ 		./studio.sh
 	     ]]></programlisting>		
-
+	     A program elindulása után feltelepítjük az alapértelmezett beállításokkal, majd kiválasztjuk az új projekt létrehozását, azon belül pedig a Google Maps típust ahol beállítjuk a java-t programozási nyelvnek. A projekt betöltődése után láthatjuk agoogle_maps_api.xml fájl forráskódját, mely arra szolgál hogy lekérjünk egy API kódot a forráskódban megadott linkről és megadjuk a forráskód YOUR_KEY_HERE helyre. Az API KEY-re azért van szükségünk hogy kapcsolatba léphessünk a Google Maps szerverekkel. 
 		
 		
