@@ -42,9 +42,43 @@
             Szőj bele egy átszövő vonatkozást az első védési programod Java átiratába! (Sztenderd védési feladat volt korábban.)
         </para>
         <para>
-            
-            
-            
+            Átszövő vonatkozásokat az AOP azaz aspekum orientált programozási nyelvek segítségével kéeszíthetünk, ilyen például az AspectJ programozási nyelv ami a Java programozási nyelvhez tartozik. Ennek a programozási nyelvnek a segítségével a már Java programozási nyelven megírt programkódot felhasználva módosításokat végezhetünk a program egyes részein külön programban így nem módosul az eredeti Java kód. Ezeket a módosításokat úgynevezett átszövések segítségével hajtjuk végre melyek hasonlítanak a más programozási nyelvekbeli osztályokra. Ezekben az átszövésekben használhatunk többféle függvényt a módosítások elvégzéséhez, például ha egy Java programozási nyelven megírt forráskód függvénye előtt vagy után akarunk plusz utasításokat elhelyezni akkor a pointcut függvényt használjuk. Ha viszont egy Java programozási nyelven megírt forráskód függvényt szeretnénk módosítani akkor az around függvényt használjuk. A feladat megoldásához is ezt használtam mivel elkészítettem az LZWBinfa preoreder bejárását és ehhez módosítanom kellett a kiirató függvényt:
+        <programlisting language="java"><![CDATA[
+        privileged aspect Aspect{
+            void around(LZWBinFa fa, LZWBinFa.Csomopont elem, java.io.BufferedWriter os):
+                call(public void LZWBinFa.kiir(LZWBinFa.Csomopont, java.io.BufferedWriter)) 
+                    && target(fa) && args(elem, os){
+                if (elem != null)
+                {
+                    try{
+                        ++fa.melyseg;
+                        for (int i = 0; i < fa.melyseg; ++i)
+                            os.write("---");
+                        os.write(elem.getBetu () + "(" + (fa.melyseg - 1) + ")\n");
+                        fa.kiir(elem.nullasGyermek (), os);
+                        fa.kiir(elem.egyesGyermek (), os);
+                        --fa.melyseg;
+                    }
+                    catch(java.io.IOException e){
+                        System.out.println("Csomópont írása nem sikerült, mivel: "+e);
+                    }
+                }
+            }
+        }
+        ]]></programlisting>            
+            Amint láthatjuk az egész program egy osztályban van mivel objektum-orientált programozási nyelvről van szó, és mivel apskeutust írunk így már a claas kulcsszó helyett aspect-et kell használnunk. A privileged típussal hoztuk létre az Aspect osztályunkat mivel szeretnénk hozzáférni a Java programozási nyelven megírt forráskódunk osztályának privát részeihez is. Amint már említettem az around függvényt fogjuk használni mivel az általunk módosítani kívánt függvény azaz a kiir(Csomopont, BufferedWriter) nem statikus azaz nincs a memóriában így az aspektusunk nem éri el, ezért az around függvény paramétereiben példányosítjuk a használatos objektumokat vesszővel elválasztva. Majd a : utám megadjuk hogy a call függvény paramétereként hogy melyik függvényét használjuk majd a Java programozási nyelven megírt forráskódunknak a megfelelő paraméterekkel. Majd && jelek után megadjuk a target függvényben megadjuk hogy melyik around paraméterei közül kiválasztott objektumra fogjuk használni a meghívott kiir függvényt. majd && után az args függvény paramétereként megadjuk hogy az around paraméterei közül melyeket használja a kiir függvény paraméterként. Az around függvény törzséen pedig a már általunk ismert preorder bejárást valósítjuk meg a megfelelő sorok felcserélésével az eredeti kód alapján. A preorder rendezésnél ugye először kiírjuk az eredményt, mivel a gyökértül indulunk, majd meghívjuk a bal oldali elemét, majd ha elfogy akkor a jobb oldalit rekúrzívan. A programnkat hibakezeltem egy be-kimeneti hibákat kezelő osztállyal, mely hiba esetén hibaüzenetet ík ki. A program futtatásához az alábbiakat kell tennünk:
+        <programlisting language="java"><![CDATA[
+            sudo apt install aspectj
+            ajc LZWBinFa.java Aspect.aj
+            java -cp /usr/share/java/aspectjrt.jar:. LZWBinFa input.txt -o output.txt
+        ]]></programlisting>
+        </para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="aop.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>            
             
             
             
