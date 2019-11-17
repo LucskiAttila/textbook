@@ -29,4 +29,9 @@
         ]]></programlisting>    
             A kódban ellenőrizzük hogy a futtatáskor parancssori argumentumként megadott ip cím 0 és 1024 közti portjain hány tcp kapcsolatot tudunk létrehozni és ezekhez csatlakozni a gépónkről. Ezzel ne nagyon kísérletezzünk mert támadásnak is vehetik egyes ip címeneket használva. Amint látjuk a forráskódból siker esetén kiírjuk hogy figyeli az adott számú portot, majd bezárjuk a kapcsolatot, hiba esetén kiiratjk hogy nem figyeli az adott számú portot. Amint láthatjuk VirtualBox alatt nem sikerült kapcsolatot létesítenem az elkapott hibaüzenet alapján, lehet a tűzfal a probléma. 
         </para>
-       
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="portscan.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>       
