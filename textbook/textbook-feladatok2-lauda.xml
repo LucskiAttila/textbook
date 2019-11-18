@@ -80,5 +80,83 @@
          </mediaobject>
     </section>            
             
+    <section>
+        <title>Anroid Játék</title>
+        <para>
+            Írjunk egy egyszerű Androidos „játékot”! Építkezzünk például a 2. hét „Helló, Android!” feladatára!
+        </para>
+        <para>            
             
+        </para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="android.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section> 
+
+    <section>
+        <title>Junit teszt</title>
+        <para>
+            A https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat poszt kézzel számított mélységét és szórását dolgozd be egy Junit tesztbe (sztenderd védési feladat volt korábban)
+        </para>
+        <para>            
+            A feladat alapján Unit keretrendszert kell használnunk, melynek segítségével teszteket hajthatunk végre egy Java programozási nyelven megírt forráskódon, tehát ellenőrizhetjük hogy a programunk egyes függvényei a vártnak megfelelő értékekkel tértek e vissza. A feladatunk az volt hogy ellenőrizzük a binfa által kiszámított értékeket egy adott sztringre, ehhez a kiszámolt értékeket az alábbi linken találhatunk például: https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat . Ezt a linket láthatjuk a feladat szövegében is, ehhez az alábbi kódot készítettem:
+        <programlisting language="java"><![CDATA[
+                import static org.junit.jupiter.api.Assertions.*;
+                import org.junit.jupiter.api.Test;
+                
+                public class LZWBinFaTest {
+                LZWBinFa binfa = new LZWBinFa();             
+                String str = "0111100101100";
+                @Test
+                public void atlagTest() {
+                    for(int i = 0; i < str.length(); i++){
+                        binfa.push_back(str.charAt(i));
+                    }
+                    double atlag = binfa.getAtlag();
+                    assertEquals(2.25, atlag, 0.001);
+                }
+                @Test
+                public void szorasTest() {
+                    for(int i = 0; i < str.length(); i++){
+                        binfa.push_back(str.charAt(i));
+                    }
+                    double szoras = binfa.getSzoras();
+                    assertEquals(0.5, szoras, 0.001);
+                }
+                @Test
+                public void melysegTest() {
+                    for(int i = 0; i < str.length(); i++){
+                    binfa.push_back(str.charAt(i));
+                    }
+                    double melyseg = binfa.getMelyseg();
+                    assertEquals(3, melyseg);
+                    }
+                }
+        ]]></programlisting>    
+        Amint láthatjuk a kódunk sima Java programozási nyelven írt kódnak néz ki, de tartalmaz @Test makrót mely arra utal hogy teszt függvényt használunk, de ezek előtt példányosítanunk kell egy binfa objektumot, mivel minden @Test függvény külön objektumot fog használni az ellenőrzéshez. A teszt függvényekben egy for ciklussal végigmegyünk a bemeneti sztringen és karaktereknént beolvassuk a binfa-ba, majd ellenőrizzük az assertEquals függvénnyel hogy a binfa adott függvénye megegyezik e az adott értékkel. Ezeket az első kétparaméterében adjuk meg, de megadhatunk egy harmadik paramétert is mely a két hasonlítandó érték közti maximum eltérést jelenti. Ez utóbbi használata akkor szükséges ha nem egész értékeket számolunk, lebegőpontos számításokat végezve a kerekítések miatt.
+        </para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="unittest.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>
+
+    <section>
+        <title>OSCI</title>
+        <para>
+            Készíts egyszerű C++/OpenGL-es megjelenítőt, amiben egy kocsit irányítasz az úton. 
+        </para>
+        <para>            
+            
+        </para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="osci.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>
+</chapter>
             
