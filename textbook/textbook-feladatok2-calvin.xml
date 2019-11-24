@@ -1,1 +1,38 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Lauda!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+<section>
+        <title>Port scan</title>
+        <para>
+            Mutassunk rá ebben a port szkennelő forrásban a kivételkezelés szerepére! https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok javat/ch01.html#id527287
+        </para>
+        <para>
+            A kivételkezelés segítségével tájékoztassuk a felhasználót arról hogy miért működik hibásan a program. Erre minden programozási nyelv biztosít lehetőséget, mivel írhatunk saját kivlteket is például if szerkezettel hogy 0-val ne osszunk, így mivel kezeltük a kivételt a program akár tovább is működhet leállás nélkül, de előfordulhatnak olyan esetek is hogy a program hibásan működhet tovább hibakezelés nélkül, nem csak leálláskor van szükség hibakezelésre. A nem objektum-orientált programozási nyelvekben mint például a C minden kivételt külön kell kezelnünk, a modernebb obejktum-orientált progrmaozási nyelvekben mint a C++ vagu ugye a Java már egy blokkban kezelhetjük az összes feltételt. Erre szolgál a try{} catch(kivétel deklaráció){} ... finally{}, ahol a try blokkba rakjuk a szöveget ahol a kivételt keressük, a cahtch blokkokba pedig megnevezzük a kivételeket amelyeket keresünk a kódban és leírjuk hogy mit csináljon a program az adott kivétel elkapásakor, akár több kvételt is definálhatunk mivel több catch blokkot használhatunk. Ekkor ugye kivételenként egy catch-et használunk, ahol a kivételek hierarchikusan növekvő sorrendben kell hogy szereplejenek öröklődés szempontjából, mert akkor az általunk használni kívánt alosztályos már nem kapódna el, mert az ősösztálya elkapta. A finally részben megadott utasítások mindenképp lefutnak kivétel találásától függetlenül. A throw kulcsszóval pedig dobhatunk kivételeket, amelyek Java-ban a Throwable osztály leszármazottjai, de mi is hozhatunk létre átlalunk definált kivételeket valamelyik Java kivétel osztály leszármazottjaként, ezeket a throw someThrowableObject; módon kell használni, ahol a throw után dobható objektumot hozunk létre vagy nevezünk meg. Ezeknek az elkapásához szükség esetén a függvénynek amikbe vannak a deklarásakor throws someThrowableClass-t írjuk a paraméterlistája után, mivel ezeket nem ebben a függvényben, hanem például az adott függvényt meghívó függvényben vagy akár a main-ben fogjuk kezelni, elkapni. Java programozási nyelvben fontos szerepe van a kivételkezelésnek mivel ennek elhagyásával akár nem is engedheti a fordítást hibát jelezve a fordító fordításkor azaz a Java VM. Ez történne az alábbi kódban is kivételkezelés nélkül:
+        <programlisting language="java"><![CDATA[
+            public class KapuSzkenner {
+                public static void main(String[] args) {    
+                    for(int i=0; i<1024; ++i;
+                        try {
+                            java.net.Socket socket = new java.net.Socket(args[0], i);
+                            System.out.println(i + " figyeli");
+                            socket.close();
+                        } catch (Exception e) {
+                            System.out.println(i + " nem figyeli, mivel: "+e);
+                        }
+                }
+            }   
+        ]]></programlisting>    
+            A kódban ellenőrizzük hogy a futtatáskor parancssori argumentumként megadott ip cím 0 és 1024 közti portjain hány tcp kapcsolatot tudunk létrehozni és ezekhez csatlakozni a gépónkről. Ezzel ne nagyon kísérletezzünk mert támadásnak is vehetik egyes ip címeneket használva. Amint látjuk a forráskódból siker esetén kiírjuk hogy figyeli az adott számú portot, majd bezárjuk a kapcsolatot, hiba esetén kiiratjk hogy nem figyeli az adott számú portot. Amint láthatjuk VirtualBox alatt nem sikerült kapcsolatot létesítenem az elkapott hibaüzenet alapján, pedig próbáltam $HOSTNAME és localhost parancssori argumentumokkal is, lehet a tűzfal a probléma. 
+        </para>
+             mediaobject>
+             <imageobject>
+                 <imagedata fileref="portscan.png"></imagedata>
+             </imageobject>
+         </mediaobject>
+    </section>
+
 
