@@ -1,38 +1,129 @@
 <chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
     <info>
-        <title>Helló, Lauda!</title>
+        <title>Helló, Calvin!</title>
         <keywordset>
             <keyword/>
         </keywordset>
     </info>
-<section>
-        <title>Port scan</title>
+    
+    <section>
+        <title>MNIST</title>
         <para>
-            Mutassunk rá ebben a port szkennelő forrásban a kivételkezelés szerepére! https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok javat/ch01.html#id527287
+            Az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen fel, https://progpater.blog.hu/2016/11/13/hello_samu_a_tenso rflow bol Háttérként ezt vetítsük le: https://prezi.com/0u8ncvvoabcr/no programming programming/        
         </para>
         <para>
-            A kivételkezelés segítségével tájékoztassuk a felhasználót arról hogy miért működik hibásan a program. Erre minden programozási nyelv biztosít lehetőséget, mivel írhatunk saját kivlteket is például if szerkezettel hogy 0-val ne osszunk, így mivel kezeltük a kivételt a program akár tovább is működhet leállás nélkül, de előfordulhatnak olyan esetek is hogy a program hibásan működhet tovább hibakezelés nélkül, nem csak leálláskor van szükség hibakezelésre. A nem objektum-orientált programozási nyelvekben mint például a C minden kivételt külön kell kezelnünk, a modernebb obejktum-orientált progrmaozási nyelvekben mint a C++ vagu ugye a Java már egy blokkban kezelhetjük az összes feltételt. Erre szolgál a try{} catch(kivétel deklaráció){} ... finally{}, ahol a try blokkba rakjuk a szöveget ahol a kivételt keressük, a cahtch blokkokba pedig megnevezzük a kivételeket amelyeket keresünk a kódban és leírjuk hogy mit csináljon a program az adott kivétel elkapásakor, akár több kvételt is definálhatunk mivel több catch blokkot használhatunk. Ekkor ugye kivételenként egy catch-et használunk, ahol a kivételek hierarchikusan növekvő sorrendben kell hogy szereplejenek öröklődés szempontjából, mert akkor az általunk használni kívánt alosztályos már nem kapódna el, mert az ősösztálya elkapta. A finally részben megadott utasítások mindenképp lefutnak kivétel találásától függetlenül. A throw kulcsszóval pedig dobhatunk kivételeket, amelyek Java-ban a Throwable osztály leszármazottjai, de mi is hozhatunk létre átlalunk definált kivételeket valamelyik Java kivétel osztály leszármazottjaként, ezeket a throw someThrowableObject; módon kell használni, ahol a throw után dobható objektumot hozunk létre vagy nevezünk meg. Ezeknek az elkapásához szükség esetén a függvénynek amikbe vannak a deklarásakor throws someThrowableClass-t írjuk a paraméterlistája után, mivel ezeket nem ebben a függvényben, hanem például az adott függvényt meghívó függvényben vagy akár a main-ben fogjuk kezelni, elkapni. Java programozási nyelvben fontos szerepe van a kivételkezelésnek mivel ennek elhagyásával akár nem is engedheti a fordítást hibát jelezve a fordító fordításkor azaz a Java VM. Ez történne az alábbi kódban is kivételkezelés nélkül:
-        <programlisting language="java"><![CDATA[
-            public class KapuSzkenner {
-                public static void main(String[] args) {    
-                    for(int i=0; i<1024; ++i;
-                        try {
-                            java.net.Socket socket = new java.net.Socket(args[0], i);
-                            System.out.println(i + " figyeli");
-                            socket.close();
-                        } catch (Exception e) {
-                            System.out.println(i + " nem figyeli, mivel: "+e);
-                        }
-                }
-            }   
+            A programunk megírásához TensorFlow kiegészítőket használtuk fel, mivel ez egy olyan könyvtárszerkezet melynek használatával gépi tanulást valósíthatunk meg például ugye neurális hálók használatakor. A feadatban is egy ilyen neurális hálózatot hoztunk létre a MNIST adatbázsit felhasználva, ezzel tanítottuk be a hálózatot hogy felismerje a számokat, mivel a MNIST képekből áll melyek kézzel rajzolt számokat ábrázolnak és hozzájuk tartozik egy címke ami azt tartalmazza hogy melyik számot kéne felismerni a képről a programnak. A forráskódunk elején láthatjuk hogy importáláshoz használt könyvtárak a matplotlib és a tensorflow, illetve python nyelven íródott ugye py a kiterjesztése is a fájlnak, ennek fordításához python könyvtárak szükségesek, ezeket Ubuntu alatt az alábbi módon telepíthetjük:
+            <programlisting><![CDATA[
+sudo apt update
+sudo apt install python3-dev python3-pip
+sudo apt-get install python3-matplotlib
+sudo pip3 install -U virtualenv
+virtualenv --system-site-packages -p python3
+source ./venv/bin/activate
+pip install --upgrade pip
+pip install --upgrade tensorflow
+python -c "import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])))"
+deactivate
+            ]]></programlisting>         
+            <programlisting language="python"><![CDATA[  
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import argparse
+
+from tensorflow.examples.tutorials.mnist import input_data
+
+import tensorflow as tf
+
+import matplotlib.pyplot
+
+
+FLAGS = None
+
+
+def readimg():
+    file = tf.read_file("sajat8as.png")
+    img = tf.image.decode_png(file, 1)
+    return img
+
+def main(_):
+  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+
+  x = tf.placeholder(tf.float32, [None, 784])
+  W = tf.Variable(tf.zeros([784, 10]))
+  b = tf.Variable(tf.zeros([10]))
+  y = tf.matmul(x, W) + b
+
+  y_ = tf.placeholder(tf.float32, [None, 10])
+
+  cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=y_))
+  train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+
+  sess = tf.InteractiveSession()
+
+  tf.global_variables_initializer().run()
+  print("-- A halozat tanitasa")  
+  for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+    if i % 100 == 0:
+      print(i/10, "%")
+  print("----------------------------------------------------------")
+
+  print("-- A halozat tesztelese")  
+  correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+  accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))  
+  print("-- Pontossag: ", sess.run(accuracy, feed_dict={x: mnist.test.images,
+                                      y_: mnist.test.labels}))
+  print("----------------------------------------------------------")
+  
+  print("-- A MNIST 42. tesztkepenek felismerese, mutatom a szamot, a tovabblepeshez csukd be az ablakat")
+  
+  img = mnist.test.images[42]
+  image = img
+
+  matplotlib.pyplot.imshow(image.reshape(28, 28), cmap=matplotlib.pyplot.cm.binary)
+  matplotlib.pyplot.savefig("4.png")  
+  matplotlib.pyplot.show()
+
+  classification = sess.run(tf.argmax(y, 1), feed_dict={x: [image]})
+
+  print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+  print("----------------------------------------------------------")
+
+  print("-- A sajat kezi 8-asom felismerese, mutatom a szamot, a tovabblepeshez csukd be az ablakat")
+
+  img = readimg()
+  image = img.eval()
+  image = image.reshape(-1, 28*28)
+
+  matplotlib.pyplot.imshow(image.reshape(28, 28), cmap=matplotlib.pyplot.cm.binary)
+  matplotlib.pyplot.savefig("8.png")  
+  matplotlib.pyplot.show()
+
+  image=image.reshape(-1)
+
+  classification = sess.run(tf.argmax(y, 1), feed_dict={x: [image]})
+
+  print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+  print("----------------------------------------------------------")
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--data_dir', type=str, default='/tmp/tensorflow/mnist/input_data',
+                      help='Directory for storing input data')
+  FLAGS = parser.parse_args()
+  tf.app.run()
         ]]></programlisting>    
-            A kódban ellenőrizzük hogy a futtatáskor parancssori argumentumként megadott ip cím 0 és 1024 közti portjain hány tcp kapcsolatot tudunk létrehozni és ezekhez csatlakozni a gépónkről. Ezzel ne nagyon kísérletezzünk mert támadásnak is vehetik egyes ip címeneket használva. Amint látjuk a forráskódból siker esetén kiírjuk hogy figyeli az adott számú portot, majd bezárjuk a kapcsolatot, hiba esetén kiiratjk hogy nem figyeli az adott számú portot. Amint láthatjuk VirtualBox alatt nem sikerült kapcsolatot létesítenem az elkapott hibaüzenet alapján, pedig próbáltam $HOSTNAME és localhost parancssori argumentumokkal is, lehet a tűzfal a probléma. 
+            A programunk elején beolvassuk a használatos könyvtárakat az import segítségével. Amint láthatjuk a python programozási nyelvben lehetőségünk van használni a from kulcsszót az importálásához, hogy a kódunkban csak az import részt adjuk meg, nem a .-tal elválasztott teljes könytvtár nevet, illetve használhatjuk az as kulcsszót is arra hogy megadjuk milyen néven fogunk hivatkozunk a későbbiekben a használatos könyvtárra, ez is a  könyvtár adatainak egyszerűbb elérését segítő elő. Amint láthatjuk a változók, függvények definiálása egyszerűbb mivel nem kell megadnunk típúusokat, ezáltal a python programozási nyelv az egyszerűbb olvashatóságot előségeti, azonban futási időben gyengébb a hasolnó objektum-orientált programozási nyelvekhez képest. A függvények definiálása a def kulcsszóval történik, a reading függvény beolvassa az általunk elkészített képet majd dekódolja fekete-fehérre és visszaddja egy img változó értékeként. A main függvényben az mnist változóba beolvassuk a tensorflow mnist mappáinak a képeit, ezek közül beolvassuk az összest, mivel a None értéket használtuk ami akármennyi lehet. 
         </para>
              mediaobject>
              <imageobject>
-                 <imagedata fileref="portscan.png"></imagedata>
+                 <imagedata fileref="mnist.png"></imagedata>
              </imageobject>
          </mediaobject>
     </section>
 
-
+    <section>
+        
