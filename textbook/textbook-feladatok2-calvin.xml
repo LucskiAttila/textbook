@@ -248,5 +248,89 @@ with tf.Session() as sess:
             Az alap feladat megoldása, +saját fotót is ismerjen fel, https://progpater.blog.hu/2016/12/10/hello_samu_a_cifar-10_tf_tutorial_peldabol        
         </para>
         <para>            
+            A programunkat az alábbi linkről tölthetjük le: https://github.com/tensorflow/models/blob/master/tutorials/image/cifar10/cifar10.py és a futtatásáshoz szükséges lehet telepíteni a pip install tensorflow_datasets és a pip install image csomagokat is. A CIFAR-10 adatbázis olyan színes képeket tartalmaz melyek alkalmasak képfelismeréshez, ezekből 60000 db van és 32x32 méretűek a hatékonyabb tanítások érdekében. A képek 10 osztályba sorolhatóak így minden osztályban 6000 kép van, ezek az osztályok a: repülőgépek, kocsik, madarak, macskák, őzek, kutyák, békák, lovak, hajók, kamionok. A betanításhoz 10000 lépést hajtunk végre, de megadhatunk a futtatáskor --max step kapcsolóval egy ennél kisebb számot is mivel egyébként akár egy napot is igénybe vehet. A programunk jelen esetben nem képes felismerni a saját képeinket, ezért módosítnaunk kell a programunkon. 
+        <programlisting language="Python"><![CDATA[
+from PIL import Image
+import numpy as np
+import sys
+
+
+im = Image.open(sys.argv[1])
+im = (np.array(im))
+
+r = im[:,:,0].flatten()
+g = im[:,:,1].flatten()
+b = im[:,:,2].flatten()
+label = [0]
+
+out = np.array(list(label) + list(r) + list(g) + list(b),np.uint8)
+out.tofile(sys.argv[2])            
+        ]]></programlisting>
+        Először is az alábbi kódból létrehozunk egy python fájlt melynek segítségével átkonvertáljuk a képünket hogy hasnálni tudja a programunk. A programban először beolvassuk az első parancssori argumentumként megadott képet majd egy tömbbé alakítjuk és az r,g,b tömbökbe kimentük az RGB színkódjait, melyben a flatten függvény átalakítja a tömböt egydimenziós vektorrá, majd egy listát fűzünk belőle össze, majd ezt a listát kimentjük az általunk második parancssori argumentumként megadott nevű fájlba.   
+        <programlisting language="python"><![CDATA[
+def inputs(eval_data, data_dir, batch_size):
+            ...
+    if not eval_data:
+        filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i)
+                    for i in xrange(1, 6)]
+        num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN
+    else:
+        filenames = [os.path.join(data_dir, 'input.bin')]
+        num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_EVAL
+            ...
+            ]]></programlisting>
+            Ezt a kódot a cifar10_input.py fájlba kell bemásolnunk, ezzel megadjuk hogy a mi képünet olvassa be, melyet ezelőtt input.bin néven kellett átkonvertálnunk. 
+            <programlisting language="python"><![CDATA[
+tf.app.flags.DEFINE_integer('batch_size', 1,
+        """Number of images to process in a batch.""")
+            ]]></programlisting>
+            Itt a DEFINE_integer második paraméterét állítottuk 1-re mivel 1 képpel fogunk dolgozni, ezt módosítást a cifar10.py fájlban hajtottuk végre.
+            <programlisting language="python"><![CDATA[
+def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
+                ...
+    #while step < num_iter and not coord.should_stop():
+    predictions = sess.run([top_k_op])
+    print(sess.run(logits[0]))
+    classification = sess.run(tf.argmax(logits[0], 0))
+    cifar10classes = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse",
+    "ship", "truck"]
+    print(cifar10classes[classification])
+    # Compute precision @ 1.
+    precision = true_count / total_sample_count
+    # print('%s: precision @ 1 = %.3f' % (datetime.now(), precision))
+                ...   
+            ]]></programlisting>
+            Ezt a cifar10_eval.py fájlba kell bemásolnunk mellyel kivesszük a programnak a pontosság számoló funkcióját és ehelyett azt határozza meg a programunk hogy a bolvasott képünk melyik CIFAR-10 osztályba tartozik. 
+            </para>
+            <mediaobject>
+             <imageobject>
+                 <imagedata fileref="cifar-10.png"></imagedata>
+             </imageobject>
+         </mediaobject>             
+    </section>
+
+    <section>
+        <title>Android telefonra a TF objektum detektálója</titlle>
+        <para>
+            Telepítsük fel, próbáljuk ki!        
+        </para>
+        <para>
+            Ehhez telepítenünk kell az Android-os telefonunkra a Objects Detection Machine Learning TensorFlow Demo nevű applikációt a Google Play áruházról, majd engedélyezzük hogy az applikáció hozzáférjen a kameránkhoz és már működik is. Amint láthatjuk különböző színű téglalapokkal keretezi be az általa felismert tárgyakat és a téglalap balalsó sarkába kiírja a felismert tárgy nevét angolul, mellé pedig hogy mennyire biztos a felismerésben 0.00 és 1.00 között. A program valós időben működik, de kameraként nem funkcionál, így csak képernyőképeket készíthetünk működés közben.
+        </para>
+        <mediaobject>
+             <imageobject>
+                 <imagedata fileref="android.png"></imagedata>
+             </imageobject>
+         </mediaobject>             
+    </section>
+
+    <section>
+        <title>Minecraft MALMÖ-s példa</title>
+        <para>
+            A https://github.com/Microsoft/malmo felhasználásával egy ágens példa, lásd pl.: https://youtu.be/bAPSu3Rndi8, https://bhaxor.blog.hu/2018/11/29/eddig_csaltunk_de_innentol_mi, https://bhaxor.blog.hu/2018/10/28/minecraft_steve_szemuvege       
+        </para>
+        <para>
             
-            
+        </para>    
+    </section>    
+</chapter>        
