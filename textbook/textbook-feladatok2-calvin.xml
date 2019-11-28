@@ -333,4 +333,4 @@ def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
             
         </para>    
     </section>    
-</chapter>        
+</chapter>       
