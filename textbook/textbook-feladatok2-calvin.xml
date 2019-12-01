@@ -239,6 +239,10 @@ with tf.Session() as sess:
              <imageobject>
                  <imagedata fileref="deepmnist2.png"></imagedata>
              </imageobject>
+         </mediaobject>            
+             <imageobject>
+                 <imagedata fileref="deepmnist3.png"></imagedata>
+             </imageobject>
          </mediaobject>             
     </section>
 
