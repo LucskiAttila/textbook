@@ -349,7 +349,7 @@ if currentSequence == "" and currentSpeed < 50 and waitCycles == 0:
 currentSequence = random.choice(commandSequences)
 print("Stuck! Chosen programme: " + currentSequence)
             ]]><programlisting>
-            Ebben a példában az ágensünk nem fog semmilyen segéd értékeket felhasználni arra hogy merre haladjon tovább, hanem ha beragad valahová, akkor egy random ágens sorozatot választunk és hatjuk végre. A breagadást úgy határozzuk meg hogy ellenőrizzük hogy van e végrehatjandó utasítás, 50 alatt van e a sebességünk és nem vagyunk e a váróciklusba. Ehhez célszerű módosítani ax XML kódrész ServerSection részében a timeLimitMS változó értékét megnövelni, hogy tovább tartson a küldetés. A programban parancsként a timeset 1000-el tudjuk állítani az órát nappalra ha besötétedne azaz 13000 lenne az értéke a timeset-nek.
+            Ebben a példában az ágensünk nem fog semmilyen segéd értékeket felhasználni arra hogy merre haladjon tovább, hanem ha beragad valahová, akkor egy random ágens sorozatot választunk és hatjuk végre. A breagadást úgy határozzuk meg hogy ellenőrizzük hogy van e végrehatjandó utasítás, 50 alatt van e a sebességünk és nem vagyunk e a váróciklusba. Ekkor a random.choice függvényt meghívva a lépéseket tartalmazó tömbre kiválasztunk egy lépéssorozatot és kiíratjuk a szabványos kimenetre, majd végrehajtuk egy ágnes folyamatként. Ehhez célszerű módosítani ax XML kódrész ServerSection részében a timeLimitMS változó értékét megnövelni, hogy tovább tartson a küldetés. A programban parancsként a timeset 1000-el tudjuk állítani az órát nappalra ha besötétedne azaz 13000 lenne az értéke a timeset-nek.
             </para>
             <mediaobject>
              <imageobject>
