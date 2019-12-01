@@ -330,7 +330,31 @@ def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
             A https://github.com/Microsoft/malmo felhasználásával egy ágens példa, lásd pl.: https://youtu.be/bAPSu3Rndi8, https://bhaxor.blog.hu/2018/11/29/eddig_csaltunk_de_innentol_mi, https://bhaxor.blog.hu/2018/10/28/minecraft_steve_szemuvege       
         </para>
         <para>
-            
-        </para>    
+            A MALMÖ projekt egy Minecraft-hoz készített platform, melynek segítségével a fiatal generációk az adott környezetbeli problémákat oldják meg, melyek mesterséges inteligenciára alapodnak. A projektet az alábbi weboldalról tölthetjük le: https://github.com/microsoft/malmo , majd tömörítsük ki a letöltött fájlunkat és telepítsük az alábbi kiegészítőket Ubuntu alatt:
+            <programlisting>
+            sudo apt-get install libboost-all-dev libpython3.5 openjdk-8-jdk ffmpeg  -python-tk python-imaging-tk       
+            export MALMO_XSD_PATH=~/MalmoPlatform/Schemas
+            export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64    
+            </programlisting>
+            Az első export parancsunknál a Schemas helyére az elérési útvonalát adjuk meg, ezzel hozzáadjuk a Path-hoz, a második export-nál pedig a Java verzióját átállítjuk Java 8-ra a atelepítési könyvtárának segítségével, mivel a programunk ezt a verziót használja. A Minecraft-ot a Mincecraft mappából indítjuk a launchClient.sh fájlt futtatva, így belép a menübe, majd a Python_examples mappába nyitunk egy terminált és futtathatjuk az egyes küldetéseket a python3 paranccsal. Majd a Minecraft betölti a küldetést és a bal alsó sarokba láthatjuk hány másodperc van még hátra, de le is állíthatjuk a terminálból a Ctrl+C.vel. A Python_examples mappában van egy Tutorial.pdf melyben bővebb leírást kapunk a platform használatáról, például aagent_host.sendCommand("turn -0.5") -ot hozzáadhatjuk a küldetésünket működtető fő ciklusunk elé. Ezzel fél sebesség fordul balra a karkterünk amíg le nem jár a játékidő, több ilyen parancs is van melyel irányíthatjuk a karakterünket, példul a jump 1, ezzel ugrálni fog, ezek közül többet is használhatunk az ágensünkhöz adva. Az ágens egy mob, azaz mozgó objektum melyet irányíthatunk parancsok hozzáadásával. A depth_map_runner.py küldetésünkben az ágensünk neve Jason Bourne, a többi beállításait az XML-es rész AgentSection részében találhatóak, itt beállíthatjuk még a kezdőpozíciónkat is. Ebben a küldetésben egyenesen megyünk az adott pozíciónktól, de elfordulunk a képmélység alapján meghatározott irányan, ezzel csakltunk. 
+            <programlisting language="python"><![CDATA[
+commandSequences=[
+"jump 1; move 1; wait 1; jump 0; move 1; wait 2",
+"turn 0.5; wait 1; turn 0; move 1; wait 2",
+"turn -0.5; wait 1; turn 0; move 1; wait 2",
+"move 0; attack 1; wait 5; pitch 0.5; wait 1; pitch 0; attack 1; wait 5; pitch -0.5; wait 1; pitch 0; attack 0; move 1; wait 2",
+"move 0; pitch 1; wait 2; pitch 0; use 1; jump 1; wait 6; use 0; jump  0; pitch -1; wait 1; pitch 0; wait 2; move 1; wait 2"
+]            
+if currentSequence == "" and currentSpeed < 50 and waitCycles == 0:
+currentSequence = random.choice(commandSequences)
+print("Stuck! Chosen programme: " + currentSequence)
+            ]]><programlisting>
+            Ebben a példában az ágensünk nem fog semmilyen segéd értékeket felhasználni arra hogy merre haladjon tovább, hanem ha beragad valahová, akkor egy random ágens sorozatot választunk és hatjuk végre. A breagadást úgy határozzuk meg hogy ellenőrizzük hogy van e végrehatjandó utasítás, 50 alatt van e a sebességünk és nem vagyunk e a váróciklusba.
+            </para>
+            <mediaobject>
+             <imageobject>
+                 <imagedata fileref="malmö.png"></imagedata>
+             </imageobject>
+         </mediaobject>                
     </section>    
 </chapter>       
