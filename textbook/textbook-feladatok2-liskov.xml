@@ -31,7 +31,7 @@ class Sasok extends  Madarak
         System.out.println("...\n");
     }
 }
-class Pingivnek extends  Madarak
+class Pingvinek extends  Madarak
 {
 }
 
@@ -45,8 +45,8 @@ class Liskov
 
     public static void main(String[] args)
     {
-        Bird Sas = new Sasok();
-        Bird Pingvin = new Pingvinek();
+        Madarak Sas = new Sasok();
+        Madarak Pingvin = new Pingvinek();
         
         repülő(Sas);
         repülő(Pingvin);
@@ -58,7 +58,7 @@ class Liskov
 ]]>
         </programlisting>
         <para>
-        A megoldás hogy külön főoszyályokat hozunk létre a repülni tudó es repülni nem tudó madaraknak, jelen esetben a Sasok es Pingvinek alosztalyoknak, a Madarak osztalyt igy üresen hagyjuk es interfezkent hasznaljuk mivel többszörös öröklődés van.
+        A megoldás hogy külön főosztályokat hozunk létre a repülni tudó es repülni nem tudó madaraknak, jelen esetben a Sasok es Pingvinek alosztalyoknak, a Madarak osztalyt igy üresen hagyjuk es interfezkent hasznaljuk mivel többszörös öröklődés van.
         </para>
         <programlisting language='Java'>
             <![CDATA[
@@ -85,12 +85,12 @@ class Pingvinek implements NemRepülőMadarak
 {
 }
 
-class Liskov
+class LiskovSub
 {
 
     public static void repülő(ReülőMadarak b)
     {
-        b.repülő();
+        b.repül();
     }
 
     public static void main(String[] args)
@@ -108,20 +108,16 @@ class Liskov
 ]]>
         </programlisting>
         <para>
-        Amint látjuk a második esetben csak a ... szerepel igy helyesen mukodik, mivel csak a Sasok osztályának függvénye hívódik meg. Az első esetben szerepel a Hiba is igy hibásan működik mivel a Pingivnek nem tudnak repülni, de mégis meghívódik a repülni függvény az öröklődés miatt.  
+        Amint látjuk a második esetben hibaüzenetet kapunk, mivel a csak a repülő madarak tudnak repülni azaz a repül függvényt nem tudjuk meghvivni egy nemrepülő madár esetén. Igy helyesen mukodik, mivel csak a Sasok osztályának függvénye hívódna meg. Az első esetben szerepel a Hiba is igy hibásan működik mivel a Pingivnek nem tudnak repülni, de mégis meghívódik a repülni függvény az öröklődés miatt. A forditó ajánlja az -Xdiag:verbose kapcsolót forditáshoz, ezzel láthatjuk a pontos hibaüzenetet, mivel a pingvinek nem tartoznak a repülő madarak osztályába. Igy futtatni nem is tudjuk a programot, tehát sikeresen hibakezeltük a madarak osztályunk repülési tulajdonságát.  
         </para>
                 <mediaobject>
             <imageobject>
-                <imagedata fileref="liskovJava.png"></imagedata>
+                <imagedata fileref="liskov.png"></imagedata>
             </imageobject>
         </mediaobject>
-                <mediaobject>
-            <imageobject>
-                <imagedata fileref="liskovJavaCorrect.png"></imagedata>
-            </imageobject>
-        </mediaobject>
+
         <para>
-        C++ programozási nyelvre átfordítva, ahol már override-olni fogjuk a repül függvényt.
+        C++ programozási nyelvre átfordítva, ahol már override-olni fogjuk a repül függvényt, illetve hasynálni fogjuk a referenciát, mivel memóriacimmel hivatkozunk az osztályok objektumaira, illetve static kulcsszót használjuk hogy memóriába helyezzük a függvényünket, mivel osztályon kivül definiáltuk és szeretnénk hozzáférni, azaz meghivni.
 	 </para>
         <programlisting language='c++'>
             <![CDATA[
@@ -132,7 +128,7 @@ class Madarak
     
 public:
    
-    virtual void  repül()
+    virtual void  repul()
     {
         std::cout << "Hiba\n" ;
     }
@@ -142,7 +138,7 @@ class Sasok : public Madarak
 {
 public:
   
-    void repül() override
+    void repul() override
     {
         std::cout << "...\n";
     }
@@ -152,9 +148,9 @@ class Pingvinek : public Madarak
 {
 };
 
-static void repülő(Madarak& b)
+static void repulo(Madarak& b)
 {
-    b.repülő();
+    b.repul();
 }
 
 int main()
@@ -162,14 +158,12 @@ int main()
     Sasok Sas;
     Pingvinek Pingvin;
     
-    repülő(Sas);
-    repülő(Pingvin);
+    repulo(Sas);
+    repulo(Pingvin);
     
     return 0;
-}
-            
-]]>
-        </programlisting>
+}          
+]]></programlisting>
 
  <programlisting language='c++'>
             <![CDATA[
@@ -180,32 +174,32 @@ class Madarak
     
 };
 
-class RepülőMadarak : public Madarak
+class RepuloMadarak : public Madarak
 {
 public:
-    virtual void repül(); 
+    virtual void repul(); 
 };
-class NemRepülőMadarak : public Madarak
+class NemRepuloMadarak : public Madarak
 {
 };
 
-class Sasok : public RepülőMadarak
+class Sasok : public RepuloMadarak
 {
 public:
   
-    void repül() override
+    void repul() override
     {
         std::cout << "...\n";
     }
 };
 
-class Pingvinek : public NemRepülőMadarak
+class Pingvinek : public NemRepuloMadarak
 {
 };
 
-static void repülő(RepülőMadarak& b)
+static void repulo(RepuloMadarak& b)
 {
-    b.repülő();
+    b.repul();
 }
 
 int main()
@@ -213,22 +207,19 @@ int main()
     Sasok Sas;
     Pingvinek Pingvin;
     
-    repülő(Sas);
-    repülő(Pingvin); 
+    repulo(Sas);
+    repulo(Pingvin); 
     
     return 0;
-}
-            
+}          
 ]]>
         </programlisting>
-
+<para>
+Jelen példákban ayért nem használtam ékezetes karaktereket, mert a g++ nem ismerte fel és ford0tási hibákat kaptam. A kimenet is eltérő, mivel itt már az üres sort nem irja ki a szabványos kimenet végén és a hibaüzenet is más, itt a referencia rossz használatára hivja fel a figyelmet.
+</para>
                 <mediaobject>
             <imageobject>
-                <imagedata fileref="liskovViolation.png"></imagedata>
-            </imageobject>
-        </mediaobject>                <mediaobject>
-            <imageobject>
-                <imagedata fileref="liskovCorrect.png"></imagedata>
+                <imagedata fileref="liskov1.png"></imagedata>
             </imageobject>
         </mediaobject>
     </section>        
@@ -325,17 +316,12 @@ public class App
 
                 <mediaobject>
             <imageobject>
-                <imagedata fileref="nonoZone.png"></imagedata>
+                <imagedata fileref="parent.png"></imagedata>
             </imageobject>
         </mediaobject>
-	    
-        <mediaobject>
-            <imageobject>
-                <imagedata fileref="nonoZoneJava.png"></imagedata>
-            </imageobject>
-        </mediaobject>
+
 	<para>
-    Mindkét esetben hibaüzenetet kaptunk a fordítótól a nem megfelelő függvényhivatkozások miatt, melyre javítási javaslatot is adott.
+    A forditó egyik esetben sem találta a függvényünket, igy hibaüzenetet kaptunk, C++-ban még javitási javaslatot is adott, mivel elirásnak hitte a függvénzünket, mert azzal hasonló függvényt tartalmaz az objektum melyből meghivtuk, de azzal sem működne mivel azt paraméter nélkül definiáltuk, valoszinuleg a C++ programozási nyelv ezen funkciója hosszabb kódok forditása esetén hasznos.
     	</para>
     </section>  
 
@@ -892,21 +878,10 @@ RAM: 8 GB 2133 MT/s DDR4
         
                 <mediaobject>
             <imageobject>
-                <imagedata fileref="liskov_bench1.png"></imagedata>
+                <imagedata fileref="anti.png"></imagedata>
             </imageobject>
         </mediaobject>
-        
-                <mediaobject>
-            <imageobject>
-                <imagedata fileref="liskov_bench3.png"></imagedata>
-            </imageobject>
-        </mediaobject>
-        
-                <mediaobject>
-            <imageobject>
-                <imagedata fileref="liskov_bench5.png"></imagedata>
-            </imageobject>
-        </mediaobject>
+
     </section>
     
     <section>
