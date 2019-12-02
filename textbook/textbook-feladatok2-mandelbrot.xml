@@ -40,7 +40,9 @@
                 <imagedata fileref="uml7.png"></imagedata>
             </imageobject>
         </mediaobject>
-        
+</section>
+
+<section>        
         <title>Forward engineering UML osztálydiagram</title>
         <para>
             UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
@@ -60,7 +62,9 @@
                 <imagedata fileref="uml10.png"></imagedata>
             </imageobject>
         </mediaobject>
+</section>
 
+<section>
      <title>Egy esettan</title>
         <para>
             A BMEs C++ tankönyv 14. fejezetét (427 444 elmélet, 445 469 az e settan) dolgozzuk fel!    
@@ -72,7 +76,7 @@
             <title>Termékek létrehozásáért felelős osztályok kapcsolata.</title>
             <mediaobject>
                 <imageobject>
-                <imagedata fileref="img/esettan-uml.png" format="PNG"/>
+                <imagedata fileref="esettan-uml.png"></imagedata>
                 </imageobject>
             </mediaobject>
         </figure>
@@ -80,7 +84,7 @@
             <title>Az programunk output-ja.</title>
             <mediaobject>
                 <imageobject>
-                <imagedata fileref="img/esettan.png" format="PNG"/>
+                <imagedata fileref="esettan.png"></imagedata>
                 </imageobject>
             </mediaobject>
         </figure>
@@ -88,12 +92,13 @@
             <title>computerproducts_out.txt file-ba való exportálás.</title>
             <mediaobject>
                 <imageobject>
-                <imagedata fileref="img/product.png" format="PNG"/>
+                <imagedata fileref="product.png"></imagedata>
                 </imageobject>
             </mediaobject>
         </figure>
+</section>
 
-        </para>
+<section>
           <title>BPMN</title>
         <para>
             Rajzoljunk le egy tevékenységet BPMN-ben! https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf (34 47 fólia)
@@ -107,6 +112,7 @@
                 <imagedata fileref="uml11.png"></imagedata>
             </imageobject>
         </mediaobject>
+</section>
 	
     <section>
         <title>BPEL Helló, Világ! egy visszhang folyamat</title>
@@ -132,11 +138,12 @@
 	    </para>
 	                    <mediaobject>
                         <imageobject>
-                            <imagedata fileref="BPEL.png" format="PNG"/>
+                            <imagedata fileref="BPEL.png"></imagedata>
                         </imageobject>
                     </mediaobject>
 	</section>
 	
+<section>
           <title>TeX UML</title>
         <para>
             Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről ( pl. use case és class diagramokat).
@@ -160,7 +167,7 @@
 \end{document}
             ]]></programlisting>
         <para>
-             Az osztályokat a <function>\umlclass</function> segítségével tudjuk létrehozni. Szintaxisa a következő:
+             Az osztályokat a umlclass segítségével tudjuk létrehozni. Szintaxisa a következő:
         </para>
             <programlisting><![CDATA[
                 \umlclass{<név>}{<tagváltozók>}{<metódusok>}

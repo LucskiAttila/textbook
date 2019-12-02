@@ -345,7 +345,7 @@ public class App
         <title>Anti OO</title>
         <para>
             A BBP algoritmussal4 a Pi hexadecimális kifejtésének a 0. pozíciótól számított
-            10<superscript>6</superscript>, 10<superscript>7</superscript>,10<superscript>8</superscript>
+            10 6, 10 7,10 8
             jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
         </para>
         
@@ -736,7 +736,7 @@ main ()
         </programlisting>     
         
         
-    <programlisting language="c#"><![CDATA[
+    <programlisting language="c"><![CDATA[
     
         /*
  * FileName: PiBBPBench.cs
@@ -867,17 +867,17 @@ public class PiBBPBench {
             Megfigyelések:
                                 A programok nagyjából azonos idő alatt végezték el az egyes méréseket, leszámítva a C#-os esetet.
                                 Az átlagos futási idők rendre 1.6, 20 és 250 másodpercek voltak.
-                                A 10<superscript>6</superscript> mérésben a C-s bináris végzett legelőször, utolsó volt a C#-os program, utobbi majdnem minden tesztben igaz lesz.
-                                A 10<superscript>7</superscript> mérésben és az utolsó 10<superscript>6</superscript> mérésben a C bájtkód került a trónra, ez nem objektum-orientált nyelv. Az objektum orientáltság előnye többnyire a fejlesztés sebességének optimalizálása, azonban ennek egyik áldozata a gép számára történő optimalizáció romlása.
+                                A 10 6 mérésben a C-s bináris végzett legelőször, utolsó volt a C#-os program, utobbi majdnem minden tesztben igaz lesz.
+                                A 10 7 mérésben és az utolsó 10 6 mérésben a C bájtkód került a trónra, ez nem objektum-orientált nyelv. Az objektum orientáltság előnye többnyire a fejlesztés sebességének optimalizálása, azonban ennek egyik áldozata a gép számára történő optimalizáció romlása.
         </para>
         
                 <mediaobject>
             <imageobject>
-                <imagedata fileref="bbtable.png"></imagedata>
+                <imagedata fileref="bbptable.png"></imagedata>
             </imageobject>
         </mediaobject>
         
-                <literallayout>
+<para>
 
 * A számításokat az alábbi erőforrásokkal felszerelt gépen végeztem:
 
@@ -887,7 +887,7 @@ CPU: intel core i5 6300HQ
 
 RAM: 8 GB 2133 MT/s DDR4
 
-        </literallayout>
+</para>
         
         
                 <mediaobject>
@@ -927,7 +927,7 @@ RAM: 8 GB 2133 MT/s DDR4
             Telepítéshez: git clone https://aur.archlinux.org/android-studio.git
             Az Android alkalmazásainkat tudjuk debugolni akár saját Androidos készülékeinken is,
             vagy akár emulátor segítségével is.
-            A <filename>.gradle</filename> fájl nélkül nem tudjuk importálni a projektet, így létrehozunk <emphasis>empty</emphasis> Android projectet és behozzuk
+            A .gradle fájl nélkül nem tudjuk importálni a projektet, így létrehozunk empty Android projectet és behozzuk
             a leklónozott forrásokat.Els˝o lépésként átmásoljuk a activity_smniste3.xml fájlt a */layout mappába.
             Ahhoz, hogy az aktivitásunk ezt a layout-ot használja át kell írni az AndroidManifest.xml fájlt:
         </para>
@@ -978,7 +978,7 @@ public class SMNISTE3Activity extends AppCompatActivity {
             a zöld kicsi háromszögre és végül...
         </para>
 	<para>
-A színvilág módosításához pl. az <filename>SMNISTforHumansExp3/app/src/main/java/hu/blog/bhaxor/smnistforhumansexp3/SMNISTSurfaceView.java</filename> fájlt is használhatjuk.
+A színvilág módosításához pl. az SMNISTforHumansExp3/app/src/main/java/hu/blog/bhaxor/smnistforhumansexp3/SMNISTSurfaceView.java fájlt is használhatjuk.
 Ha az RGB paramétereket átírjuk a bgColor-ban, akkor az app háttérszíne módosul.
 	</para>
 <programlisting language="Java"><![CDATA[
@@ -1072,12 +1072,10 @@ Többek között a szövegek, felugró üzenetek, szegélyek színét, elhelyezk
 
 
 	<para>
-Az <filename>SMNISTforHumansExp3/app/src/main/res/values/strings.xml</filename> tartalmazza az app nevét, természetesen ezt is lehet módosítani.
+Az SMNISTforHumansExp3/app/src/main/res/values/strings.xml tartalmazza az app nevét, természetesen ezt is lehet módosítani.
 	</para>
-<programlisting><![CDATA[
-<resources>
-    <string name="app_name">SMNISTforHumansExp3, v0.0.3</string>
-</resources>]]>
+<programlisting>
+     SMNISTforHumansExp3, v0.0.3
 </programlisting>
 	    <para>
 Ebben az xml fájlban tárolódnak nemcsak a további lehetséges string nevek, de pl. a status állapotokhoz tartozó stringek is (a színmódosítás itt is megvalósítható lenne).
@@ -1116,41 +1114,33 @@ Ebben az xml fájlban tárolódnak nemcsak a további lehetséges string nevek, 
     <para>
         
 Metódusok ciklomatikus bonyolultságának meghatározása:
-             Metódusonként végezzük el. Legyen adott egy <literal>n</literal> szám úgy, hogy <literal>n=1</literal>.
+             Metódusonként végezzük el. Legyen adott egy n szám úgy, hogy n=1.
             Minden egyes adott metódusban előforduló szelekciós, iterációs,...,vezérlést megváltoztató utasítás
-            esetén növeljük <literal>n</literal> szám értékét +1 értékkel.
+            esetén növeljük n szám értékét +1 értékkel.
       </para>
         
      <para>
             Tehát néznünk kell a következő elemeket:
         </para>
-        <itemizedlist mark='opencircle'>
-            <listitem>
-                <para>
-                    <literal>return</literal>, csak akkor ha nem az utolsó utasítás adott metódusban
+               <para>
+                    return, csak akkor ha nem az utolsó utasítás adott metódusban
                 </para>
-            </listitem>
-            <listitem>
+            
                 <para>
-                    Szelekciós utasítások: <literal>if-else,case,default</literal>
+                    Szelekciós utasítások: if-else,case,default
                 </para>
-            </listitem>
-             <listitem>
+            
                 <para>
-                    Iterációs utasítások: <literal>for,while,do-while, break, continue</literal>
+                    Iterációs utasítások: for,while,do-while, break, continue
                 </para>
-            </listitem>
-             <listitem>
+            
                 <para>
-                    A &amp;&amp; ||, ?, : operátorok..
+                    A  ||, ?, : operátorok..
                 </para>
-            </listitem>
-             <listitem>
+       
                 <para>
-                    Kivételkezelés kulcsszavai: <literal>catch,finally,throw...</literal>
+                    Kivételkezelés kulcsszavai: catch,finally,throw...
                 </para>
-            </listitem>
-        </itemizedlist>
 	
 	<para>
             Például:
@@ -1158,13 +1148,11 @@ Metódusok ciklomatikus bonyolultságának meghatározása:
 	
         <mediaobject>
             <imageobject>
-                <imagedata fileref="manual.png" scale='55'></imagedata>
+                <imagedata fileref="manual.png"></imagedata>
             </imageobject>
-            <caption>
-		 <para> Itt <literal>CNN=7</literal>, kisebb programok esetén megnézhetjük manuálisan is.</para>
-            </caption>
-        </mediaobject>
+            </mediaobject>
         <para>
+             Itt CNN=7, kisebb programok esetén megnézhetjük manuálisan is.
             A CNN kiszámítását nem csak kézzel végezhetjük, hanem a több tucat kiegészítő segítségével, ami
             minden népszerű IDE-hez létezik. Ilyen például a 'metriculator' nevű plugin.
         </para>
@@ -1181,22 +1169,15 @@ A 'metriculator' a ciklomatikus komplexitást a McCabe oszlopban írja, ugyanis 
     
     <mediaobject>
 <imageobject>
-<imagedata fileref="cc_1.PNG" format="PNG" scale="100"/>
+<imagedata fileref="cc_1.png"></imagedata>
 </imageobject>
 </mediaobject>
     
 <mediaobject>
 <imageobject>
-<imagedata fileref="cc_3.PNG" format="PNG" scale="100"/>
+<imagedata fileref="cc_3.png"></imagedata>
 </imageobject>
 </mediaobject>
 
-    </section>                  
-                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 </chapter>
-
-        
-       
-        
-        

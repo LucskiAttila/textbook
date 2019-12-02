@@ -42,7 +42,7 @@
 		     %%
 		     {felhasználói utasítások}
 	A CarLexer a FlexLexer alosztálya: figyeli, hogy az egyének milyen úton vannak, illetve hogy egy jármű kísérve van-e. A carlexer.hpp fájlt is includoltuk hogy a benne lévő globális változók értékeit módosíthassuk a programunk segítségével.
-	A definíciók részben hozzuk létr a lexáláshoz szükséges tokeneket, melynek megadjuk a nevét amivel azonosítjuk majd a felhasználói utasítások részben, illetve egy sztringet amiből a beolvasott szöveg fog állni. Ahogy például a STAT esetén a <stat sztringet olvassuk be. A WS esetén a /t a whitespacet jelenti, a csillag ugye hogy akárhányszor szerepelhet, akár 0-szor is a + jelöléssel ellentétben ugye. A WORLD esetén a ^ jelölés azt jelenti hogy a mögötte felsorolt karaktereken kívül bármi lehet, a {} pedig hogy a kapcsos zárójel közötti elemből áll a beolvasott karaktersorozat.	     
+	A definíciók részben hozzuk létr a lexáláshoz szükséges tokeneket, melynek megadjuk a nevét amivel azonosítjuk majd a felhasználói utasítások részben, illetve egy sztringet amiből a beolvasott szöveg fog állni. Ahogy például a STAT esetén a kisebbstat sztringet olvassuk be. A WS esetén a /t a whitespacet jelenti, a csillag ugye hogy akárhányszor szerepelhet, akár 0-szor is a + jelöléssel ellentétben ugye. A WORLD esetén a ^ jelölés azt jelenti hogy a mögötte felsorolt karaktereken kívül bármi lehet, a {} pedig hogy a kapcsos zárójel közötti elemből áll a beolvasott karaktersorozat.	     
 	A szabályok részben megadjuk hogy az általunk képzett reguláris kifejezések illeszkedése esetén mikre módosuljanak a változók értékei. 
 	A felhasználói utasítások részben definiáljuk az yylex függvényt, ami ugye beolvassa a bemenetet az egyes CarLExer objektumokra.
         A lex parancs segítségével, amihez szükséges telep1teni a flex csomagot hatjsuk végre a lexálást az adott forráskód alapján, ami jelen esetben a carlexer.ll: 
@@ -344,6 +344,3 @@ delete [] image;
         </mediaobject>
 	</section>
 </chapter>
-
-	
-	

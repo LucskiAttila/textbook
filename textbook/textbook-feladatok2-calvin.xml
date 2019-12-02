@@ -13,7 +13,8 @@
         </para>
         <para>
             A programunk megírásához TensorFlow kiegészítőket használtuk fel, mivel ez egy olyan könyvtárszerkezet melynek használatával gépi tanulást valósíthatunk meg például ugye neurális hálók használatakor. A feadatban is egy ilyen neurális hálózatot hoztunk létre a MNIST adatbázsit felhasználva, ezzel tanítottuk be a hálózatot hogy felismerje a számokat, mivel a MNIST képekből áll melyek kézzel rajzolt számokat ábrázolnak és hozzájuk tartozik egy címke ami azt tartalmazza hogy melyik számot kéne felismerni a képről a programnak. A forráskódunk elején láthatjuk hogy importáláshoz használt könyvtárak a matplotlib és a tensorflow, illetve python nyelven íródott ugye py a kiterjesztése is a fájlnak, ennek fordításához python könyvtárak szükségesek, ezeket Ubuntu alatt az alábbi módon telepíthetjük:
-            <programlisting><![CDATA[
+</para>      
+      <programlisting>
 sudo apt update
 sudo apt install python3-dev python3-pip
 sudo apt-get install python3-matplotlib
@@ -24,7 +25,7 @@ pip install --upgrade pip
 pip install --upgrade tensorflow
 python -c "import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])))"
 deactivate
-            ]]></programlisting>         
+            </programlisting>         
             <programlisting language="python"><![CDATA[  
 from __future__ import absolute_import
 from __future__ import division
@@ -114,29 +115,33 @@ if __name__ == '__main__':
   FLAGS = parser.parse_args()
   tf.app.run()
         ]]></programlisting>    
+<para>
             A programunk elején beolvassuk a használatos könyvtárakat az import segítségével. Amint láthatjuk a python programozási nyelvben lehetőségünk van használni a from kulcsszót az importálásához, hogy a kódunkban csak az import részt adjuk meg, nem a .-tal elválasztott teljes könytvtár nevet, illetve használhatjuk az as kulcsszót is arra hogy megadjuk milyen néven fogunk hivatkozunk a későbbiekben a használatos könyvtárra, ez is a  könyvtár adatainak egyszerűbb elérését segítő elő. Amint láthatjuk a változók, függvények definiálása egyszerűbb mivel nem kell megadnunk típúusokat, ezáltal a python programozási nyelv az egyszerűbb olvashatóságot előségeti, azonban futási időben gyengébb a hasolnó objektum-orientált programozási nyelvekhez képest. A függvények definiálása a def kulcsszóval történik, a reading függvény beolvassa az általunk elkészített képet majd dekódolja fekete-fehérre és visszaddja egy img változó értékeként. A main függvényben az mnist változóba beolvassuk a tensorflow mnist mappáinak a képeit, ezek közül beolvassuk az összest, mivel a None értéket használtuk ami akármennyi lehet. Ezek a fájlok 3 almappából olvasódnak be az mnist.train, mnist.test, mnist.validation-ből és az MNIST adatbázis elemei két részből állnak, egy imagine kép részből mely a kézzelírt számot tartalmazza és egy címkéből ami a szám értékét adja meg, ezeket mnist.test.images és mnist.test.labels könyvtárak elemi adják meg. Az egyes képek 28x28-as pixel méretűek így ezeket egy 28*28-as méretű azaz 784 elemű mátrixba tudjuk beolvasni melynek ez lesz az oszlop és a None a sor értéke, mivel minden fájlt szeretnénk beolvasni a könyvtárból. Ezt egy placefolder-be hozzuk létre mivel értékét a run függvényben adjuk meg a feed_dict függvénnyel, a mátrix elemei 0 vagy 1 a pixel intenzitástól függően. A címkék értékeit hasonló módon egy y_ mátrixban tároljuk, de nem a tizesszámrendszerbeli értékként, mivel beolvasáskor one_hot-tal olvastuk be, így egy 10 számjegyű szám lesz az értéke melynek minden számjegye 0 kivéve az ahanyadik a címke értéke, mivel az 1 lesz. A softmmax-ot használjuk regresszióként mivel ez alkalmas arra hogy valószínűséget rendeljünk egy több különböző elemekből álló objektumhoz. A súlyokat és torzításokat tároljuk Variables-be melynek értékét a program módosítja majd így mindegy mivel töltjük fel. A súlyok mátrixa [784,10] mivel megszorozzuk majd az x mátrix-szal ami [None,784] elemszámú és eggyezni kell az oszlop és sornak azaz a 784-nek. Ebből kapunk egy [10] elemű tömböt így hozzáadáskor majd a torzításnak is 10 elemű tömbnek kell lennie. Majd a Training végrehajtásához tudnia kell a modulunknak mi a jó érték vagy mi a rossz értéke és ezt minimalizáljuk. A keresztentrópiát úgy számítjuk ki hogy vesszük a logaritmusát y-nak majd megszorozzuk y_-nal és összadjuk az összes így kapott értéket. Majd ezt az értéket a gradiens algoritmussal minimalizáljuk és inicializáljuk a változókat, majd futtatjuk a szessziónkat egy for ciklus segítségével 100-assával végrehajtva a tanítást, ennek előrehaladását kiírattuk %-osan is. A correct_prediction értékeként meghatározzuk hogy egyenlőek e az álatalunk kiszámolt értékek a beolvasott értékekkel ciklusonként, ehhez az equal függvényt használjuk, a legvalószínűbb értéket pedig az argmax-szal határozzuk meg. Az accuary értékeként kiszámítjuk milyen pontossággal határozta meg az értéket, ehhez átíkonvertáljuk a true-fale-t 1-0-ra és vesszük az átlagukat. Majd megviszgáljuk a test értékekre a pontosságot és kiíratjuk. Majd a test 42. elemén hatjuk végre a tesztet, de előtte megjelnítjük a képernyőn hogy lássuk mi is mit kellene felismernie, ehhez megfelelő formátumba hozzuk a képet, majd kimentjük 4.png néven. A reshape füvénnyel az adott tömböt átméretezzük az adott mértetű az eredetivel azonos tömbre, majd végrehajtuk a tesztet egy általunk elkészített képen is amit a sajat8as.png néven kell elkészítenünk és formázása után kimentjük 8.png néven.
         </para>
-             mediaobject>
+             <mediaobject>
              <imageobject>
                  <imagedata fileref="mnist.png"></imagedata>
              </imageobject>
          </mediaobject>
     </section>
 
-    <section>
+      <section>
         <title>DEEP MNIST</title>
         <para>
             Mint az előző, de a mély változattal. Segítő ábra, vesd össze a forráskoddal a https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf 8. fóliáját.        
         </para>
         <para>
             Amint láthatjuk az előző feladatunkban 91%-kal dolgoztunk, azonban ez újrafutattátással sem javulna, mivel ugyanazt az eljárást alkalmaznánk és imsét egy rossz értéket kapnánk, de a jelen feladtban mélyítva használjuk a programunkat, így elérhetünk akár 99%.os eredményt is. A mélyített programunk működését az alábbi ábra szemlélteti:
+</para>
         <mediaobject>
              <imageobject>
                  <imagedata fileref="deepmnist.png"></imagedata>
              </imageobject>
          </mediaobject>    
-            Az ábrán egy konvolúciós réteget láthatunk amelynél a mély kifejezés a többrétegűségére utal. A bemeneti rétegen a 28x28-as kép lesz egy 3 dimenziós 28x28x1-es mátriban, melyből az első konvolúció segítségével létrehozunk egy 28x28x32-es képet, majd az első összevonó réteg segítségével létrehozunk egy 14x14x32-es mátrixot, ehhez hasonlóan végezzük el a második konvolúciót és összevonást, majd az FC rétegekben bővítjük a már 7x7-re konvertált képet 1024 neuronnal hogy a teljes kéhez hozzáférjünk és a dropout réteggel oldjuk meg hogy nehogy túlcsorduljon, majd az értékeket besoroljuk 0 és 9 közzé, ami a kimenetet adja. 
-            <programlisting language="python"><![CDATA[ 
+<para>       
+     Az ábrán egy konvolúciós réteget láthatunk amelynél a mély kifejezés a többrétegűségére utal. A bemeneti rétegen a 28x28-as kép lesz egy 3 dimenziós 28x28x1-es mátriban, melyből az első konvolúció segítségével létrehozunk egy 28x28x32-es képet, majd az első összevonó réteg segítségével létrehozunk egy 14x14x32-es mátrixot, ehhez hasonlóan végezzük el a második konvolúciót és összevonást, majd az FC rétegekben bővítjük a már 7x7-re konvertált képet 1024 neuronnal hogy a teljes kéhez hozzáférjünk és a dropout réteggel oldjuk meg hogy nehogy túlcsorduljon, majd az értékeket besoroljuk 0 és 9 közzé, ami a kimenetet adja. 
+</para>      
+      <programlisting language="python"><![CDATA[ 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial)
@@ -145,8 +150,10 @@ def bias_variable(shape):
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial)              
             ]]></programlisting>
-            Mivel a programunkban többrétegű neurális hálót hozunk létre így több súlyra és torzításra lesz szükségünk, így létrehozunk egy-egy függvényt melyeknek paraméterei a súlyok és torzítások tömbjei, melyeket inicializálunk a weight_variable és bias_variable függvényeikben. Ezek azértis szökségesek mivel a súlyok értékeét most a truncated_normal függvénnyel határozzuk meg ami az általunk megadott mértű tömbnek feltölti az elemeit 0.1 szórású normál eloszlású random elemekkel, majd egy változóba rakjuk mely majd később fog ténylegesen inicializálódni, Ugye a súlyokat kis zajszinttel inicializáltuk mivel el kerüljük ezzel a szimmetria törést és a 0 gradienseket- A bias_variable függvényben hasonlóan a paraméterül kapott méretű tömb elemeit töltjük fel de jelen esetben a constant függvény segítségével így mindegyik értéke 0.1 lesz. Mivel ReLU neuronokat használunk így kis pozitív értékekkel inicalizáljuk a torzításokat mert így elkerülhetjük a halott neuronokat. A függvény visszatérési értéke az előzőhez hasonlóan Variable változó lesz melynek inicializálást később indíthatjuk el.    
-            <programlisting language="python"><![CDATA[
+<para>       
+     Mivel a programunkban többrétegű neurális hálót hozunk létre így több súlyra és torzításra lesz szükségünk, így létrehozunk egy-egy függvényt melyeknek paraméterei a súlyok és torzítások tömbjei, melyeket inicializálunk a weight_variable és bias_variable függvényeikben. Ezek azértis szökségesek mivel a súlyok értékeét most a truncated_normal függvénnyel határozzuk meg ami az általunk megadott mértű tömbnek feltölti az elemeit 0.1 szórású normál eloszlású random elemekkel, majd egy változóba rakjuk mely majd később fog ténylegesen inicializálódni, Ugye a súlyokat kis zajszinttel inicializáltuk mivel el kerüljük ezzel a szimmetria törést és a 0 gradienseket- A bias_variable függvényben hasonlóan a paraméterül kapott méretű tömb elemeit töltjük fel de jelen esetben a constant függvény segítségével így mindegyik értéke 0.1 lesz. Mivel ReLU neuronokat használunk így kis pozitív értékekkel inicalizáljuk a torzításokat mert így elkerülhetjük a halott neuronokat. A függvény visszatérési értéke az előzőhez hasonlóan Variable változó lesz melynek inicializálást később indíthatjuk el.    
+</para>      
+      <programlisting language="python"><![CDATA[
 def conv2d(x, W):
     """conv2d returns a 2d convolution layer with full stride."""
     return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
@@ -155,9 +162,11 @@ def max_pool_2x2(x):
     """max_pool_2x2 downsamples a feature map by 2X."""
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                           strides=[1, 2, 2, 1], padding='SAME')
-            ]]></programlisting>            
+            ]]></programlisting>  
+<para>          
             A konvolúciót a conv2d függvénnyel fogjuk elvégezni melynek két paramétere van egy bemeneti tenzor és egy szűrő. A függvény a szűrőt egy e dimenziós mátrixá alakítja, a bemeneti tenzorból részeket vesz ki, majd minden ilyen részt megszoroz jobbról a szűrő mátrixal és visszaad egy a bemeneti tenzorral azonos méretű két dimenziós tenzort, mivel a paddingértéke SAME volt. Az összevonást a max_pool_2x2 függvényünk max_pool függvénye hajtja végre a maximális összevonást ami azt jelenti hogy a bemeneti tenzornak csak a legnagyobb értékeit tartjuk meg. Ahogy az általunk létrehozott függvény nevéből látszik 2x2-es blokkon hajtjuk végre a maximális összevonást így a strides és ksize középső két értéke 2 lesz, a padding SAME mivel azonos méretű értéket kapunk. 
-            <programlisting language="python"><![CDATA[
+</para>      
+      <programlisting language="python"><![CDATA[
 def deepnn(x):
     x_image = tf.reshape(x, [-1,28,28,1])
     with tf.name_scope('reshape'):
@@ -171,8 +180,10 @@ with tf.name_scope('conv1'):
 with tf.name_scope('pool1'):
     h_pool1 = max_pool_2x2(h_conv1)
             ]]></programlisting>
-            A deepnn függvénnyel hozzuk létre a konvolúciós rétegeinket, melynek paramétere a képünk, először ezt átméretezzük a with kifejezés segítségével mellyel kivételkezelést hatjunk végre mintha egy try blokkot használnánk. Az átméretezéssel a képünk is már 4 dimenziós lesz, melynek második, harmadik paramétere a kép szélessége és magassága, a negyedik a színcsatornák száma. Majd megkezdjük az első konvolúciós rétegünk létrehozásást melyben egy konvolóciót és maximális összevonást végzünk el. Ehhez létrehozzuk a súlyokat tartalmazó tömbünket a weight_variable függvénnyel, ez egy beépített python programozási nyelvbeli függvény, melyet felülírtunk, első két paramétere a képrészletek dimenziójáta adja meg hogy jelen esetben 5x5-ös méretűek lesznek, a harmadik paraméter a bemeneti csatornák száma, a negyedik paraméter a kimeneti csatornák számát jelenti. Majd létrehozzuk a torzítást is melyet majd hozzáadunk az egyes kimeneti csatornák értékeihez, melyet a konvolúciós függvényünk határoz meg ami 5x5-ös képrészleteket szoroz meg a súllyal. Majd az így kapott eredményeket a relu függvénnyel átkonvertálunk 0-ra ha negatív érték volt, a nem negatív akkor nem konvertálja át. Majd az így kapott eredményre meghívjuk a max_pool2x2-es függvényünket így elkészült az első konvolúciós rétegünk.    
-            <programlisting language="python"><![CDATA[
+<para>       
+     A deepnn függvénnyel hozzuk létre a konvolúciós rétegeinket, melynek paramétere a képünk, először ezt átméretezzük a with kifejezés segítségével mellyel kivételkezelést hatjunk végre mintha egy try blokkot használnánk. Az átméretezéssel a képünk is már 4 dimenziós lesz, melynek második, harmadik paramétere a kép szélessége és magassága, a negyedik a színcsatornák száma. Majd megkezdjük az első konvolúciós rétegünk létrehozásást melyben egy konvolóciót és maximális összevonást végzünk el. Ehhez létrehozzuk a súlyokat tartalmazó tömbünket a weight_variable függvénnyel, ez egy beépített python programozási nyelvbeli függvény, melyet felülírtunk, első két paramétere a képrészletek dimenziójáta adja meg hogy jelen esetben 5x5-ös méretűek lesznek, a harmadik paraméter a bemeneti csatornák száma, a negyedik paraméter a kimeneti csatornák számát jelenti. Majd létrehozzuk a torzítást is melyet majd hozzáadunk az egyes kimeneti csatornák értékeihez, melyet a konvolúciós függvényünk határoz meg ami 5x5-ös képrészleteket szoroz meg a súllyal. Majd az így kapott eredményeket a relu függvénnyel átkonvertálunk 0-ra ha negatív érték volt, a nem negatív akkor nem konvertálja át. Majd az így kapott eredményre meghívjuk a max_pool2x2-es függvényünket így elkészült az első konvolúciós rétegünk.    
+</para>      
+      <programlisting language="python"><![CDATA[
 with tf.name_scope('conv2'):
     W_conv2 = weight_variable([5, 5, 32, 64])
     b_conv2 = bias_variable([64])
@@ -181,8 +192,10 @@ with tf.name_scope('conv2'):
 with tf.name_scope('pool2'):
     h_pool2 = max_pool_2x2(h_conv2)
 ]]></programlisting>
-            Mivel mély neurális hálózatot hoztunk létre így több rétegünk lesz, a második réteget ugye az első réteg alapján hozzuk létre mivel a conv3d paramétere az első réteg által meghatározott mátrix melynek már minden 5x5-ös képrészletéhez 64 kimenetet számítunk ki, ehhez a súlyok kimeneti értékét a megfelelőre állítottuk és a torzítások számát is, majd az osszevonás elvégzése után a képünk 7x7-es méretű lesz. 
-            <programlisting language="python"><![CDATA[
+<para>        
+    Mivel mély neurális hálózatot hoztunk létre így több rétegünk lesz, a második réteget ugye az első réteg alapján hozzuk létre mivel a conv3d paramétere az első réteg által meghatározott mátrix melynek már minden 5x5-ös képrészletéhez 64 kimenetet számítunk ki, ehhez a súlyok kimeneti értékét a megfelelőre állítottuk és a torzítások számát is, majd az osszevonás elvégzése után a képünk 7x7-es méretű lesz. 
+</para>      
+      <programlisting language="python"><![CDATA[
 with tf.name_scope('fc1'):
     W_fc1 = weight_variable([7 * 7 * 64, 1024])
     b_fc1 = bias_variable([1024])
@@ -199,8 +212,10 @@ with tf.name_scope('fc2'):
     b_fc2 = bias_variable([10])
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
             ]]></programlisting>
-            Majd hozzáadunk a modellünkhöz egy 1024 neruonokból álló FC réteget, hogy a teljes képet feldolgozzuk, majd a mádosik réteg képét átkonvertáljuk valamennyix3236-os méretűre, ezt megszorozzuk a súlyokkal és hozzádjuk a torzításokat és a kapott eredményre meghívjuk a ReLU függvényt. Majd a dropout függvény segítségével a keep_prob értékéne által meghatározott valószínűséggel elhagyjuk az elemeket, a megmaradt elemeket tároljuk hogy a train-elés alatt mehessen a folyamat, a test alatt pedig megállítjuk. Majd az FC2 rétegben a már ismert módon végrehatjuk a megtartott neuronok alapján a regressziót az előző MNIST verzióhoz hasolnóan, itt már a matmul-t használjuk a szorzáshoz.            
-            <programlisting language="python"><![CDATA[
+<para>       
+     Majd hozzáadunk a modellünkhöz egy 1024 neruonokból álló FC réteget, hogy a teljes képet feldolgozzuk, majd a mádosik réteg képét átkonvertáljuk valamennyix3236-os méretűre, ezt megszorozzuk a súlyokkal és hozzádjuk a torzításokat és a kapott eredményre meghívjuk a ReLU függvényt. Majd a dropout függvény segítségével a keep_prob értékéne által meghatározott valószínűséggel elhagyjuk az elemeket, a megmaradt elemeket tároljuk hogy a train-elés alatt mehessen a folyamat, a test alatt pedig megállítjuk. Majd az FC2 rétegben a már ismert módon végrehatjuk a megtartott neuronok alapján a regressziót az előző MNIST verzióhoz hasolnóan, itt már a matmul-t használjuk a szorzáshoz.            
+</para>      
+      <programlisting language="python"><![CDATA[
 with tf.name_scope('loss'):
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,logits=y_conv)
 cross_entropy = tf.reduce_mean(cross_entropy)
@@ -234,12 +249,15 @@ with tf.Session() as sess:
     saver = tf.compat.v1.train.Saver()
     saver.save(sess, "./model/model.ckpt")
             ]]></programlisting>
-            Majd betanítjuk és teszteljük a neurális hálózatunkat a MNIST-hez hasonlóan, de itt egy jobb optimalizálót hasnzálunk a hibák csökkentésére az ADAM optimalizálót a gradient-es helyett és keep_prob, feed_dict paraméterekkel kontroláljuk a neruon elhagyás mértékét, illetve 20000 lépést hajtunk végre a szesszió során és a képeken is 50-essével haladunk. A programunk két fájlból állt a deep_mnist_train.py és a deep_mnist_eval.py, melyeket ebben a sorrendben kell futtatnunk.
+<para>       
+     Majd betanítjuk és teszteljük a neurális hálózatunkat a MNIST-hez hasonlóan, de itt egy jobb optimalizálót hasnzálunk a hibák csökkentésére az ADAM optimalizálót a gradient-es helyett és keep_prob, feed_dict paraméterekkel kontroláljuk a neruon elhagyás mértékét, illetve 20000 lépést hajtunk végre a szesszió során és a képeken is 50-essével haladunk. A programunk két fájlból állt a deep_mnist_train.py és a deep_mnist_eval.py, melyeket ebben a sorrendben kell futtatnunk.
+</para>
         <mediaobject>
              <imageobject>
                  <imagedata fileref="deepmnist2.png"></imagedata>
              </imageobject>
-         </mediaobject>            
+         </mediaobject> 
+        <mediaobject>           
              <imageobject>
                  <imagedata fileref="deepmnist3.png"></imagedata>
              </imageobject>
@@ -253,7 +271,8 @@ with tf.Session() as sess:
         </para>
         <para>            
             A programunkat az alábbi linkről tölthetjük le: https://github.com/tensorflow/models/blob/master/tutorials/image/cifar10/cifar10.py és a futtatásáshoz szükséges lehet telepíteni a pip install tensorflow_datasets és a pip install image csomagokat is. A CIFAR-10 adatbázis olyan színes képeket tartalmaz melyek alkalmasak képfelismeréshez, ezekből 60000 db van és 32x32 méretűek a hatékonyabb tanítások érdekében. A képek 10 osztályba sorolhatóak így minden osztályban 6000 kép van, ezek az osztályok a: repülőgépek, kocsik, madarak, macskák, őzek, kutyák, békák, lovak, hajók, kamionok. A betanításhoz 10000 lépést hajtunk végre, de megadhatunk a futtatáskor --max step kapcsolóval egy ennél kisebb számot is mivel egyébként akár egy napot is igénybe vehet. A programunk jelen esetben nem képes felismerni a saját képeinket, ezért módosítnaunk kell a programunkon. 
-        <programlisting language="Python"><![CDATA[
+</para>      
+  <programlisting language="Python"><![CDATA[
 from PIL import Image
 import numpy as np
 import sys
@@ -270,8 +289,10 @@ label = [0]
 out = np.array(list(label) + list(r) + list(g) + list(b),np.uint8)
 out.tofile(sys.argv[2])            
         ]]></programlisting>
-        Először is az alábbi kódból létrehozunk egy python fájlt melynek segítségével átkonvertáljuk a képünket hogy hasnálni tudja a programunk. A programban először beolvassuk az első parancssori argumentumként megadott képet majd egy tömbbé alakítjuk és az r,g,b tömbökbe kimentük az RGB színkódjait, melyben a flatten függvény átalakítja a tömböt egydimenziós vektorrá, majd egy listát fűzünk belőle össze, majd ezt a listát kimentjük az általunk második parancssori argumentumként megadott nevű fájlba.   
-        <programlisting language="python"><![CDATA[
+<para>       
+ Először is az alábbi kódból létrehozunk egy python fájlt melynek segítségével átkonvertáljuk a képünket hogy hasnálni tudja a programunk. A programban először beolvassuk az első parancssori argumentumként megadott képet majd egy tömbbé alakítjuk és az r,g,b tömbökbe kimentük az RGB színkódjait, melyben a flatten függvény átalakítja a tömböt egydimenziós vektorrá, majd egy listát fűzünk belőle össze, majd ezt a listát kimentjük az általunk második parancssori argumentumként megadott nevű fájlba.   
+</para>      
+  <programlisting language="python"><![CDATA[
 def inputs(eval_data, data_dir, batch_size):
             ...
     if not eval_data:
@@ -283,13 +304,17 @@ def inputs(eval_data, data_dir, batch_size):
         num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_EVAL
             ...
             ]]></programlisting>
-            Ezt a kódot a cifar10_input.py fájlba kell bemásolnunk, ezzel megadjuk hogy a mi képünet olvassa be, melyet ezelőtt input.bin néven kellett átkonvertálnunk. 
-            <programlisting language="python"><![CDATA[
+<para>      
+      Ezt a kódot a cifar10_input.py fájlba kell bemásolnunk, ezzel megadjuk hogy a mi képünet olvassa be, melyet ezelőtt input.bin néven kellett átkonvertálnunk. 
+</para>      
+      <programlisting language="python"><![CDATA[
 tf.app.flags.DEFINE_integer('batch_size', 1,
         """Number of images to process in a batch.""")
             ]]></programlisting>
+<para>
             Itt a DEFINE_integer második paraméterét állítottuk 1-re mivel 1 képpel fogunk dolgozni, ezt módosítást a cifar10.py fájlban hajtottuk végre.
-            <programlisting language="python"><![CDATA[
+</para>      
+      <programlisting language="python"><![CDATA[
 def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
                 ...
     #while step < num_iter and not coord.should_stop():
@@ -304,7 +329,8 @@ def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
     # print('%s: precision @ 1 = %.3f' % (datetime.now(), precision))
                 ...   
             ]]></programlisting>
-            Ezt a cifar10_eval.py fájlba kell bemásolnunk mellyel kivesszük a programnak a pontosság számoló funkcióját és ehelyett azt határozza meg a programunk hogy a bolvasott képünk melyik CIFAR-10 osztályba tartozik. 
+<para>       
+     Ezt a cifar10_eval.py fájlba kell bemásolnunk mellyel kivesszük a programnak a pontosság számoló funkcióját és ehelyett azt határozza meg a programunk hogy a bolvasott képünk melyik CIFAR-10 osztályba tartozik. 
             </para>
             <mediaobject>
              <imageobject>
@@ -314,7 +340,7 @@ def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
     </section>
 
     <section>
-        <title>Android telefonra a TF objektum detektálója</titlle>
+        <title>Android telefonra a TF objektum detektálója</title>
         <para>
             Telepítsük fel, próbáljuk ki!        
         </para>
@@ -335,12 +361,15 @@ def eval_once(saver, summary_writer, top_k_op, summary_op, logits):
         </para>
         <para>
             A MALMÖ projekt egy Minecraft-hoz készített platform, melynek segítségével a fiatal generációk az adott környezetbeli problémákat oldják meg, melyek mesterséges inteligenciára alapodnak. A projektet az alábbi weboldalról tölthetjük le: https://github.com/microsoft/malmo , majd tömörítsük ki a letöltött fájlunkat és telepítsük az alábbi kiegészítőket Ubuntu alatt:
-            <programlisting>
+</para>      
+      <programlisting>
             sudo apt-get install libboost-all-dev libpython3.5 openjdk-8-jdk ffmpeg  -python-tk python-imaging-tk       
             export MALMO_XSD_PATH=~/MalmoPlatform/Schemas
             export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64    
             </programlisting>
-            Az első export parancsunknál a Schemas helyére az elérési útvonalát adjuk meg, ezzel hozzáadjuk a Path-hoz, a második export-nál pedig a Java verzióját átállítjuk Java 8-ra a atelepítési könyvtárának segítségével, mivel a programunk ezt a verziót használja. A Minecraft-ot a Mincecraft mappából indítjuk a launchClient.sh fájlt futtatva, így belép a menübe, majd a Python_examples mappába nyitunk egy terminált és futtathatjuk az egyes küldetéseket a python3 paranccsal. Majd a Minecraft betölti a küldetést és a bal alsó sarokba láthatjuk hány másodperc van még hátra, de le is állíthatjuk a terminálból a Ctrl+C.vel. A Python_examples mappában van egy Tutorial.pdf melyben bővebb leírást kapunk a platform használatáról, például aagent_host.sendCommand("turn -0.5") -ot hozzáadhatjuk a küldetésünket működtető fő ciklusunk elé. Ezzel fél sebesség fordul balra a karkterünk amíg le nem jár a játékidő, több ilyen parancs is van melyel irányíthatjuk a karakterünket, példul a jump 1, ezzel ugrálni fog, ezek közül többet is használhatunk az ágensünkhöz adva. Az ágens egy mob, azaz mozgó objektum melyet irányíthatunk parancsok hozzáadásával. A depth_map_runner.py küldetésünkben az ágensünk neve Jason Bourne, a többi beállításait az XML-es rész AgentSection részében találhatóak, itt beállíthatjuk még a kezdőpozíciónkat is. Ebben a küldetésben egyenesen megyünk az adott pozíciónktól, de elfordulunk a képmélység alapján meghatározott irányan, ezzel csakltunk. 
+<para>       
+     Az első export parancsunknál a Schemas helyére az elérési útvonalát adjuk meg, ezzel hozzáadjuk a Path-hoz, a második export-nál pedig a Java verzióját átállítjuk Java 8-ra a atelepítési könyvtárának segítségével, mivel a programunk ezt a verziót használja. A Minecraft-ot a Mincecraft mappából indítjuk a launchClient.sh fájlt futtatva, így belép a menübe, majd a Python_examples mappába nyitunk egy terminált és futtathatjuk az egyes küldetéseket a python3 paranccsal. Majd a Minecraft betölti a küldetést és a bal alsó sarokba láthatjuk hány másodperc van még hátra, de le is állíthatjuk a terminálból a Ctrl+C.vel. A Python_examples mappában van egy Tutorial.pdf melyben bővebb leírást kapunk a platform használatáról, például aagent_host.sendCommand("turn -0.5") -ot hozzáadhatjuk a küldetésünket működtető fő ciklusunk elé. Ezzel fél sebesség fordul balra a karkterünk amíg le nem jár a játékidő, több ilyen parancs is van melyel irányíthatjuk a karakterünket, példul a jump 1, ezzel ugrálni fog, ezek közül többet is használhatunk az ágensünkhöz adva. Az ágens egy mob, azaz mozgó objektum melyet irányíthatunk parancsok hozzáadásával. A depth_map_runner.py küldetésünkben az ágensünk neve Jason Bourne, a többi beállításait az XML-es rész AgentSection részében találhatóak, itt beállíthatjuk még a kezdőpozíciónkat is. Ebben a küldetésben egyenesen megyünk az adott pozíciónktól, de elfordulunk a képmélység alapján meghatározott irányan, ezzel csakltunk. 
+</para>      
             <programlisting language="python"><![CDATA[
 commandSequences=[
 "jump 1; move 1; wait 1; jump 0; move 1; wait 2",
@@ -352,13 +381,14 @@ commandSequences=[
 if currentSequence == "" and currentSpeed < 50 and waitCycles == 0:
 currentSequence = random.choice(commandSequences)
 print("Stuck! Chosen programme: " + currentSequence)
-            ]]><programlisting>
-            Ebben a példában az ágensünk nem fog semmilyen segéd értékeket felhasználni arra hogy merre haladjon tovább, hanem ha beragad valahová, akkor egy random ágens sorozatot választunk és hatjuk végre. A breagadást úgy határozzuk meg hogy ellenőrizzük hogy van e végrehatjandó utasítás, 50 alatt van e a sebességünk és nem vagyunk e a váróciklusba. Ekkor a random.choice függvényt meghívva a lépéseket tartalmazó tömbre kiválasztunk egy lépéssorozatot és kiíratjuk a szabványos kimenetre, majd végrehajtuk egy ágnes folyamatként. Ehhez célszerű módosítani ax XML kódrész ServerSection részében a timeLimitMS változó értékét megnövelni, hogy tovább tartson a küldetés. A programban parancsként a timeset 1000-el tudjuk állítani az órát nappalra ha besötétedne azaz 13000 lenne az értéke a timeset-nek.
+            ]]></programlisting>
+<para>       
+     Ebben a példában az ágensünk nem fog semmilyen segéd értékeket felhasználni arra hogy merre haladjon tovább, hanem ha beragad valahová, akkor egy random ágens sorozatot választunk és hatjuk végre. A breagadást úgy határozzuk meg hogy ellenőrizzük hogy van e végrehatjandó utasítás, 50 alatt van e a sebességünk és nem vagyunk e a váróciklusba. Ekkor a random.choice függvényt meghívva a lépéseket tartalmazó tömbre kiválasztunk egy lépéssorozatot és kiíratjuk a szabványos kimenetre, majd végrehajtuk egy ágnes folyamatként. Ehhez célszerű módosítani ax XML kódrész ServerSection részében a timeLimitMS változó értékét megnövelni, hogy tovább tartson a küldetés. A programban parancsként a timeset 1000-el tudjuk állítani az órát nappalra ha besötétedne azaz 13000 lenne az értéke a timeset-nek.
             </para>
             <mediaobject>
              <imageobject>
                  <imagedata fileref="malmö.png"></imagedata>
              </imageobject>
          </mediaobject>                
-    </section>    
+    </section>  
 </chapter>       
