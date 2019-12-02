@@ -413,7 +413,7 @@ public boolean onTouchEvent(MotionEvent motionEvent) {
         </para>
              <mediaobject>
              <imageobject>
-                 <imagedata fileref="android.png"></imagedata>
+                 <imagedata fileref="snake.png"></imagedata>
              </imageobject>
          </mediaobject>
     </section> 
